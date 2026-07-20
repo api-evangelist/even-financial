@@ -1,0 +1,39 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/even-financial-openapi-original.json
+docs: https://engine.tech/docs/api-reference/
+summary:
+  types:
+  - http
+  http_schemes:
+  - bearer
+  notes: >-
+    All requests to the Engine by MoneyLion (formerly Even Financial) API are authenticated
+    with a bearer token in the Authorization header, prefixed with "Bearer ". Tokens are two
+    UUIDs concatenated with an underscore. There are two production token classes plus an
+    experimental class; there is no OAuth 2.0 / OpenID Connect flow.
+schemes:
+- name: publishableBearerToken
+  type: http
+  scheme: bearer
+  description: >-
+    A publishable bearer token, safe to ship in application/client code and downloaded to a
+    user's device. Restricted access — only non-sensitive endpoints (e.g. lead submission,
+    UI utilities).
+  sources:
+  - openapi/even-financial-openapi-original.json
+- name: confidentialBearerToken
+  type: http
+  scheme: bearer
+  description: >-
+    A confidential bearer token that must be managed like a password and kept server-side.
+    Grants access to sensitive endpoints (analytics, payouts, full lead data).
+  sources:
+  - openapi/even-financial-openapi-original.json
+- name: experimentalBearerToken
+  type: http
+  scheme: bearer
+  description: >-
+    A bearer token scoped to experimental / early-access endpoints.
+  sources:
+  - openapi/even-financial-openapi-original.json
