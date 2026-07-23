@@ -1,0 +1,411 @@
+openapi: 3.0.3
+info:
+  title: Engine by MoneyLion Analytics UI Utils API
+  version: 1.106.0
+  termsOfService: https://engine.tech/about/legal#terms
+  contact:
+    name: API Support
+    url: https://engine.tech/docs
+    email: help@engine.tech
+  description: "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n"
+servers:
+- url: https://api.engine.tech
+tags:
+- name: UI Utils
+  description: 'A collection of endpoints that can be used to improve a search experience.
+
+    '
+paths:
+  /leads/universities:
+    get:
+      x-implemented-by:
+        service: lead
+        path: /leads/universities
+      summary: Get university names
+      description: 'Get a list of university names that correspond to the specified fragment.
+
+
+        This is useful for implementing an autocomplete input for the `educationInformation.universityAttended` lead field when searching for student loan refinancing loans. See the [Student Loan Refinancing overview](https://engine.tech/docs/api-reference/#student-loan-refinancing).'
+      operationId: getUniversities
+      security:
+      - publishableBearerToken: []
+      tags:
+      - UI Utils
+      parameters:
+      - name: name
+        in: query
+        description: Fragment of a university name to seach for.
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Number of results to skip before the first returned result.
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+          default: 0
+      - name: limit
+        in: query
+        description: Maximum number of results to return.
+        required: true
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                universityNamesMatchingJohns:
+                  $ref: '#/components/examples/UniversityNamesMatchingJohns'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+  /leads/vehicles/years:
+    get:
+      x-lint-skip:
+      - index-endpoint-has-limit
+      summary: Get vehicle years
+      description: 'Get all available vehicle years
+
+
+        This is useful for implementing a select input for vehicle years when searching for auto loan refinancing loans. A valid combination of year, make, model, and trim corresponds to a vehicle UUID that can be used in the `vehicleInformation.vehicleUuid` field. See the [Auto Loan Refinancing overview](https://engine.tech/docs/api-reference/#auto-loan-refinancing).'
+      operationId: getVehicleYears
+      security:
+      - publishableBearerToken: []
+      tags:
+      - UI Utils
+      parameters:
+      - name: minYear
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: maxYear
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Valid vehicle years
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  format: int32
+  /leads/vehicles/makes:
+    get:
+      x-lint-skip:
+      - index-endpoint-has-limit
+      summary: Get vehicle makes
+      description: 'Get all makes for the given vehicle year
+
+
+        This is useful for implementing a select input for vehicle makes when searching for auto loan refinancing loans. A valid combination of year, make, model, and trim corresponds to a vehicle UUID that can be used in the `vehicleInformation.vehicleUuid` field. See the [Auto Loan Refinancing overview](https://engine.tech/docs/api-reference/#auto-loan-refinancing).'
+      operationId: getVehicleMakes
+      security:
+      - publishableBearerToken: []
+      tags:
+      - UI Utils
+      parameters:
+      - name: year
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Makes for given vehicle year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /leads/vehicles/models:
+    get:
+      x-lint-skip:
+      - index-endpoint-has-limit
+      summary: Get vehicle models
+      description: 'Get all models for the given vehicle year and make
+
+
+        This is useful for implementing a select input for vehicle models when searching for auto loan refinancing loans. A valid combination of year, make, model, and trim corresponds to a vehicle UUID that can be used in the `vehicleInformation.vehicleUuid` field. See the [Auto Loan Refinancing overview](https://engine.tech/docs/api-reference/#auto-loan-refinancing).'
+      operationId: getVehicleModels
+      security:
+      - publishableBearerToken: []
+      tags:
+      - UI Utils
+      parameters:
+      - name: year
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: make
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Models for given vehicle year and make
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /leads/vehicles/trims:
+    get:
+      x-lint-skip:
+      - index-endpoint-has-limit
+      summary: Get vehicle trims
+      description: 'Get vehicle details, including trims and uuids, for the given year, make, and model
+
+
+        This is useful for implementing a select input for vehicle trims when searching for auto loan refinancing loans. A valid combination of year, make, model, and trim corresponds to a vehicle UUID that can be used in the `vehicleInformation.vehicleUuid` field. The uuid field returned in successful response objects corresponds to a valid `vehicleUuid`. See the [Auto Loan Refinancing overview](https://engine.tech/docs/api-reference/#auto-loan-refinancing).'
+      operationId: getVehicleTrims
+      security:
+      - publishableBearerToken: []
+      tags:
+      - UI Utils
+      parameters:
+      - name: year
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: make
+        in: query
+        schema:
+          type: string
+      - name: model
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Vehicle details, including trim and uuid, for the given year, make, model
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleDetails'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+  /uiUtil/featuredFinancialInstitutions:
+    x-implemented-by:
+      service: partner-data
+      path: /userExperience/featuredFinancialInstitutions
+    get:
+      summary: Get featured financial institutions
+      description: 'Get a list of featured financial institution names and logos that can be displayed prior to collecting personal information in a search application to improve the user experience.
+
+        '
+      operationId: getFeaturedFinancialInstitutions
+      security:
+      - publishableBearerToken: []
+      tags:
+      - UI Utils
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeaturedFinancialInstitution'
+              examples:
+                featuredFinancialInstitutions:
+                  $ref: '#/components/examples/FeaturedFinancialInstitutions'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiError'
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        attribute:
+          type: string
+          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
+
+            '
+        type:
+          type: string
+          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
+
+            '
+        details:
+          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ApiErrorDetails'
+        message:
+          type: string
+          description: 'A human-readable, English description of the error.
+
+            '
+    FeaturedFinancialInstitution:
+      type: object
+      required:
+      - uuid
+      - name
+      - logoUrl
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+          description: 'A unique identifier for the financial institution.
+
+            '
+        name:
+          type: string
+          readOnly: true
+          description: 'The name of the financial institution. This value is subject to
+
+            change, so `financialInstitutionUuid` should be used for grouping.
+
+            '
+        logoUrl:
+          type: string
+          format: url
+          readOnly: true
+          description: 'The URL of an image logo for the associated financial institution.
+
+            '
+    VehicleDetails:
+      type: object
+      required:
+      - year
+      - make
+      - model
+      - trim
+      - uuid
+      - ucgVehicleId
+      properties:
+        year:
+          type: integer
+          format: int32
+          description: Year of the vehicle.
+        make:
+          type: string
+          description: Make of the vehicle.
+        model:
+          type: string
+          description: Model of the vehicle.
+        trim:
+          type: string
+          description: Trim of the vehicle.
+        uuid:
+          type: string
+          format: uuid
+          description: A unique identifier for this vehicle.
+        ucgVehicleId:
+          type: integer
+          format: int64
+          description: NADA Used Card Guide vehicle id.
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
+  examples:
+    FeaturedFinancialInstitutions:
+      summary: Featured financial institutions
+      value:
+      - uuid: 32bd2f7c-79fd-5c54-bcb5-3a46454a465c
+        name: Alpha, Inc.
+        logoUrl: https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png
+      - uuid: 91d08be0-2a8c-4d28-b399-7e1b38e2522e
+        name: Beta, Inc.
+        logoUrl: https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png
+    UniversityNamesMatchingJohns:
+      summary: University names matching "johns"
+      value:
+      - Johns Hopkins University
+      - Johns Hopkins University - Carey Business School
+      - Johns Hopkins University - Paul Nifle School of Advanced International Studies
+      - Johns Hopkins University - Peabody Conservatory of Music
+      - Johns Hopkins University - School of Arts & Science
+      - Johns Hopkins University - School of Medicine
+      - Johns Hopkins University - School of Nursing
+      - Johns Hopkins University - School of Public Health
+      - Johns Hopkins University - SPSBE
+      - Saint Johns University
+      - Cornell University Johnson, MBA
+      - Johnson College
+      - Johnson County Community College
+      - Johnson University
+      - Johnson & Wales University
+      - Northern Vermont University - Johnson (FKA Johnson State College + Lyndon State College)
+      - Northern Vermont University - Lyndon (FKA Lyndon State College + Johnson State College)
+      - University of Pittsburgh - Johnstown
+  responses:
+    UnauthorizedRequest:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            missingAccessToken:
+              summary: Access token was not specified
+              value:
+              - message: Access token is missing
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+  securitySchemes:
+    publishableBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is assumed to be published in application code and downloaded to a user''s device. As a result, it only has restricted access to the API.
+
+        '
+    confidentialBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is assumed to be managed like a password or any other confidential secret. As a result, it has access to sensitive API endpoints.
+
+        '
+    experimentalBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is used to access experimental endpoints that are not yet available for all partners. It may be treated the same as a `publishableBearerToken`.
+
+        '
+externalDocs:
+  description: Engine by MoneyLion API Reference
+  url: https://engine.tech/docs/api-reference/

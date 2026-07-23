@@ -1,0 +1,1022 @@
+openapi: 3.0.3
+info:
+  title: Engine by MoneyLion Analytics API
+  version: 1.106.0
+  termsOfService: https://engine.tech/about/legal#terms
+  contact:
+    name: API Support
+    url: https://engine.tech/docs
+    email: help@engine.tech
+  description: "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n"
+servers:
+- url: https://api.engine.tech
+tags:
+- name: Analytics
+  description: "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n"
+paths:
+  /supplyAnalytics/leadEvents:
+    get:
+      x-lint-skip:
+      - index-endpoint-has-limit
+      x-implemented-by:
+        service: supply-analytics
+        path: /leadEvents
+      summary: Get lead events
+      description: "### What is the Lead Events API used for?\n\nWith the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\nThe endpoint returns events associated with each lead. The event type is indicated by the eventType property. Each event will also include metadata applicable to the eventType. It allows easy consumption of the events into your database so that you can integrate it into your BI framework and compare it alongside data from other systems to assess performance holistically.\n\n### How does it work?\n\nThe endpoint is cursor based. You can consume batches of events for the product tied to your sub account. All that is required is a bearer token and previous `paginationToken` or `sinceTimestamp`. The endpoint will respond with all of the events that have happened from that point forward subject to optional `untilTimestamp` parameter and page size limit. It will also include a pointer to the next page (`paginationToken`) to be used for a subsequent call. This endpoint should be polled hourly to fetch new events.\n\nFor convenience, we provide a `shouldContinuePolling` flag to signal if data has been published at the location of the `nextUrl`. Since the endpoint will return as much data as it can, unless there is more data that can fit in a single response, this flag will usually be false as all available data has been returned.\n\nThe endpoint is designed for paging forward through data in order to populate your local database. By relying on the `nextUrl` parameter provided in the preceding call's response, we can guarantee a) you will see no gaps, and b) you will see no duplicates.\n\nIf constructing the url manually, subsequent requests should use `paginationToken` from the last response and omit `sinceTimestamp`.\n\nThis endpoint should be polled no more frequently than every 5 minutes, we recommend hourly. Data for this endpoint is made available with a 5 minute SLA.\n\nIf the current time is '2020-01-01T00:15:00Z' UTC, making a request to this endpoint with the timestamp set to '2020-01-01T00:14:00Z' will error because of the 5 minute SLA. Making a request with a timestamp of '2020-01-01T00:09:00Z' however, will succeed.\n\n### Event Definitions\n\nCommon Attributes\n\n<table>\n  <thead>\n    <tr>\n      <th>Attribute Name</th>\n      <th>Type</th>\n      <th>Format</th>\n      <th>Enum</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>eventType</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>leadCreated appSubmitted apiApproved apiRejected offerClicked affiliateOfferClicked applied approved listed opened funded conversation lenderQualifiedLead</td>\n    </tr>\n    <tr>\n      <td>leadUuid</td>\n      <td>string</td>\n      <td>uuid</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>leadCreatedAt</td>\n      <td>string</td>\n      <td>date-time</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>eventCreatedAt</td>\n      <td>string</td>\n      <td>date-time</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>eventDeletedAt</td>\n      <td>string</td>\n      <td>date-time</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>amountInCents</td>\n      <td>double</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>supplySubAccountName</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>supplySubAccountUuid</td>\n      <td>string</td>\n      <td>uuid</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>financialInstitutionName</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>financialInstitutionUuid</td>\n      <td>string</td>\n      <td>uuid</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>unifiedProductType</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>productType</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>creditCard insurance lifeInsurance loan mortgage savings other</td>\n    </tr>\n    <tr>\n      <td>productSubType</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>isTest</td>\n      <td>boolean</td>\n      <td>&#xa0;</td>\n      <td>Whether a Lead was created using a test access token</td>\n    </tr>\n    <tr>\n      <td>paginationTimestamp</td>\n      <td>string</td>\n      <td>date-time</td>\n      <td>Time when the event entered our system.</td>\n    </tr>\n  </tbody>\n</table>\n\nCommon Event Types\n\n<table>\n  <thead>\n    <tr>\n      <th> Event Type </th>\n      <th> Required Attributes </th>\n      <th> Optional Attributes </th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td> leadCreated </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt </td>\n      <td> </td>\n    </tr>\n    <tr>\n      <td> appSubmitted </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt </td>\n      <td> </td>\n    </tr>\n    <tr>\n      <td> apiApproved </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> apiRejected </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> offerClicked </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> affiliateOfferClicked </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> applied </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> approved </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> listed </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> opened </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n  </tbody>\n</table>\n\nEvent Types for Personal Loans Funnel\n\n<table>\n  <thead>\n    <tr>\n      <th> Event Type </th>\n      <th> Definition </th>\n      <th> Required Attributes </th>\n      <th> Optional Attributes </th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td> leadCreated </td>\n      <td> A user enters the marketplace funnel </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> appSubmitted </td>\n      <td> The lead has filled out the information in the Engine by MoneyLion application and a rate table has been created </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> apiApproved </td>\n      <td> Financial institution has pre-approved or pre-qualified a user for at least one offer </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> apiRejected </td>\n      <td> Financial institution has not pre-approved or pre-qualified a user for any offers </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> offerClicked </td>\n      <td> The user clicks on or is auto redirected into an offer </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> affiliateOfferClicked </td>\n      <td> The user clicks on or is auto redirected into an affiliate offer </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> applied </td>\n      <td> The user applied for an offer in the financial institution's experience </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType amountInCents </td>\n    </tr>\n    <tr>\n      <td> approved </td>\n      <td> The user was approved for an offer after applying in the financial institution's experience </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType amountInCents </td>\n    </tr>\n    <tr>\n      <td> listed </td>\n      <td> The user's loan was listed on the financial institution's marketplace for funding </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType amountInCents </td>\n    </tr>\n    <tr>\n      <td> funded </td>\n      <td> The user has a loan funded </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType amountInCents </td>\n    </tr>\n    <tr>\n      <td> opened </td>\n      <td> The user monetizes with a special offer </td>\n      <td> See under common events </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> conversion </td>\n      <td> This event varies by lender, and will be deprecated. </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> lenderQualifiedLead </td>\n      <td> Financial institution further collected information from a lead </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid amountInCents </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n  </tbody>\n</table>\n"
+      operationId: getLeadEvents
+      security:
+      - confidentialBearerToken: []
+      tags:
+      - Analytics
+      parameters:
+      - name: sinceTimestamp
+        in: query
+        required: false
+        description: 'The lower bound for when an event hit Engine''s system. Use this on your initial request.
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - name: untilTimestamp
+        in: query
+        required: false
+        description: 'The upper bound of events to include (exclusive - timestamps less than this parameter)
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - name: paginationToken
+        in: query
+        required: false
+        description: 'Opaque cursor for subsequent requests. Obtained from previous response.
+
+          '
+        schema:
+          type: string
+      - name: eventType
+        in: query
+        required: false
+        description: 'List of event types to filter by if specified. Pass multiple values either as repeated parameters or a single parameter with comma separated values.
+
+          '
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: false
+      - name: API-Version
+        in: header
+        required: true
+        description: 'Supply Analytics API version header. Must be set to 2025-04-01 for v3.
+
+          '
+        schema:
+          type: string
+          example: '2025-04-01'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadEventResponse'
+              examples:
+                leadEventResponse:
+                  summary: Lead event
+                  value:
+                    nextUrl: https://api.engine.tech/supplyAnalytics/leadEvents?paginationToken=gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g
+                    shouldContinuePolling: false
+                    paginationToken: gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g
+                    data:
+                    - id: 5550066157addee59022a5e69b12f26feba5c6ff461210309a4fc846a38c404d
+                      leadUuid: 4bbb25a6-6fcf-4ed3-88f9-6daacb0f8b33
+                      leadCreatedAt: '2021-01-01T11:24:45Z'
+                      eventType: offerClicked
+                      eventCreatedAt: '2019-09-22T17:44:22Z'
+                      financialInstitutionUuid: da14e06b-0866-4f02-a3b2-9443501b25b9
+                      financialInstitutionName: OpenSky®
+                      isTest: false
+                      paginationTimestamp: '2019-09-22T17:51:00Z'
+                    - id: faa7b339d89453e284e68e76d0c7b0600f04c276a895a3cbc720803164c45434
+                      leadUuid: 39afdb4a-ef26-42ed-a313-e28288f95099
+                      leadCreatedAt: '2021-01-01T20:42:06Z'
+                      eventType: apiApproved
+                      eventCreatedAt: '2019-10-10T20:44:28Z'
+                      financialInstitutionUuid: da14e06b-0866-4f02-a3b2-9443501b25b9
+                      financialInstitutionName: LendingClub
+                      isTest: false
+                      paginationTimestamp: '2019-10-10T20:51:00Z'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiError'
+              examples:
+                missingTimestamp:
+                  $ref: '#/components/examples/MissingTimestamp'
+                timestampTooLate:
+                  $ref: '#/components/examples/TimestampTooLate'
+  /supplyAnalytics/leadPayouts:
+    get:
+      x-lint-skip:
+      - index-endpoint-has-limit
+      x-implemented-by:
+        service: supply-analytics
+        path: /leadPayouts
+      summary: Get lead payouts
+      description: "### What is the Lead Payouts API used for?\n\nWith Lead payout API you can collect granular payout information for leads you have submitted. It returns payout events associated with a lead. Event data is limited to the amount that was paid out, and when the payout was booked.\n\nWe recently added two additional optional fields to the payout event information tied to leads:\n\n\n  - `financialInstitutionUuid`\n  - `financialInstitutionName`\n\n\nThese fields will tie conversion events to specific Financial Institutions (Lenders) for your knowledge and analytical use. We include these additional fields to disambiguate which financial institution a given payout originates from in the case of multiple payouts against a given lead. Not all lead payout events can be traced back to a financial institution, so these fields are optional. The Financial Institution Name is not guaranteed to be a stable identifier of the entity; Financial Institution UUID is.\n\nLeadPayout `deletedAt` will report the time that the payout was deleted. Payouts get deleted when there are post dated Contract changes or partner reporting errors requiring reingestion of EDEs.\n\n### How does it work?\n\nThe endpoint is cursor based. You can consume batches of events for the product tied to your company uuid. All that is required is a bearer token and previous `paginationToken` or `sinceTimestamp`. The endpoint will respond with all of the events that have happened from that point forward subject to optional `untilTimestamp` parameter and page size limit (currently 40000 records but this could change). It will also include a pointer to the next page (`paginationToken`) to be used for a subsequent call. This endpoint should be polled hourly to fetch new events.\n\nFor convenience, we provide a `shouldContinuePolling` flag to signal if data has been published at the location of the `nextUrl`. Since the endpoint will return as much data as it can, unless there is more data that can fit in a single response, this flag will usually be false as all available data has been returned.\n\nThe endpoint is designed for paging forward through data in order to populate your local database. By relying on the `nextUrl` parameter provided in the preceding call's response, we can guarantee a) you will see no gaps, and b) you will see no duplicates.\n\nIf constructing the url manually, subsequent requests should use `paginationToken` from the last response and omit `sinceTimestamp`.\n\nThis endpoint should be polled no more frequently than every 5 minutes, we recommend hourly. Data for this endpoint is made available with a 5 minute SLA. If the current time is '2020-01-01T00:15:00Z' UTC, making a request to this endpoint with the timestamp set to '2020-01-01T00:14:00Z' will error because of the 5 minute SLA. Making a request with a timestamp of '2020-01-01T00:09:00Z' however will succeed.\n"
+      operationId: getLeadPayouts
+      security:
+      - confidentialBearerToken: []
+      tags:
+      - Analytics
+      parameters:
+      - name: sinceTimestamp
+        in: query
+        required: false
+        description: 'The lower bound for when an event hit Engine''s system. Use this on your initial request.
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - name: untilTimestamp
+        in: query
+        required: false
+        description: 'The upper bound of events to include (exclusive - timestamps less than this parameter)
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - name: paginationToken
+        in: query
+        required: false
+        description: 'Opaque cursor for subsequent requests. Obtained from previous response.
+
+          '
+        schema:
+          type: string
+      - name: API-Version
+        in: header
+        required: true
+        description: 'Supply Analytics API version header. Must be set to 2025-04-01 for v3.
+
+          '
+        schema:
+          type: string
+          example: '2025-04-01'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadPayoutResponse'
+              examples:
+                leadPayoutResponse:
+                  $ref: '#/components/examples/LeadPayoutResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiError'
+              examples:
+                missingTimestamp:
+                  $ref: '#/components/examples/MissingTimestamp'
+                timestampTooLate:
+                  $ref: '#/components/examples/TimestampTooLate'
+  /supplyAnalytics/leadClientTags:
+    get:
+      x-lint-skip:
+      - index-endpoint-has-limit
+      x-implemented-by:
+        service: supply-analytics
+        path: /leadClientTags
+      summary: Get lead client tags
+      description: "### What is the Lead Client Tags API used for?\n\nClient tags (also known as Custom Lead Attributes) are arbitrary key:value pairs of information that can be set using the API or URL of a partner page to enable custom segmentation. Client tags provides you a method to be able to segment leads to support uses cases like:\n\n\n - See how various traffic sources on the supply partners site perform\n - See what preferences their users from different segments have\n\n\nThe lead client tag endpoint returns client tags associated with a lead.\n\nClient tags are intended for segmentation and attribution (e.g., campaign ID, article source, user cohort). They should not contain personally identifiable information (PII) such as names, email addresses, phone numbers, or social security numbers.\n\nFor more information on how to send client tags to Engine please refer to: https://engine.tech/developer-center/references/appendix/appendix-e-appending-client-tags-to-leads-posted-to-engine\n\n### How does it work?\n\nThe endpoint is cursor based. You can consume batches of events for the product tied to your company uuid. All that is required is a bearer token and previous `paginationToken` or `sinceTimestamp`. The endpoint will respond with all of the events that have happened from that point forward subject to optional `untilTimestamp` parameter and page size limit (currently 40000 records but this could change). It will also include a pointer to the next page (`paginationToken`) to be used for a subsequent call. This endpoint should be polled hourly to fetch new events.\n\nFor convenience, we provide a `shouldContinuePolling` flag to signal if data has been published at the location of the `nextUrl`. Since the endpoint will return as much data as it can, unless there is more data that can fit in a single response, this flag will usually be false as all available data has been returned.\n\nThe endpoint is designed for paging forward through data in order to populate your local database. By relying on the “nextUrl” parameter provided in the preceding call’s response, we can guarantee a) you will see no gaps, and b) you will see no duplicates.\n\nIf constructing the url manually, subsequent requests should use `paginationToken` from the last response and omit `sinceTimestamp`.\n\nThis endpoint should be polled no more frequently than every 5 minutes, we recommend hourly. Data for this endpoint is made available with a 5 minute SLA. If the current time is '2020-01-01T00:15:00Z' UTC, making a request to this endpoint with the timestamp set to '2020-01-01T00:14:00Z' will error because of the 5 minute SLA. Making a request with a timestamp of '2020-01-01T00:09:00Z' however will succeed.\n"
+      operationId: getLeadClientTags
+      security:
+      - confidentialBearerToken: []
+      tags:
+      - Analytics
+      parameters:
+      - name: sinceTimestamp
+        in: query
+        required: false
+        description: 'The lower bound for when an event hit Engine''s system. Use this on your initial request.
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - name: untilTimestamp
+        in: query
+        required: false
+        description: 'The upper bound of events to include (exclusive - timestamps less than this parameter)
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - name: paginationToken
+        in: query
+        required: false
+        description: 'Opaque cursor for subsequent requests. Obtained from previous response.
+
+          '
+        schema:
+          type: string
+      - name: API-Version
+        in: header
+        required: true
+        description: 'Supply Analytics API version header. Must be set to 2025-04-01 for v3.
+
+          '
+        schema:
+          type: string
+          example: '2025-04-01'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadClientTagsResponse'
+              examples:
+                leadClientTagResponse:
+                  value:
+                    $ref: '#/components/examples/LeadClientTagResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiError'
+              examples:
+                missingTimestamp:
+                  $ref: '#/components/examples/MissingTimestamp'
+                timestampTooLate:
+                  $ref: '#/components/examples/TimestampTooLate'
+  /supplyAnalytics/leadsInfo/{leadUuid}:
+    x-lint-skip:
+    - path-resource-is-plural
+    get:
+      x-lint-skip:
+      - index-endpoint-has-limit
+      x-implemented-by:
+        service: supply-analytics
+        path: /leadsInfo/{leadUuid}
+      summary: Get all combined information for a lead
+      description: 'Provides a snapshot of all information about a lead - events, payouts and client tags.
+
+
+        In rare cases with extremely large data volume, results may be truncated to fit the response size limit and HTTP 206 will be returned along with `warnings`.
+
+        '
+      operationId: getLeadsInfo
+      security:
+      - confidentialBearerToken: []
+      tags:
+      - Analytics
+      parameters:
+      - name: leadUuid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The UUID of the lead you wish to obtain the information for.
+      - name: API-Version
+        in: header
+        required: true
+        description: Supply Analytics API version header. Must be set to 2025-04-01 for v3.
+        schema:
+          type: string
+          example: '2025-04-01'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadInfoResponse'
+        '206':
+          description: Partial Content - results were truncated to fit response size limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadInfoResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/InvalidRequest'
+components:
+  schemas:
+    OfferClickedEventData:
+      type: object
+      title: offerClicked
+      properties:
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the clicked offer.
+
+            '
+    ApprovedEventData:
+      type: object
+      title: approved
+      properties:
+        amount:
+          type: integer
+          format: int32
+          description: 'The dollar amount of the approved offer.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the approved offer.
+
+            '
+    LeadClientTag:
+      type: object
+      required:
+      - hash
+      - leadUuid
+      - key
+      - value
+      - createdAt
+      - paginationTimestamp
+      properties:
+        hash:
+          type: string
+          description: 'A unique hash for the client tag to assist with deduplication.
+
+            '
+        leadUuid:
+          type: string
+          format: uuid
+          description: 'The UUID of the lead that this client tag belongs to.
+
+            '
+        key:
+          type: string
+          description: 'The key of this client tag.
+
+            '
+        value:
+          type: string
+          description: 'The latest value for the client tag key.
+
+            '
+        createdAt:
+          type: string
+          format: date-time
+          description: 'The time that this client tag was added to the lead.
+
+            '
+        paginationTimestamp:
+          type: string
+          format: date-time
+          description: 'Time when event was captured by our system. Used for pagination.
+
+            '
+    ProductSubType:
+      type: string
+      description: A type of financial product
+      enum:
+      - credit_card
+      - secured_card
+      - student_card
+      - personal_loan
+      - secured_loan
+      - student_loan_refinance
+      - co_applicant_loan
+      - line_of_credit
+      - automobile_refinance
+      - home_equity_line_of_credit
+      - purchase
+      - refinance
+      - savings_account
+      - money_market_account
+      - certificate_of_deposit
+      - individual_retirement_account
+      - cash_management_account
+      - high_interest_checking
+      - checking
+      - accidental_death_benefits
+      - term_life
+      - term_life_instant
+      - whole_life
+      - bill_reduction
+      - debt_relief
+      - installment_loans
+      - credit_builder
+      - cash_advance
+      - credit_repair
+      - education_offers
+      - employment_opportunity
+      - financial_wellness
+      - direct_affiliate
+      - overdraft_protection
+      - revenue_based_financing
+      - installment_loan_more_offers
+      - credit_card_more_offers
+      - credit_repair_more_offers
+      - student_loan
+      - health
+      - auto_and_vehicle
+      - games
+      - home
+      - rewards
+      - life_insurance
+      - auto_insurance
+      - specialty_vehicle_insurance
+      - home_owners_insurance
+      - renters_insurance
+      - uncategorized
+      - buy_now_pay_later
+      - home_equity_agreements
+      - cash_advance_moneylion
+      - unknown
+    ConversionEventData:
+      type: object
+      title: conversion
+      properties:
+        payoutInCents:
+          type: integer
+          format: int32
+          description: 'The number of cents paid out for the conversion event.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the converted offer.
+
+            '
+    LeadPayout:
+      type: object
+      required:
+      - leadUuid
+      - bookedAt
+      - paginationTimestamp
+      - supplySubAccountUuid
+      - supplySubAccountName
+      properties:
+        leadUuid:
+          type: string
+          format: uuid
+          description: 'The unique identifier for the associated lead.
+
+            '
+        bookedAt:
+          type: string
+          format: date-time
+          description: 'The time that this payout to a supply partner was booked.
+
+            '
+        payoutInCents:
+          type: number
+          format: double
+          description: 'The payout amount in cents made available to the supply partner. May be fractional.
+
+            '
+        uuid:
+          type: string
+          format: uuid
+          description: 'The unique identifier for the associated payout event.
+
+            '
+        deletedAt:
+          type: string
+          format: date-time
+          description: 'If a payout to a supply partner was revoked, this value will report the time that the payout was revoked.
+
+            '
+        supplySubAccountUuid:
+          type: string
+          format: uuid
+          description: 'The unique identifier for the associated supply sub-account.
+
+            '
+        supplySubAccountName:
+          type: string
+          description: 'The name of the associated supply sub-account. This value is subject to change, so `supplySubAccountUuid` should be used as a stable identifier.
+
+            '
+        financialInstitutionName:
+          type: string
+          description: 'The name of the associated financial institution. This value is subject to change, so `financialInstitutionUuid` should be used as a stable identifier.
+
+            '
+        financialInstitutionUuid:
+          type: string
+          format: uuid
+          description: 'A unique identifier for the associated financial institution. Only present for event types associated with financial institutions.
+
+            '
+        unifiedProductType:
+          allOf:
+          - $ref: '#/components/schemas/OfferCatalogProductType'
+          - description: 'The product type of financial offer. Replaces `productType` and `productSubType`.
+
+              '
+        productType:
+          allOf:
+          - $ref: '#/components/schemas/ProductType'
+          - description: 'A legacy product type of financial offer.
+
+              '
+        paginationTimestamp:
+          $ref: '#/components/schemas/LeadClientTag/properties/paginationTimestamp'
+    LeadPayoutResponse:
+      type: object
+      required:
+      - nextUrl
+      - paginationToken
+      - shouldContinuePolling
+      - data
+      properties:
+        nextUrl:
+          type: string
+          description: 'The URL for the next request.
+
+            '
+        paginationToken:
+          $ref: '#/components/schemas/LeadClientTagsResponse/properties/paginationToken'
+        shouldContinuePolling:
+          type: boolean
+          description: "If true, data is currently available at `nextUrl`. \n  Calling the `nextUrl` at the current time will return the next batch of data.  \nIf false, calling `nextUrl` at the current time will return an error response from the API.  \n  Data will be made available at a later time (at the next hour mark).\n"
+        data:
+          type: array
+          description: 'Lead payout data for the requested time window.
+
+            '
+          items:
+            $ref: '#/components/schemas/LeadPayout'
+    ProductType:
+      type: string
+      enum:
+      - credit_card
+      - generic
+      - auto_insurance
+      - insurance
+      - life_insurance
+      - loan
+      - mortgage
+      - savings
+      - other
+      - unknown
+    OpenedEventData:
+      type: object
+      title: opened
+      properties:
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the offer for which the account was opened.
+
+            '
+    LeadClientTagsResponse:
+      type: object
+      required:
+      - nextUrl
+      - paginationToken
+      - shouldContinuePolling
+      - data
+      properties:
+        nextUrl:
+          type: string
+          description: 'A URL which identifies where the next batch of LeadClientTags can be queried for.
+
+            '
+        paginationToken:
+          type: string
+          description: 'An opaque string that identifies the end of the current page of data and is used as a cursor for consecutive requests.
+
+            '
+        shouldContinuePolling:
+          type: boolean
+          description: "If true, data is currently available at `nextUrl`. \n  Calling the `nextUrl` at the current time will return the next batch of data.  \nIf false, calling `nextUrl` at the current time will return an error response from the API.  \n  Data will be made available at a later time (at the next hour mark).\n"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeadClientTag'
+          description: 'Lead client tag data for the requested time window.
+
+            '
+    ApiRejectedEventData:
+      type: object
+      title: apiRejected
+      properties:
+        rejectReason:
+          $ref: '#/components/schemas/RejectReason'
+          description: 'A normalized reason why the lead was rejected, according to the financial institution.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the rejected offer.
+
+            '
+    ApiApprovedEventData:
+      type: object
+      title: apiApproved
+      properties:
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the approved offer.
+
+            '
+    OfferCatalogProductType:
+      type: string
+      description: Offer Catalog Product types to identify what vertical the sub account is set for (demand only)
+    RejectReason:
+      type: string
+      enum:
+      - low_fico
+      - no_fico
+      - major_derogatory
+      - underwriting_decline
+      - debt_to_income_ratio
+      - not_in_active_state
+      - incorrect_data_provided
+      - duplicate
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
+    LeadInfoResponse:
+      type: object
+      required:
+      - data
+      - warnings
+      properties:
+        data:
+          type: object
+          required:
+          - events
+          - payouts
+          - clientTags
+          properties:
+            events:
+              type: array
+              items:
+                $ref: '#/components/schemas/LeadEvent'
+            payouts:
+              type: array
+              items:
+                $ref: '#/components/schemas/LeadPayout'
+            clientTags:
+              type: array
+              items:
+                $ref: '#/components/schemas/LeadClientTag'
+        warnings:
+          type: array
+          description: 'List of warnings about potential issues, if any.
+
+            '
+          items:
+            type: string
+    ListedEventData:
+      type: object
+      title: listed
+      properties:
+        amount:
+          type: integer
+          format: int32
+          description: 'The dollar amount of the offer that was listed.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the offer that was listed.
+
+            '
+    EventType:
+      type: string
+      enum:
+      - leadCreated
+      - appSubmitted
+      - apiApproved
+      - apiRejected
+      - offerClicked
+      - affiliateOfferClicked
+      - lenderQualifiedLead
+      - applied
+      - approved
+      - listed
+      - opened
+      - funded
+      - conversion
+      - firstPayment
+      - isContacted
+      - salesQualified
+      - firstContact
+      - rateLocked
+    EventData:
+      oneOf:
+      - $ref: '#/components/schemas/ApiApprovedEventData'
+      - $ref: '#/components/schemas/ApiRejectedEventData'
+      - $ref: '#/components/schemas/AppliedEventData'
+      - $ref: '#/components/schemas/ApprovedEventData'
+      - $ref: '#/components/schemas/ConversionEventData'
+      - $ref: '#/components/schemas/FundedEventData'
+      - $ref: '#/components/schemas/ListedEventData'
+      - $ref: '#/components/schemas/OfferClickedEventData'
+      - $ref: '#/components/schemas/OpenedEventData'
+    LeadEvent:
+      type: object
+      required:
+      - id
+      - isTest
+      - leadUuid
+      - leadCreatedAt
+      - eventType
+      - eventCreatedAt
+      - paginationTimestamp
+      - supplySubAccountUuid
+      - supplySubAccountName
+      properties:
+        id:
+          type: string
+          description: 'A hash of the `leadUuid`, `eventType` and `eventCreatedAt` which uniquely identifies a leadEvent.
+
+            '
+        leadUuid:
+          type: string
+          format: uuid
+          description: 'The unique identifier for the associated lead.
+
+            '
+        leadCreatedAt:
+          type: string
+          format: date-time
+          description: 'The time that the associated lead was created.
+
+            '
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        eventCreatedAt:
+          type: string
+          format: date-time
+          description: 'The time that the event occurred.
+
+            '
+        eventDeletedAt:
+          type: string
+          format: date-time
+          description: 'The time that the event was deleted.
+
+            '
+        eventData:
+          $ref: '#/components/schemas/EventData'
+          description: 'Supplemental data about the event that is specific to the `eventType`. For events that occur in a financial institution''s experience, the availability of the data may vary depending on the FI.
+
+            '
+        amountInCents:
+          type: number
+          format: double
+          description: 'The amount of liquidity provided to the end user by the FI. Only present for some events.
+
+            '
+        supplySubAccountUuid:
+          type: string
+          format: uuid
+          description: 'The unique identifier for the associated supply sub-account.
+
+            '
+        supplySubAccountName:
+          type: string
+          description: 'The name of the associated supply sub-account. This value is subject to change, so `supplySubAccountUuid` should be used as a stable identifier.
+
+            '
+        financialInstitutionUuid:
+          type: string
+          format: uuid
+          description: 'A unique identifier for the associated financial institution. Only present for event types associated with financial institutions.
+
+            '
+        financialInstitutionName:
+          type: string
+          description: 'The name of the associated financial institution. This value is subject to change, so `financialInstitutionUuid` should be used as a stable identifier. Only present for event types associated with financial institutions.
+
+            '
+        unifiedProductType:
+          allOf:
+          - $ref: '#/components/schemas/OfferCatalogProductType'
+          - description: 'The product type of financial offer. Replaces `productType` and `productSubType`.
+
+              '
+        productType:
+          allOf:
+          - $ref: '#/components/schemas/ProductType'
+          - description: 'A legacy product type of financial offer.
+
+              '
+        productSubType:
+          allOf:
+          - $ref: '#/components/schemas/ProductSubType'
+          - description: 'A legacy product subtype describing a type of financial product.
+
+              '
+        offerUuid:
+          type: string
+          format: uuid
+        isTest:
+          type: boolean
+          description: Whether a `Lead` was created using a test access token
+        paginationTimestamp:
+          $ref: '#/components/schemas/LeadClientTag/properties/paginationTimestamp'
+    FundedEventData:
+      type: object
+      title: funded
+      properties:
+        amount:
+          type: integer
+          format: int32
+          description: 'The dollar amount of the offer that was funded.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the funded offer.
+
+            '
+    LeadEventResponse:
+      type: object
+      required:
+      - nextUrl
+      - paginationToken
+      - shouldContinuePolling
+      - data
+      properties:
+        nextUrl:
+          type: string
+          description: 'The URL for the next request.
+
+            '
+        paginationToken:
+          $ref: '#/components/schemas/LeadClientTagsResponse/properties/paginationToken'
+        shouldContinuePolling:
+          type: boolean
+          description: "If true, data is currently available at `nextUrl`. \n  Calling the `nextUrl` at the current time will return the next batch of data.  \nIf false, calling `nextUrl` at the current time will return an error response from the API.  \n  Data will be made available at a later time (at the next hour mark).\n"
+        data:
+          type: array
+          description: 'Lead event data for the requested time window.
+
+            '
+          items:
+            $ref: '#/components/schemas/LeadEvent'
+    ApiError:
+      type: object
+      properties:
+        attribute:
+          type: string
+          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
+
+            '
+        type:
+          type: string
+          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
+
+            '
+        details:
+          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ApiErrorDetails'
+        message:
+          type: string
+          description: 'A human-readable, English description of the error.
+
+            '
+    AppliedEventData:
+      type: object
+      title: applied
+      properties:
+        amount:
+          type: integer
+          format: int32
+          description: 'The dollar amount of the offer that was applied for.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the offer that was applied for.
+
+            '
+  examples:
+    LeadPayoutResponse:
+      summary: Lead payout
+      value:
+        nextUrl: https://api.engine.tech/supplyAnalytics/leadPayouts?paginationToken=gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g
+        shouldContinuePolling: false
+        paginationToken: gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g
+        data:
+        - leadUuid: dda9f837-2560-4b42-bc85-f6edd047a4d5
+          bookedAt: '2021-01-01T00:00:00Z'
+          payoutInCents: 20000
+          paginationTimestamp: '2021-01-01T00:07:00Z'
+        - leadUuid: a61d7cc3-3ad8-45b9-ba35-6572789203b3
+          bookedAt: '2021-01-02T00:00:00Z'
+          payoutInCents: 10000
+          paginationTimestamp: '2021-01-02T00:07:00Z'
+    TimestampTooLate:
+      summary: Timestamp not early enough
+      value:
+      - attribute: timestamp
+        type: malformed
+        details:
+          specified: '2021-02-01T17:00:00.000Z'
+          requirement: must be at or before 2021-01-13T16:00:00Z
+        message: timestamp must be at or before 2021-01-13T16:00:00Z, but is '2021-02-01T17:00:00Z'
+    MissingTimestamp:
+      summary: Timestamp missing or malformed
+      value:
+      - attribute: timestamp
+        type: missing
+        message: timestamp must be specified
+    LeadClientTagResponse:
+      summary: Lead client tags
+      value:
+        nextUrl: https://api.engine.tech/supplyAnalytics/leadClientTags?paginationToken=gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g
+        shouldContinuePolling: true
+        paginationToken: gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g
+        data:
+        - id: e63aff4b-eea7-4f98-926c-15a15fc76ed3
+          leadUuid: a67b2027-29b2-43aa-a06f-2b60deaf3f2b
+          key: subId
+          value: '425352'
+          createdAt: '2021-01-05T14:00:00Z'
+          paginationTimestamp: '2021-01-05T14:07:00Z'
+  responses:
+    UnauthorizedRequest:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            missingAccessToken:
+              summary: Access token was not specified
+              value:
+              - message: Access token is missing
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+  securitySchemes:
+    publishableBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is assumed to be published in application code and downloaded to a user''s device. As a result, it only has restricted access to the API.
+
+        '
+    confidentialBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is assumed to be managed like a password or any other confidential secret. As a result, it has access to sensitive API endpoints.
+
+        '
+    experimentalBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is used to access experimental endpoints that are not yet available for all partners. It may be treated the same as a `publishableBearerToken`.
+
+        '
+externalDocs:
+  description: Engine by MoneyLion API Reference
+  url: https://engine.tech/docs/api-reference/

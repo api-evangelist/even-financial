@@ -1,0 +1,544 @@
+openapi: 3.0.3
+info:
+  title: Engine by MoneyLion Analytics Approval Probability API
+  version: 1.106.0
+  termsOfService: https://engine.tech/about/legal#terms
+  contact:
+    name: API Support
+    url: https://engine.tech/docs
+    email: help@engine.tech
+  description: "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n"
+servers:
+- url: https://api.engine.tech
+tags:
+- name: Approval Probability
+  description: 'Approval probability reports contains data about the likelihood that a user with specified attributes will be approved for particular product offers.
+
+
+    The user attributes are passed in the request''s `POST` body. Attributes are specific to the product in questions and do not include personally identifiable information.
+
+
+    The approval probabilty data is calculated per financial institution, as well as across the entire Engine by MoneyLion network. Within each of these groups, offer probablilities may be further broken down according to product attributes. For loans, for example, approval probabilities are associated with offer APR range and optionally product sub-type.
+
+    '
+paths:
+  /approvalProbability/loanReports:
+    post:
+      x-implemented-by:
+        service: approval-probability
+        path: /approvalProbability/loanReports
+      summary: Get a loan approval probability report
+      description: Get a report on approval probabilities for loan offers for a specified cohort of users.
+      operationId: createLoansApprovalProbabilityReport
+      security:
+      - experimentalBearerToken: []
+      tags:
+      - Approval Probability
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanReportCreateData'
+            examples:
+              loanApprovalProbabilityCreateData:
+                $ref: '#/components/examples/LoanApprovalProbabilityCreateData'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanReport'
+              examples:
+                loanApprovalProbabilityReport:
+                  $ref: '#/components/examples/LoanApprovalProbabilityReport'
+        '400':
+          $ref: '#/components/responses/MalformedRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+        '422':
+          $ref: '#/components/responses/InvalidRequest'
+  /approvalProbability/loanReports/{uuid}:
+    parameters:
+    - name: uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    get:
+      x-implemented-by:
+        service: approval-probability
+        path: /approvalProbability/loanReports/{uuid}
+      summary: Get approval probability loan report
+      description: Get the approval probability report for a specified UUID. If the UUID is unkown, a `404 Not Found` response will be returned.
+      operationId: getLoansApprovalProbabilityReport
+      security:
+      - experimentalBearerToken: []
+      tags:
+      - Approval Probability
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanReport'
+              examples:
+                loanApprovalProbabilityReport:
+                  $ref: '#/components/examples/LoanApprovalProbabilityReport'
+        '400':
+          description: Malformed request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiError'
+              examples:
+                invalidUuidPathParameter:
+                  $ref: '#/components/examples/InvalidUuidPathParameter'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+        '404':
+          description: Unknown UUID
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiError'
+components:
+  schemas:
+    LoanPurpose:
+      type: string
+      enum:
+      - auto
+      - auto_purchase
+      - auto_refinance
+      - baby
+      - boat
+      - business
+      - car_repair
+      - cosmetic
+      - credit_card_refi
+      - debt_consolidation
+      - emergency
+      - engagement
+      - green
+      - home_improvement
+      - home_purchase
+      - home_refi
+      - household_expenses
+      - large_purchases
+      - life_event
+      - medical_dental
+      - motorcycle
+      - moving_relocation
+      - other
+      - rv
+      - special_occasion
+      - student_loan
+      - student_loan_refi
+      - taxes
+      - vacation
+      - wedding
+    LoanReport:
+      type: object
+      required:
+      - uuid
+      - annualIncome
+      - creditRating
+      - networkProbabilities
+      - financialInsitutions
+      - createdAt
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: A unique identifier for this report.
+        annualIncome:
+          type: integer
+          format: int32
+          description: The user's annual income in dollars.
+        creditRating:
+          description: The user's credit score range.
+          allOf:
+          - $ref: '#/components/schemas/ProvidedCreditRating'
+        totalDebt:
+          type: integer
+          format: int32
+          description: The user's total debt in dollars.
+        countOfDerogatories:
+          type: integer
+          format: int32
+          description: The number of derogatory accounts listed on the user's credit report.
+        state:
+          description: The user's state of residence.
+          allOf:
+          - $ref: '#/components/schemas/State'
+        loanPurpose:
+          description: The reason for the loan.
+          allOf:
+          - $ref: '#/components/schemas/LoanPurpose'
+        loanAmount:
+          type: integer
+          format: int32
+          description: The size of the the loan.
+        networkProbabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoanProbability'
+          description: Probabilities for classes of loans, irrespective of financial institution.
+        financialInsitutions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialInstitutionLoanReport'
+          description: Probabilities broken out for specific financial institutions.
+        createdAt:
+          type: string
+          format: date-time
+          description: When this report was created.
+    ProvidedCreditRating:
+      type: string
+      enum:
+      - excellent
+      - good
+      - fair
+      - poor
+      - limited
+      - unknown
+    ProductSubType:
+      type: string
+      description: A type of financial product
+      enum:
+      - credit_card
+      - secured_card
+      - student_card
+      - personal_loan
+      - secured_loan
+      - student_loan_refinance
+      - co_applicant_loan
+      - line_of_credit
+      - automobile_refinance
+      - home_equity_line_of_credit
+      - purchase
+      - refinance
+      - savings_account
+      - money_market_account
+      - certificate_of_deposit
+      - individual_retirement_account
+      - cash_management_account
+      - high_interest_checking
+      - checking
+      - accidental_death_benefits
+      - term_life
+      - term_life_instant
+      - whole_life
+      - bill_reduction
+      - debt_relief
+      - installment_loans
+      - credit_builder
+      - cash_advance
+      - credit_repair
+      - education_offers
+      - employment_opportunity
+      - financial_wellness
+      - direct_affiliate
+      - overdraft_protection
+      - revenue_based_financing
+      - installment_loan_more_offers
+      - credit_card_more_offers
+      - credit_repair_more_offers
+      - student_loan
+      - health
+      - auto_and_vehicle
+      - games
+      - home
+      - rewards
+      - life_insurance
+      - auto_insurance
+      - specialty_vehicle_insurance
+      - home_owners_insurance
+      - renters_insurance
+      - uncategorized
+      - buy_now_pay_later
+      - home_equity_agreements
+      - cash_advance_moneylion
+      - unknown
+    State:
+      type: string
+      format: state
+      title: state
+      description: A two character upper case state, Puerto Rico, or District of Columbia code
+      enum:
+      - AK
+      - AL
+      - AR
+      - AZ
+      - CA
+      - CO
+      - CT
+      - DC
+      - DE
+      - FL
+      - GA
+      - HI
+      - IA
+      - ID
+      - IL
+      - IN
+      - KS
+      - KY
+      - LA
+      - MA
+      - MD
+      - ME
+      - MI
+      - MN
+      - MO
+      - MS
+      - MT
+      - NC
+      - ND
+      - NE
+      - NH
+      - NJ
+      - NM
+      - NV
+      - NY
+      - OH
+      - OK
+      - OR
+      - PA
+      - PR
+      - RI
+      - SC
+      - SD
+      - TN
+      - TX
+      - UT
+      - VA
+      - VI
+      - VT
+      - WA
+      - WI
+      - WV
+      - WY
+    LoanReportCreateData:
+      type: object
+      required:
+      - annualIncome
+      - creditRating
+      properties:
+        annualIncome:
+          type: integer
+          format: int32
+          description: The user's annual income in dollars.
+        creditRating:
+          description: The user's credit score range.
+          allOf:
+          - $ref: '#/components/schemas/ProvidedCreditRating'
+        totalDebt:
+          type: integer
+          format: int32
+          description: The user's total debt in dollars.
+        countOfDerogatories:
+          type: integer
+          format: int32
+          description: The number of derogatory accounts listed on the user's credit report.
+        state:
+          description: The user's state of residence.
+          allOf:
+          - $ref: '#/components/schemas/State'
+        loanPurpose:
+          description: The reason for the loan.
+          allOf:
+          - $ref: '#/components/schemas/LoanPurpose'
+        loanAmount:
+          type: integer
+          format: int32
+          description: The size of the the loan.
+    FinancialInstitutionLoanReport:
+      type: object
+      required:
+      - uuid
+      - name
+      - probabilities
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The unique identifier for the financial institution.
+        name:
+          type: string
+          description: The name of the financial institution.
+        logoUrl:
+          type: string
+          description: A URL of a logo for the financial institution.
+        probabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoanProbability'
+          description: The approval probabilities for the financial intitution.
+    LoanProbability:
+      type: object
+      required:
+      - probability
+      - aprPercentMin
+      - aprPercentMax
+      - termMonthsMin
+      - termMonthsMax
+      properties:
+        probability:
+          type: number
+          format: double
+          description: The likelihood of approval for loans that match the criteria.
+        aprPercentMin:
+          type: number
+          format: double
+          description: The minimum APR for loans with this approval probability.
+        aprPercentMax:
+          type: number
+          format: double
+          description: The maximum APR for loans with this approval probability.
+        termMonthsMin:
+          type: integer
+          format: int64
+          description: The minimum term length for loans with this approval probability.
+        termMonthsMax:
+          type: integer
+          format: int64
+          description: The maximum term length for loans with this approval probability.
+        productSubType:
+          description: The optional loan sub-type of loans with this approval probability.
+          allOf:
+          - $ref: '#/components/schemas/ProductSubType'
+    ApiError:
+      type: object
+      properties:
+        attribute:
+          type: string
+          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
+
+            '
+        type:
+          type: string
+          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
+
+            '
+        details:
+          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ApiErrorDetails'
+        message:
+          type: string
+          description: 'A human-readable, English description of the error.
+
+            '
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
+  responses:
+    MalformedRequest:
+      description: Malformed request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            invalidUuidPathParameter:
+              $ref: '#/components/examples/InvalidUuidPathParameter'
+    UnauthorizedRequest:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            missingAccessToken:
+              summary: Access token was not specified
+              value:
+              - message: Access token is missing
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+  examples:
+    LoanApprovalProbabilityCreateData:
+      summary: Loan approval probability create data
+      value:
+        annualIncome: 75000
+        creditRating: excellent
+        totalDebt: 10000
+        countOfDerogatories: 0
+        state: NY
+        loanPurpose: debt_consolidation
+        loanAmount: 10000
+    InvalidUuidPathParameter:
+      summary: Invalid UUID in path parameter
+      value:
+      - message: Bad request.
+        details: 'Cannot parse parameter uuid as UUID: Invalid UUID string: 123'
+    LoanApprovalProbabilityReport:
+      summary: Loan approval probability report
+      value:
+        annualIncome: 75000
+        creditRating: excellent
+        totalDebt: 10000
+        countOfDerogatories: 0
+        state: NY
+        loanPurpose: debt_consolidation
+        loanAmount: 10000
+        networkProbabilities:
+        - probability: 79.67534
+          aprLow: 12.76
+          aprHigh: 19.85
+        financialInsitutions:
+        - uuid: 005b235e-9388-5e96-9d43-d1b6fd587652
+          name: Alpha, Inc.
+          logoUrl: https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png
+          probabilities:
+          - probability: 49.945
+            aprLow: 15.25
+            aprHigh: 19.85
+        - uuid: c5e7db20-81a4-4fe4-9100-fb8b3ae84f02
+          name: Beta Inc.
+          logoUrl: https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png
+          probabilities:
+          - probability: 84.5421
+            aprLow: 12.76
+            aprHigh: 18.85
+  securitySchemes:
+    publishableBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is assumed to be published in application code and downloaded to a user''s device. As a result, it only has restricted access to the API.
+
+        '
+    confidentialBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is assumed to be managed like a password or any other confidential secret. As a result, it has access to sensitive API endpoints.
+
+        '
+    experimentalBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is used to access experimental endpoints that are not yet available for all partners. It may be treated the same as a `publishableBearerToken`.
+
+        '
+externalDocs:
+  description: Engine by MoneyLion API Reference
+  url: https://engine.tech/docs/api-reference/

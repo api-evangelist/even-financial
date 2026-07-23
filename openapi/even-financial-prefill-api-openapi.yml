@@ -1,0 +1,1290 @@
+openapi: 3.0.3
+info:
+  title: Engine by MoneyLion Analytics Prefill API
+  version: 1.106.0
+  termsOfService: https://engine.tech/about/legal#terms
+  contact:
+    name: API Support
+    url: https://engine.tech/docs
+    email: help@engine.tech
+  description: "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n"
+servers:
+- url: https://api.engine.tech
+tags:
+- name: Prefill
+paths:
+  /originator/prefills/{prefillToken}:
+    get:
+      parameters:
+      - name: prefillToken
+        in: path
+        required: true
+        description: The UUID of the prefill token
+        schema:
+          type: string
+          format: uuid
+      x-implemented-by:
+        service: originator
+        path: /prefills/{prefillToken}
+      summary: Get prefill data
+      description: First-party Prefill data.
+      operationId: getPrefill
+      security:
+      - publishableBearerToken: []
+      tags:
+      - Prefill
+      responses:
+        '200':
+          description: The original Prefill data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadCreateData'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+        '404':
+          description: Prefill token not found
+  /originator/prefills:
+    post:
+      x-implemented-by:
+        service: originator
+        path: /prefills
+      summary: Prefill data
+      description: Second-party Prefill data.
+      operationId: prefill
+      security:
+      - publishableBearerToken: []
+      tags:
+      - Prefill
+      requestBody:
+        description: A prefill object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadCreateData'
+      responses:
+        '200':
+          description: The generated `PrefillResponse`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrefillResponse'
+              examples:
+                pendingLoanRateTable:
+                  $ref: '#/components/examples/PrefillResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedRequest'
+components:
+  schemas:
+    LeadCreateData:
+      type: object
+      properties:
+        productTypes:
+          type: array
+          description: Product types in which the `Lead` is interested
+          items:
+            $ref: '#/components/schemas/ProductType'
+        uuid:
+          type: string
+          format: uuid
+          description: Primary UUID for a `Lead`
+        sessionUuid:
+          type: string
+          format: uuid
+          description: UUID used to link leads across verticals, unique per user per supply sub-account
+        deviceId:
+          type: string
+          format: uuid
+          description: Unique identifier for the lead's device.
+        loanInformation:
+          $ref: '#/components/schemas/LeadLoanInformationJson'
+        personalInformation:
+          $ref: '#/components/schemas/LeadPersonalInformation'
+        personalReferenceInformation:
+          $ref: '#/components/schemas/LeadPersonalReferenceInformationJson'
+        mortgageInformation:
+          $ref: '#/components/schemas/LeadMortgageInformationJson'
+        creditCardInformation:
+          $ref: '#/components/schemas/LeadCreditCardInformationJson'
+        savingsInformation:
+          $ref: '#/components/schemas/LeadSavingsInformationJson'
+        creditInformation:
+          $ref: '#/components/schemas/LeadCreditInformationJson'
+        financialInformation:
+          $ref: '#/components/schemas/LeadFinancialInformation'
+        employmentInformation:
+          $ref: '#/components/schemas/LeadEmploymentInformationJson'
+        legalInformation:
+          $ref: '#/components/schemas/LeadLegalInformationJson'
+        educationInformation:
+          $ref: '#/components/schemas/LeadEducationInformationJson'
+        coApplicantInformation:
+          $ref: '#/components/schemas/LeadCoApplicantInformationJson'
+        healthInformation:
+          $ref: '#/components/schemas/LeadHealthInformationJson'
+        autoInsuranceInformation:
+          $ref: '#/components/schemas/LeadAutoInsuranceInformationJson'
+        refinanceLoans:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeadRefinanceLoanInformationJson'
+          description: One or more loans that the lead wishes to refinance or consolidate
+        identificationInformation:
+          $ref: '#/components/schemas/LeadIdentificationInformationJson'
+        clientTags:
+          $ref: '#/components/schemas/LeadClientTagsJson'
+        sessionInformation:
+          $ref: '#/components/schemas/LeadSessionInformationJson'
+        formCompleted:
+          type: boolean
+          description: Whether the `Lead` has completed an application form
+          deprecated: true
+        referralCompanyUuid:
+          type: string
+          format: uuid
+          description: UUID of company from which the `Lead` was referred
+          deprecated: true
+        trackingUuid:
+          type: string
+          format: uuid
+          description: UUID for internal Engine by MoneyLion tracking purposes. This field should never be set by 3rd party API consumers
+          deprecated: true
+        partnerUserId:
+          type: string
+          format: string
+          description: A tracking identifier that references a unique user for an API partner
+      example:
+        productTypes:
+        - loan
+        - savings
+        personalInformation:
+          firstName: John
+          lastName: Doe
+          email: john@example.com
+          city: New York
+          state: NY
+          workPhone: '2125551234'
+          primaryPhone: '2125556789'
+          address1: 45 West 21st Street
+          address2: 5th Floor
+          zipcode: '10010'
+          monthsAtAddress: 5
+          driversLicenseNumber: '111222333'
+          driversLicenseState: NY
+          ipAddress: 8.8.8.8
+          activeMilitary: false
+          militaryVeteran: true
+          dateOfBirth: '1993-10-09'
+          ssn: 111-22-3333
+        loanInformation:
+          purpose: debt_consolidation
+          loanAmount: 10000
+        mortgageInformation:
+          propertyType: condo
+          propertyStatus: own_with_mortgage
+          propertyValue: 200000
+          mortgageBalance: 10000
+          lenderName: Bank OF NY
+          hasFHALoan: true
+          currentWithLoan: true
+        creditCardInformation:
+          allowAnnualFee: true
+          cardPurposes:
+          - travel_incentives
+        savingsInformation:
+          minDepositAmount: 1000
+        creditInformation:
+          providedCreditRating: excellent
+          providedNumericCreditScore: 750
+        financialInformation:
+          creditCardDebt: 5000
+          employmentStatus: employed
+          employmentPayFrequency: weekly
+          annualIncome: 120000
+          monthlyNetIncome: 10000
+          bankName: Santander
+          bankRoutingNumber: '231372691'
+          bankAccountType: savings
+          monthsAtBank: 10
+          bankAccountNumber: '1234567890'
+        employmentInformation:
+          employerName: Engine by MoneyLion
+          employerAddress: 45 W 21st St
+          employerCity: New York
+          employerState: NY
+          employerZip: '10010'
+          jobTitle: Software Engineer
+          monthsEmployed: 14
+          directDeposit: true
+          payDate1: '2004-10-06'
+          payDate2: '2004-11-06'
+        educationInformation:
+          educationLevel: masters
+          graduateDegreeType: master_of_science
+          universityAttended: Johns Hopkins University
+        coApplicantInformation:
+          firstName: Jane
+          lastName: Doe
+          dateOfBirth: '1984-03-06'
+          annualIncome: 100000
+          streetAddress1: 45 West 21st Street
+          streetAddress2: 5th Floor
+          city: New York
+          state: NY
+          zipcode: '10010'
+        healthInformation:
+          gender: male
+          heightInInches: 72
+          weightInPounds: 195
+          tobaccoSmoker: false
+        autoInsuranceInformation:
+          numberOfVehicles: 1
+          hasAutoInsurance: true
+        legalInformation:
+          consentsToFcra: true
+          consentsToTcpa: true
+          fcraLanguage: By checking this box/clicking 'agree' I hereby consent to the 'E-Sign Agreement', the 'Credit Authorization Agreement', the Terms of Service and Privacy Policy, and I am providing written consent under the Fair Credit Reporting Act (FCRA) for [Engine by MoneyLion and/or Insert Company Name], its partners and financial institutions to obtain consumer report information from my credit profile. I request that my information be provided to their partners, lenders, and financial services partners to provide me with financial recommendations, which may also include debt relief, credit repair, credit monitoring or other related services
+          tcpaLanguage: I agree to be contacted by [Engine by MoneyLion and/or Insert Company Name] its partners and their affiliated companies and financial institutions via email, postal mail service and/or at the telephone number(s) I have provided above to explore various financial products and services I inquired about, including contact through automatic dialing systems, artificial or pre-recorded voice messaging, or text message. Consent is not required as a condition to utilize the service, and you may choose to be contacted by an individual customer care representative(s) by calling XXXXX or emailing XXXX
+        clientTags:
+          hello:
+          - world
+          - there
+          something:
+          - else
+    LeadPersonalReferenceInformationJson:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: The first name of the personal reference supplied by the lead
+        lastName:
+          type: string
+          description: The last name of the personal reference supplied by the lead
+        primaryPhone:
+          type: string
+          pattern: ^1?\d{10}$
+          description: The phone number of the personal reference supplied by the lead
+        relationType:
+          $ref: '#/components/schemas/PersonalReferenceRelationType'
+          description: The relation of the personal reference supplied by the lead
+    PropertyType:
+      type: string
+      enum:
+      - rent
+      - condo
+      - multi_unit
+      - single_family
+      - townhouse
+    LeadFinancialInformation:
+      type: object
+      properties:
+        employmentStatus:
+          $ref: '#/components/schemas/EmploymentStatus'
+        employmentPayFrequency:
+          $ref: '#/components/schemas/EmploymentPayFrequency'
+        annualIncome:
+          type: integer
+          format: int32
+        monthlyNetIncome:
+          type: integer
+          format: int32
+        bankName:
+          type: string
+        bankRoutingNumber:
+          type: string
+        bankAccountType:
+          $ref: '#/components/schemas/BankAccountType'
+        creditCardDebt:
+          type: integer
+          format: int32
+        monthsAtBank:
+          type: integer
+          format: int32
+        bankAccountNumber:
+          type: string
+        monthlyDebt:
+          type: integer
+          format: int32
+        totalAssets:
+          type: integer
+          format: int32
+        monthlyHousingPayment:
+          type: integer
+          format: int32
+        availableAssets:
+          type: integer
+          format: int32
+        additionalIncome:
+          type: integer
+          format: int32
+          description: The amount of additional income the lead recieves
+        additionalIncomeFrequency:
+          $ref: '#/components/schemas/EmploymentPayFrequency'
+          description: The frequency the lead recieves additional income
+        hasDirectDeposit:
+          type: boolean
+          description: Do you have a direct deposit?
+        totalUnsecuredDebt:
+          type: integer
+          format: int32
+          description: Approximate total unsecured debt in dollars
+    CardPurpose:
+      type: string
+      description: Purposes or categories related to a credit card
+      enum:
+      - balance_transfer
+      - cash_back
+      - earning_rewards
+      - improve_credit
+      - low_interest
+      - new_to_credit
+      - student
+      - travel_incentives
+    PersonalReferenceRelationType:
+      type: string
+      enum:
+      - parent
+      - employer
+      - spouse
+      - guardian
+      - sibling
+      - relative
+      - friend
+      - other
+    LeadSavingsInformationJson:
+      type: object
+      properties:
+        minDepositAmount:
+          type: integer
+          format: int32
+          description: The minimum amount a `Lead` is interested in depositing when opening a new savings account
+        maxDepositAmount:
+          type: integer
+          format: int32
+          description: The maximum amount a `Lead` is interested in depositing when opening a new savings account
+    State:
+      type: string
+      format: state
+      title: state
+      description: A two character upper case state, Puerto Rico, or District of Columbia code
+      enum:
+      - AK
+      - AL
+      - AR
+      - AZ
+      - CA
+      - CO
+      - CT
+      - DC
+      - DE
+      - FL
+      - GA
+      - HI
+      - IA
+      - ID
+      - IL
+      - IN
+      - KS
+      - KY
+      - LA
+      - MA
+      - MD
+      - ME
+      - MI
+      - MN
+      - MO
+      - MS
+      - MT
+      - NC
+      - ND
+      - NE
+      - NH
+      - NJ
+      - NM
+      - NV
+      - NY
+      - OH
+      - OK
+      - OR
+      - PA
+      - PR
+      - RI
+      - SC
+      - SD
+      - TN
+      - TX
+      - UT
+      - VA
+      - VI
+      - VT
+      - WA
+      - WI
+      - WV
+      - WY
+    LeadEmploymentInformationJson:
+      type: object
+      properties:
+        employerName:
+          type: string
+        employerAddress:
+          type: string
+        employerAddress2:
+          type: string
+        employerCity:
+          type: string
+        employerPhone:
+          type: string
+        employerState:
+          type: string
+        employerZip:
+          type: string
+        jobTitle:
+          type: string
+        monthsEmployed:
+          type: integer
+          format: int32
+        directDeposit:
+          type: boolean
+          description: Whether a `Lead` uses direct deposit for their salary
+        payDate1:
+          type: string
+          format: date
+        payDate2:
+          type: string
+          format: date
+        startDate:
+          type: string
+          format: date
+          description: The date the lead started working at their current employer (YYYY-MM-DD)
+    ProductType:
+      type: string
+      enum:
+      - credit_card
+      - generic
+      - auto_insurance
+      - insurance
+      - life_insurance
+      - loan
+      - mortgage
+      - savings
+      - other
+      - unknown
+    PrefillResponse:
+      type: object
+      properties:
+        productTypes:
+          type: array
+          description: Product types in which the `Prefill` is associated
+          items:
+            $ref: '#/components/schemas/ProductType'
+        prefillToken:
+          type: string
+          format: uuid
+          description: The Prefill token used for retrieving the prefill data
+        expiresInSeconds:
+          type: number
+          format: int32
+          description: The number of seconds until the prefill token expires
+        maxUses:
+          type: number
+          format: int32
+          description: The maximum number of times the prefill token can be used
+        partnerPageUrl:
+          type: string
+          format: uri
+          description: The URL to the partner's page
+        embedSnippet:
+          type: string
+          format: html
+          description: The snippet to be embedded in the partner's page
+      required:
+      - productTypes
+      - prefillToken
+      - expiresInSeconds
+      - maxUses
+      example:
+        productTypes:
+        - loan
+        prefillToken: d9b212a8-b284-5986-813e-a8d8e87c1863
+        expiresInSeconds: 180
+        maxUses: 1
+        partnerPageUrl: https://www.moneylion.com/network/meratas/loans/search/loan-purpose?tag.partnerKey=meratas-pp-loans&prefillToken=e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4
+        embedSnippet: <script async src="https://www.moneylion.dev/network/fagner/offer-carousel/web-component/offer-carousel/index.js" data-embed-type="auto-mount" data-cnf-layout-variant="native-layout" data-title="Offer Carousel" data-prefill-token="e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4" data-display-layout="carousel"></script>
+    EducationLevel:
+      type: string
+      enum:
+      - high_school
+      - associate
+      - bachelors
+      - masters
+      - doctorate
+      - other_grad_degree
+      - certificate
+      - did_not_graduate
+      - still_enrolled
+      - other
+    IdType:
+      type: string
+      enum:
+      - driver_license
+      - state_id
+      - passport
+    CitizenshipStatus:
+      type: string
+      description: Citizenship status
+      enum:
+      - citizen
+      - permanent_resident
+      - other
+    LoanPurpose:
+      type: string
+      enum:
+      - auto
+      - auto_purchase
+      - auto_refinance
+      - baby
+      - boat
+      - business
+      - car_repair
+      - cosmetic
+      - credit_card_refi
+      - debt_consolidation
+      - emergency
+      - engagement
+      - green
+      - home_improvement
+      - home_purchase
+      - home_refi
+      - household_expenses
+      - large_purchases
+      - life_event
+      - medical_dental
+      - motorcycle
+      - moving_relocation
+      - other
+      - rv
+      - special_occasion
+      - student_loan
+      - student_loan_refi
+      - taxes
+      - vacation
+      - wedding
+    PropertyStatus:
+      type: string
+      enum:
+      - own_outright
+      - own_with_mortgage
+      - rent
+    LeadCreditCardInformationJson:
+      type: object
+      properties:
+        allowAnnualFee:
+          type: boolean
+        cardPurposes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardPurpose'
+          description: A list of card purposes in which the lead is interested
+    BankAccountType:
+      type: string
+      enum:
+      - checking
+      - savings
+      - other
+    MortechCreditRating:
+      type: string
+      enum:
+      - Excellent (780-850)
+      - Excellent (760-779)
+      - Excellent (740-759)
+      - Good (720-739)
+      - Good (700-719)
+      - Fair (680-699)
+      - Fair (660-679)
+      - Poor (640-659)
+      - Poor (620-639)
+      - Poor (580-619)
+      - Poor (Under 580)
+    MortgageLoanType:
+      type: string
+      enum:
+      - ten_year_fixed
+      - fifteen_year_fixed
+      - twenty_year_fixed
+      - thirty_year_fixed
+      - forty_year_fixed
+      - three_year_intro_30_year_adjustable
+      - five_year_intro_30_year_adjustable
+      - seven_year_intro_30_year_adjustable
+      - ten_year_intro_30_year_adjustable
+    EmploymentStatus:
+      type: string
+      enum:
+      - employed
+      - employed_full_time
+      - employed_part_time
+      - military
+      - not_employed
+      - self_employed
+      - retired
+      - other
+    BatchConsentVersion:
+      type: string
+      enum:
+      - v1
+      - v2
+    LeadHealthInformationJson:
+      type: object
+      properties:
+        gender:
+          $ref: '#/components/schemas/Gender'
+        heightInInches:
+          type: integer
+          format: int32
+        weightInPounds:
+          type: integer
+          format: int32
+        tobaccoSmoker:
+          type: boolean
+    LeadCoApplicantInformationJson:
+      type: object
+      description: 'The personal information of a co-applicant that may be considered in the
+
+        underwriting and approval of a loan.
+
+        '
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        annualIncome:
+          type: integer
+          format: int32
+        streetAddress1:
+          type: string
+          description: Street address (primary address line)
+        streetAddress2:
+          type: string
+          description: Secondary address line
+        city:
+          type: string
+        state:
+          $ref: '#/components/schemas/State'
+        zipcode:
+          type: string
+          pattern: ^\d{5}([-\s]\d{4})?$
+    LeadRefinanceLoanInformationJson:
+      type: object
+      title: Refinance loan information
+      properties:
+        accountNumber:
+          type: string
+          description: The account number for a loan the lead is refinancing
+        incomeBasedRepayment:
+          type: boolean
+          description: If the repayment is income-based for a loan the lead is refinancing
+        interestRate:
+          type: number
+          description: The interest rate for a loan the lead is refinancing
+        loanAmount:
+          type: integer
+          format: int32
+          description: The loan amount for a loan the lead is refinancing
+        loanServicer:
+          type: string
+          description: The name of a loan servicer of a loan the lead is refinancing
+        loanType:
+          $ref: '#/components/schemas/RefinanceLoanType'
+          description: The loan type for a loan the lead is refinancing
+        nextPaymentAmount:
+          type: number
+          description: The amount the next payment will be on a loan the lead is refinancing
+        nextPaymentDate:
+          type: string
+          format: date
+          description: The next payment date for a loan the lead is refinancing
+    LeadMortgageInformationJson:
+      type: object
+      properties:
+        propertyType:
+          $ref: '#/components/schemas/PropertyType'
+        propertyValue:
+          type: integer
+          format: int32
+        mortgageBalance:
+          type: integer
+          format: int32
+        lenderName:
+          type: string
+        hasFHALoan:
+          type: boolean
+        currentWithLoan:
+          type: boolean
+        propertyStatus:
+          $ref: '#/components/schemas/PropertyStatus'
+        mortgageType:
+          $ref: '#/components/schemas/MortgageType'
+        mortgageAmount:
+          type: integer
+          format: int32
+          description: Amount the lead will borrow
+        downPaymentAmount:
+          type: integer
+          format: int32
+        propertyState:
+          type: string
+        propertyCounty:
+          type: string
+        propertyAddress1:
+          type: string
+          description: Street address (primary address line)
+        propertyAddress2:
+          type: string
+          description: Secondary address line
+        propertyZipcode:
+          type: string
+        propertyCity:
+          type: string
+        refinanceAmount:
+          type: integer
+          format: int32
+          description: Amount the lead will borrow for refinancing an existing mortgage
+        cashOutAmount:
+          type: integer
+          format: int32
+          description: Additional amount the lead will borrow against existing home equity in the case of refinance
+        occupancyType:
+          $ref: '#/components/schemas/OccupancyType'
+        refinanceType:
+          $ref: '#/components/schemas/RefinanceType'
+        propertySearchStatus:
+          $ref: '#/components/schemas/PropertySearchStatus'
+        numUnits:
+          type: integer
+          format: int32
+          description: The number of legal units on the property
+        closingDate:
+          type: string
+          format: date
+        purchaseStatus:
+          $ref: '#/components/schemas/PurchaseStatus'
+        purchaseDate:
+          type: string
+          format: date
+        monthlyHoaFee:
+          type: number
+          description: The amount of the HOA fee for the lead
+        mortgageCompany:
+          type: string
+          description: The name of the company holding the lead's mortgage
+        mortgageEscrowAmount:
+          type: number
+          description: The amount of escrow the lead pays
+        includeFhaLoans:
+          type: boolean
+          description: 'If true, the lead will receive FHA loan offers; if false, they will not.
+
+            '
+        includeVaLoans:
+          type: boolean
+          description: 'If true, the lead will receive VA loan offers; if false, they will not.
+
+            '
+        requestedLoanTerms:
+          type: array
+          items:
+            $ref: '#/components/schemas/MortgageLoanType'
+        mortechCreditRating:
+          $ref: '#/components/schemas/MortechCreditRating'
+    LeadLoanInformationJson:
+      type: object
+      properties:
+        purpose:
+          $ref: '#/components/schemas/LoanPurpose'
+        loanAmount:
+          type: integer
+          format: int32
+    Gender:
+      type: string
+      enum:
+      - male
+      - female
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
+    LeadIdentificationInformationJson:
+      type: object
+      properties:
+        idNumber:
+          type: string
+          description: The ID number supplied by the lead
+        idState:
+          type: string
+          description: The state of issue of the supplied ID
+        idType:
+          $ref: '#/components/schemas/IdType'
+          description: The form of the ID number supplied by the lead
+    LeadCreditInformationJson:
+      type: object
+      description: Credit history information relating to a `Lead`
+      properties:
+        providedCreditRating:
+          $ref: '#/components/schemas/ProvidedCreditRating'
+        providedNumericCreditScore:
+          type: integer
+          format: int32
+          description: FICO credit score provided by a `Lead`
+    OpeId:
+      type: string
+      pattern: ^\d{6}[A-Za-z\d]{2}$
+      description: identification number used by the U.S. Department of Education's Office of Postsecondary Education (OPE) to identify schools that have Program Participation Agreements (PPA) so that its students are eligible to participate in Federal Student Financial Assistance programs under Title IV regulations. This is a 6-digit number followed by a 2-digit suffix used to identify branches, additional locations, and other entities that are part of the eligible institution.
+    LeadClientTagsJson:
+      type: object
+      description: Arbitrary key-values mappings to associate with a `Lead`. This field can be use to attach `subid`s to a `Lead`
+      additionalProperties:
+        type: array
+        items:
+          type: string
+      maxProperties: 1
+      minProperties: 1
+      example:
+        subid:
+        - '123'
+    LeadPersonalInformation:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        aliasFirstName:
+          type: string
+          description: The first name the lead uses as an alias
+        aliasLastName:
+          type: string
+          description: The last name the lead uses as an alias
+        email:
+          type: string
+          format: email
+          pattern: ^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$
+        city:
+          type: string
+        state:
+          $ref: '#/components/schemas/State'
+        workPhone:
+          type: string
+          pattern: ^1?\d{10}$
+        primaryPhone:
+          type: string
+          pattern: ^1?\d{10}$
+        bestTimeToCall:
+          $ref: '#/components/schemas/LeadBestTimeToCall'
+        address1:
+          type: string
+          description: Street address (primary address line)
+        address2:
+          type: string
+          description: Secondary address line
+        addressMoveInDate:
+          type: string
+          format: date
+          description: The date the lead moved into their current address
+        zipcode:
+          type: string
+          pattern: ^\d{5}([-\s]\d{4})?$
+        monthsAtAddress:
+          type: integer
+          format: int32
+          description: Number of months the provided address has been the lead's primary residence
+        driversLicenseNumber:
+          type: string
+        driversLicenseState:
+          type: string
+          description: State in which the driver's license was issued
+        ipAddress:
+          type: string
+          format: ip
+          description: IP address
+        activeMilitary:
+          type: boolean
+          description: Whether the lead is currently in the military (not a veteran)
+        militaryVeteran:
+          type: boolean
+          description: Whether the lead is a veteran (should not be used if the lead is active in the military)
+        dateOfBirth:
+          type: string
+          format: date
+        educationLevel:
+          deprecated: true
+          allOf:
+          - $ref: '#/components/schemas/EducationLevel'
+        ssn:
+          type: string
+          pattern: ^(?!\b(\d)\1+-(\d)\1+-(\d)\1+\b)(?!123-45-6789|219-09-9999|078-05-1120)(?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4}$
+        citizenshipStatus:
+          $ref: '#/components/schemas/CitizenshipStatus'
+    LeadBestTimeToCall:
+      type: string
+      enum:
+      - morning
+      - afternoon
+      - evening
+      - night
+    PropertySearchStatus:
+      type: string
+      enum:
+      - found
+      - not_found
+    LeadSessionInformationJson:
+      type: object
+      description: Browsing session information accociated with a `Lead`
+      properties:
+        ipAddress:
+          type: string
+        userAgent:
+          type: string
+        browserFingerprint:
+          type: string
+    LeadEducationInformationJson:
+      type: object
+      properties:
+        educationLevel:
+          $ref: '#/components/schemas/EducationLevel'
+        graduateDegreeType:
+          $ref: '#/components/schemas/GraduateDegreeType'
+        universityAttended:
+          type: string
+          description: 'Name of university where a lead received their undergraduate degree.
+
+            A lookup service for possible universities is available from using the /leads/universities endpoint.
+
+            To maximize returned offers, this string must match one of the names returned from the lookup.
+
+            '
+          deprecated: true
+        universityOpeId:
+          type: string
+          $ref: '#/components/schemas/OpeId'
+        graduationDate:
+          type: string
+          format: date
+          description: Date the lead graudated from undergrad (YYYY-MM-DD)
+          deprecated: true
+        graduateGraduationDate:
+          type: string
+          format: date
+          description: Lead's graduate school graduation date (YYYY-MM-DD)
+        graduateLastAttendedDate:
+          type: string
+          format: date
+          description: Lead's last attended month/year for graduate school (YYYY-MM-DD)
+        graduateUniversityAttended:
+          type: string
+          description: 'Name of university where a lead received their graduate degree.
+
+            A lookup service for possible universities is available from using the /leads/universities endpoint.
+
+            To maximize returned offers, this string must match one of the names returned from the lookup.
+
+            '
+        graduateUniversityOpeId:
+          $ref: '#/components/schemas/OpeId'
+        undergraduateGraduationDate:
+          type: string
+          format: date
+          description: Date the lead graduated from undergrad (YYYY-MM-DD).
+        undergraduateLastAttendedDate:
+          type: string
+          format: date
+          description: Lead's last attended month/year for undergrad (YYYY-MM-DD)
+        undergraduateUniversityAttended:
+          type: string
+          description: 'Name of university where a lead received their undergraduate degree.
+
+            A lookup service for possible universities is available from using the /leads/universities endpoint.
+
+            To maximize returned offers, this string must match one of the names returned from the lookup.
+
+            '
+        undergraduateUniversityOpeId:
+          type: string
+          $ref: '#/components/schemas/OpeId'
+    OccupancyType:
+      type: string
+      enum:
+      - primary
+      - secondary
+      - investment
+    EmploymentPayFrequency:
+      type: string
+      enum:
+      - weekly
+      - biweekly
+      - twice_monthly
+      - monthly
+    MortgageType:
+      type: string
+      enum:
+      - purchase
+      - refinance
+    RefinanceLoanType:
+      type: string
+      enum:
+      - federal_student_loan
+      - private_student_loan
+    ProvidedCreditRating:
+      type: string
+      enum:
+      - excellent
+      - good
+      - fair
+      - poor
+      - limited
+      - unknown
+    PurchaseStatus:
+      type: string
+      enum:
+      - no_offer
+      - offer_accepted
+      - offer_pending
+      - under_contract
+    LeadLegalInformationJson:
+      type: object
+      description: Information regarding a `Lead`'s communication consent
+      properties:
+        consentsToFcra:
+          type: boolean
+          description: Whether the lead was shown, and consented to a Fair Credit Reporting Act notice
+        consentsToSms:
+          type: boolean
+          description: The lead agrees to recieve SMS text messages from the Financial Institution
+        consentsToTcpa:
+          type: boolean
+          description: Whether the lead was shown, and consented to a Telephone Consumer Protection Act notice
+        batchConsentVersion:
+          $ref: '#/components/schemas/BatchConsentVersion'
+        fcraLanguage:
+          type: string
+          description: The exact FCRA language to which the lead consented
+        tcpaLanguage:
+          type: string
+          description: The exact TCPA language to which the lead consented
+        batchConsentLanguage:
+          type: string
+          description: The exact batch consent language to which the lead consented
+    RefinanceType:
+      type: string
+      enum:
+      - cash_out
+      - rate_term
+    ApiError:
+      type: object
+      properties:
+        attribute:
+          type: string
+          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
+
+            '
+        type:
+          type: string
+          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
+
+            '
+        details:
+          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ApiErrorDetails'
+        message:
+          type: string
+          description: 'A human-readable, English description of the error.
+
+            '
+    LeadAutoInsuranceInformationJson:
+      type: object
+      properties:
+        numberOfVehicles:
+          type: integer
+          format: int32
+        hasAutoInsurance:
+          type: boolean
+        priorCarrierInformation:
+          type: object
+          title: Prior Carrier Information
+          properties:
+            carrierName:
+              type: string
+              description: Name of the prior insurance carrier
+            timeInsuredMonths:
+              type: integer
+              format: int32
+              description: Duration in months the lead was insured with the prior carrier
+        policyEffectiveDate:
+          type: string
+          format: date
+        coverageInformation:
+          type: object
+          title: Coverage Information
+          properties:
+            bodilyInjuryAmount:
+              type: integer
+              format: int32
+              description: Bodily injury coverage amount
+            propertyDamageAmount:
+              type: integer
+              format: int32
+              description: Property damage coverage amount
+            collisionAmount:
+              type: integer
+              format: int32
+              description: Collision coverage amount
+        garageInformation:
+          type: object
+          title: Garage Information
+          properties:
+            address1:
+              type: string
+              description: Street address line 1 of the garage location
+            address2:
+              type: string
+              description: Street address line 2 of the garage location (optional)
+            city:
+              type: string
+              description: City where the vehicle is garaged
+            state:
+              type: string
+              description: State where the vehicle is garaged
+            zipCode:
+              type: string
+              description: ZIP code of the garage address
+        vehiclesInformation:
+          type: array
+          items:
+            type: object
+            title: Vehicle information
+            properties:
+              monthlyPayment:
+                type: integer
+                format: int32
+                description: The lead's monthly auto loan payment
+              estimatedMileage:
+                type: integer
+                format: int32
+                description: The vehicle's estimated number of miles driven
+              vehicleIdentificationNumber:
+                type: string
+                description: The vehicle identification number (VIN) of the financed vehicle
+              vehicleUuid:
+                type: string
+                format: uuid
+                description: The UUID representing the unique Year/Make/Model/Trim of the financed vehicle
+        driversInformation:
+          type: array
+          items:
+            type: object
+            title: Driver Information
+            properties:
+              role:
+                type: string
+                enum:
+                - primary
+                - secondary
+                - unlisted
+              gender:
+                $ref: '#/components/schemas/Gender'
+                description: Driver's gender
+              personalInformation:
+                $ref: '#/components/schemas/LeadPersonalInformation'
+                description: Personal information of the driver
+    GraduateDegreeType:
+      type: string
+      enum:
+      - doctor_of_medicine
+      - doctor_of_osteopathic_medicine
+      - doctor_of_optometry
+      - doctor_of_dental_medicine
+      - dentariae_medicinae_doctoris
+      - doctor_of_dental_surgery
+      - doctor_of_veterinary_medicine
+      - doctor_of_pharmacy
+      - veterinariae_medicinae_doctoris
+      - master_of_arts
+      - master_of_science
+      - master_of_research
+      - master_of_research_project
+      - master_of_studies
+      - master_of_business_administration
+      - master_of_library_science
+      - master_of_public_administration
+      - master_of_public_health
+      - master_of_laws
+      - master_of_arts_liberal_studies
+      - master_of_fine_arts
+      - master_of_music
+      - master_of_education
+      - master_of_engineering
+      - master_of_architecture
+      - juris_doctor
+      - other
+  examples:
+    PrefillResponse:
+      summary: Prefill Response
+      value:
+        productTypes:
+        - loan
+        prefillToken: d9b212a8-b284-5986-813e-a8d8e87c1863
+        expiresInSeconds: 180
+        maxUses: 1
+        partnerPageUrl: https://www.moneylion.com/network/meratas/loans/search/loan-purpose?tag.partnerKey=meratas-pp-loans&prefillToken=e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4
+        embedSnippet: <script async src="https://www.moneylion.dev/network/fagner/offer-carousel/web-component/offer-carousel/index.js" data-embed-type="auto-mount" data-cnf-layout-variant="native-layout" data-title="Offer Carousel" data-prefill-token="e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4" data-display-layout="carousel"> </script>
+  responses:
+    UnauthorizedRequest:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            missingAccessToken:
+              summary: Access token was not specified
+              value:
+              - message: Access token is missing
+  securitySchemes:
+    publishableBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is assumed to be published in application code and downloaded to a user''s device. As a result, it only has restricted access to the API.
+
+        '
+    confidentialBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is assumed to be managed like a password or any other confidential secret. As a result, it has access to sensitive API endpoints.
+
+        '
+    experimentalBearerToken:
+      type: http
+      scheme: bearer
+      description: 'A bearer token that is used to access experimental endpoints that are not yet available for all partners. It may be treated the same as a `publishableBearerToken`.
+
+        '
+externalDocs:
+  description: Engine by MoneyLion API Reference
+  url: https://engine.tech/docs/api-reference/
