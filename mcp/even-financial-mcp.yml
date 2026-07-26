@@ -1,0 +1,120 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: openapi/even-financial-openapi-original.json
+note: No official hosted/remote MCP server was found for Engine by MoneyLion. This is a candidate tool
+  surface derived one-per-operation from the OpenAPI, for exposing the Engine API to agents.
+server:
+  name: even-financial
+  transport: http
+tools:
+- name: submitLead
+  description: Submit lead
+  method: POST
+  path: /leads/rateTables
+  source_operation: openapi/even-financial-openapi-original.json#submitLead
+- name: getRateTableForSpecifiedLead
+  description: Submit a lead and get a rate table
+  method: POST
+  path: /leads/{leadUuid}/rateTables
+  source_operation: openapi/even-financial-openapi-original.json#getRateTableForSpecifiedLead
+- name: getPrefill
+  description: Get prefill data
+  method: GET
+  path: /originator/prefills/{prefillToken}
+  source_operation: openapi/even-financial-openapi-original.json#getPrefill
+- name: prefill
+  description: Prefill data
+  method: POST
+  path: /originator/prefills
+  source_operation: openapi/even-financial-openapi-original.json#prefill
+- name: getRateTable
+  description: Get rate table
+  method: GET
+  path: /originator/rateTables/{uuid}
+  source_operation: openapi/even-financial-openapi-original.json#getRateTable
+- name: getLead
+  description: Get lead
+  method: GET
+  path: /leads/{uuid}
+  source_operation: openapi/even-financial-openapi-original.json#getLead
+- name: updateLead
+  description: Update a lead
+  method: PATCH
+  path: /leads/{uuid}
+  source_operation: openapi/even-financial-openapi-original.json#updateLead
+- name: createLoansApprovalProbabilityReport
+  description: Get a loan approval probability report
+  method: POST
+  path: /approvalProbability/loanReports
+  source_operation: openapi/even-financial-openapi-original.json#createLoansApprovalProbabilityReport
+- name: getLoansApprovalProbabilityReport
+  description: Get approval probability loan report
+  method: GET
+  path: /approvalProbability/loanReports/{uuid}
+  source_operation: openapi/even-financial-openapi-original.json#getLoansApprovalProbabilityReport
+- name: getPreviewLoanOffers
+  description: Get preview loan offers
+  method: GET
+  path: /offerPreview/loanOffers
+  source_operation: openapi/even-financial-openapi-original.json#getPreviewLoanOffers
+- name: getPreviewCreditCardOffers
+  description: Get preview credit card offers
+  method: GET
+  path: /offerPreview/creditCardOffers
+  source_operation: openapi/even-financial-openapi-original.json#getPreviewCreditCardOffers
+- name: getPreviewSavingsOffers
+  description: Get preview savings offers
+  method: GET
+  path: /offerPreview/savingsOffers
+  source_operation: openapi/even-financial-openapi-original.json#getPreviewSavingsOffers
+- name: getLeadEvents
+  description: Get lead events
+  method: GET
+  path: /supplyAnalytics/leadEvents
+  source_operation: openapi/even-financial-openapi-original.json#getLeadEvents
+- name: getLeadPayouts
+  description: Get lead payouts
+  method: GET
+  path: /supplyAnalytics/leadPayouts
+  source_operation: openapi/even-financial-openapi-original.json#getLeadPayouts
+- name: getLeadClientTags
+  description: Get lead client tags
+  method: GET
+  path: /supplyAnalytics/leadClientTags
+  source_operation: openapi/even-financial-openapi-original.json#getLeadClientTags
+- name: getLeadsInfo
+  description: Get all combined information for a lead
+  method: GET
+  path: /supplyAnalytics/leadsInfo/{leadUuid}
+  source_operation: openapi/even-financial-openapi-original.json#getLeadsInfo
+- name: getUniversities
+  description: Get university names
+  method: GET
+  path: /leads/universities
+  source_operation: openapi/even-financial-openapi-original.json#getUniversities
+- name: getVehicleYears
+  description: Get vehicle years
+  method: GET
+  path: /leads/vehicles/years
+  source_operation: openapi/even-financial-openapi-original.json#getVehicleYears
+- name: getVehicleMakes
+  description: Get vehicle makes
+  method: GET
+  path: /leads/vehicles/makes
+  source_operation: openapi/even-financial-openapi-original.json#getVehicleMakes
+- name: getVehicleModels
+  description: Get vehicle models
+  method: GET
+  path: /leads/vehicles/models
+  source_operation: openapi/even-financial-openapi-original.json#getVehicleModels
+- name: getVehicleTrims
+  description: Get vehicle trims
+  method: GET
+  path: /leads/vehicles/trims
+  source_operation: openapi/even-financial-openapi-original.json#getVehicleTrims
+- name: getFeaturedFinancialInstitutions
+  description: Get featured financial institutions
+  method: GET
+  path: /uiUtil/featuredFinancialInstitutions
+  source_operation: openapi/even-financial-openapi-original.json#getFeaturedFinancialInstitutions

@@ -1,0 +1,49 @@
+generated: '2026-07-19'
+method: searched
+source: https://even-financial.gitbook.io/developer-center/embeddable-integrations
+note: >-
+  Engine by MoneyLion ships a broad set of embeddable / client-side surfaces for placing financial
+  product marketplaces into partner sites and apps. These are distinct from the server-side SDK in
+  packages/.
+families:
+- family: Top-of-Funnel Calculators
+  kind: embeddable-widget
+  components:
+  - Personal Loan Calculator
+  - Debt Consolidation Loan Calculator
+  - Personal Loan vs Debt Relief Calculator
+  - Savings Calculator
+  docs: https://even-financial.gitbook.io/developer-center/embeddable-integrations/top-of-funnel-calculators
+- family: Partner Pages
+  kind: hosted-marketplace-page
+  components:
+  - Personal Loans Marketplace
+  - Credit Cards Marketplace
+  - Banking (Deposits) Marketplace
+  - Auto Insurance Marketplace
+  - Preferred Look / Bridge Partner Pages
+  docs: https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages
+- family: Widgets and Embeds
+  kind: embeddable-widget
+  components:
+  - Personal Loans Marketplace Embed
+  - Credit Cards Marketplace Embed
+  - Banking (Deposits) Marketplace Embed
+  - Auto Insurance Marketplace Embed
+  - Offer Carousel
+  docs: https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds
+- family: Mobile SDKs
+  kind: native-mobile-component
+  components:
+  - React Native Personal Loans SDK
+  - React Native Offer Carousel SDK
+  - React Native Debt Relief SDK
+  - Flutter Personal Loans SDK
+  docs: https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks
+- family: Cyber Safety & Identity
+  kind: native-mobile-component
+  components:
+  - Antiscam SDK (Android)
+  - Antiscam SDK (iOS)
+  - Identity SDK
+  docs: https://even-financial.gitbook.io/developer-center/cyber-safety-and-identity-solutions

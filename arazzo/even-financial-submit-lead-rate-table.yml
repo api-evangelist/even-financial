@@ -1,0 +1,48 @@
+arazzo: 1.0.1
+info:
+  title: Submit a lead and retrieve its rate table
+  version: 1.0.0
+  summary: Submit a consumer lead to Engine by MoneyLion and read back the resulting rate table of offers.
+sourceDescriptions:
+- name: engine
+  url: ../openapi/even-financial-openapi-original.json
+  type: openapi
+workflows:
+- workflowId: submitLeadAndGetRateTable
+  summary: Create a lead, then fetch its rate table and the stored lead.
+  inputs:
+    type: object
+    properties:
+      lead:
+        type: object
+        description: Applicant profile plus product search criteria (per the Lead schema).
+  steps:
+  - stepId: submitLead
+    description: Submit the lead and receive a rate table of offers.
+    operationId: submitLead
+    requestBody:
+      payload: $inputs.lead
+    outputs:
+      leadUuid: $response.body#/lead/uuid
+      rateTableUuid: $response.body#/rateTable/uuid
+  - stepId: getRateTable
+    description: Re-fetch the rate table by UUID.
+    operationId: getRateTable
+    parameters:
+    - name: uuid
+      in: path
+      value: $steps.submitLead.outputs.rateTableUuid
+    outputs:
+      rateTable: $response.body
+  - stepId: getLead
+    description: Read the stored lead by UUID.
+    operationId: getLead
+    parameters:
+    - name: uuid
+      in: path
+      value: $steps.submitLead.outputs.leadUuid
+    outputs:
+      lead: $response.body
+  outputs:
+    leadUuid: $steps.submitLead.outputs.leadUuid
+    rateTable: $steps.getRateTable.outputs.rateTable

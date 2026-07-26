@@ -1,0 +1,20 @@
+generated: '2026-07-19'
+method: searched
+source: https://even-financial.gitbook.io/developer-center
+versioning:
+  scheme: date-header
+  header: API-Version
+  current: '2026-02-25'
+  recent: ['2025-10-15', '2025-12-09', '2026-02-25']
+  docs: https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions
+  note: >-
+    The Engine API version is selected with an API-Version request header carrying a date stamp;
+    the Alpha Offer Searches API publishes dated version pages. The core public OpenAPI is
+    versioned 1.106.0 (semantic).
+status_page: https://status.engine.tech
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No formal deprecation/Sunset (RFC 8594) policy was found published; superseded API versions
+    are managed through the dated API-Version header.
+deprecated_operations: []

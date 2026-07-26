@@ -1,0 +1,32 @@
+generated: '2026-07-19'
+method: searched
+source: live probes of /.well-known/ on Engine by MoneyLion hosts
+hosts:
+- host: https://api.engine.tech
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://engine.tech
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+notes: >-
+  No /.well-known/ discovery documents are published on either the API host (api.engine.tech)
+  or the marketing/docs host (engine.tech). Recorded as a negative result; no raw files saved and
+  no WellKnown pointer wired.

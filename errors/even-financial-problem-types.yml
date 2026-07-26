@@ -1,0 +1,88 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/even-financial-openapi-original.json
+docs: https://engine.tech/docs/api-reference/
+format: custom
+envelope:
+  shape: application/json array of ApiError objects
+  fields:
+    attribute: The request attribute this error applies to (omitted when not attributable to a single
+      field).
+    type: A machine-readable classification string for programmatic handling / custom error templates.
+    details: Object of string variables that can be injected into a rendered error message.
+  schema_ref: '#/components/schemas/ApiError'
+note: Engine by MoneyLion does not use RFC 9457 problem+json; errors are returned as a JSON array of ApiError
+  objects. Status codes and per-operation associations are derived from the OpenAPI responses.
+problems:
+- status: 400
+  title: Invalid request
+  descriptions:
+  - Bad Request
+  - Invalid data
+  - Invalid request
+  - Malformed request
+  source_operations:
+  - openapi/even-financial-openapi-original.json#createLoansApprovalProbabilityReport
+  - openapi/even-financial-openapi-original.json#getLead
+  - openapi/even-financial-openapi-original.json#getLoansApprovalProbabilityReport
+  - openapi/even-financial-openapi-original.json#getRateTable
+  - openapi/even-financial-openapi-original.json#getRateTableForSpecifiedLead
+  - openapi/even-financial-openapi-original.json#getVehicleMakes
+  - openapi/even-financial-openapi-original.json#getVehicleModels
+  - openapi/even-financial-openapi-original.json#getVehicleTrims
+  - openapi/even-financial-openapi-original.json#prefill
+  - openapi/even-financial-openapi-original.json#submitLead
+  - openapi/even-financial-openapi-original.json#updateLead
+- status: 401
+  title: Unauthorized
+  descriptions: []
+  source_operations:
+  - openapi/even-financial-openapi-original.json#createLoansApprovalProbabilityReport
+  - openapi/even-financial-openapi-original.json#getFeaturedFinancialInstitutions
+  - openapi/even-financial-openapi-original.json#getLead
+  - openapi/even-financial-openapi-original.json#getLeadClientTags
+  - openapi/even-financial-openapi-original.json#getLeadEvents
+  - openapi/even-financial-openapi-original.json#getLeadPayouts
+  - openapi/even-financial-openapi-original.json#getLeadsInfo
+  - openapi/even-financial-openapi-original.json#getLoansApprovalProbabilityReport
+  - openapi/even-financial-openapi-original.json#getPrefill
+  - openapi/even-financial-openapi-original.json#getPreviewCreditCardOffers
+  - openapi/even-financial-openapi-original.json#getPreviewLoanOffers
+  - openapi/even-financial-openapi-original.json#getPreviewSavingsOffers
+  - openapi/even-financial-openapi-original.json#getRateTable
+  - openapi/even-financial-openapi-original.json#getRateTableForSpecifiedLead
+  - openapi/even-financial-openapi-original.json#getUniversities
+  - openapi/even-financial-openapi-original.json#prefill
+  - openapi/even-financial-openapi-original.json#submitLead
+  - openapi/even-financial-openapi-original.json#updateLead
+- status: 404
+  title: Not found
+  descriptions:
+  - Prefill token not found
+  - Unknown UUID
+  - '`Lead` with the given UUID does not exist'
+  source_operations:
+  - openapi/even-financial-openapi-original.json#getLead
+  - openapi/even-financial-openapi-original.json#getLeadsInfo
+  - openapi/even-financial-openapi-original.json#getLoansApprovalProbabilityReport
+  - openapi/even-financial-openapi-original.json#getPrefill
+  - openapi/even-financial-openapi-original.json#getPreviewSavingsOffers
+  - openapi/even-financial-openapi-original.json#getRateTable
+  - openapi/even-financial-openapi-original.json#updateLead
+- status: 409
+  title: Duplicate lead
+  descriptions:
+  - Duplicate lead
+  source_operations:
+  - openapi/even-financial-openapi-original.json#submitLead
+- status: 422
+  title: Unprocessable entity
+  descriptions:
+  - Invalid request
+  source_operations:
+  - openapi/even-financial-openapi-original.json#createLoansApprovalProbabilityReport
+  - openapi/even-financial-openapi-original.json#getFeaturedFinancialInstitutions
+  - openapi/even-financial-openapi-original.json#getLeadClientTags
+  - openapi/even-financial-openapi-original.json#getLeadEvents
+  - openapi/even-financial-openapi-original.json#getLeadPayouts
+  - openapi/even-financial-openapi-original.json#getLeadsInfo

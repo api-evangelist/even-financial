@@ -1,0 +1,34 @@
+generated: '2026-07-19'
+method: searched
+source: https://even-financial.gitbook.io/developer-center/channel-partner-reporting/postback-reporting
+spec_type: Webhooks
+note: >-
+  Engine by MoneyLion does not publish an AsyncAPI document. Its server-to-server event surface is
+  "Postback Reporting" — Engine posts lead/conversion event notifications back to a partner-configured
+  endpoint — complemented by real-time event handlers in the mobile SDKs and a pull-based Analytics
+  API (leadEvents / leadPayouts). The event surface below is captured from the docs; it is not a
+  formal webhook schema.
+surfaces:
+- name: Postback Reporting
+  kind: server-to-server postback
+  direction: engine-to-partner
+  docs: https://even-financial.gitbook.io/developer-center/channel-partner-reporting/postback-reporting
+  description: >-
+    Configurable postbacks that notify partners of lead and conversion events for reporting and
+    attribution, with support for appended Client Tags.
+- name: Mobile SDK Event Handlers
+  kind: client-side event callbacks
+  docs: https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/personal-loans/recommended/native-event-handlers
+  description: Native event handlers for real-time tracking of user interactions in the mobile SDKs.
+- name: Analytics API (pull)
+  kind: polling
+  docs: https://even-financial.gitbook.io/developer-center/channel-partner-reporting/engine-analytics-api
+  operations:
+  - openapi/even-financial-openapi-original.json#getLeadEvents
+  - openapi/even-financial-openapi-original.json#getLeadPayouts
+event_types_documented:
+- applied
+- approved
+- rejected
+- conversion
+- funded

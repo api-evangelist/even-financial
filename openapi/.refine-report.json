@@ -1,0 +1,24 @@
+{
+  "provider": "even-financial",
+  "sources": [
+    "even-financial-analytics-api-openapi.yml",
+    "even-financial-approval-probability-api-openapi.yml",
+    "even-financial-lead-api-openapi.yml",
+    "even-financial-offer-preview-api-openapi.yml",
+    "even-financial-prefill-api-openapi.yml",
+    "even-financial-ui-utils-api-openapi.yml"
+  ],
+  "outputs": [
+    "even-financial-analytics-api-openapi.yml",
+    "even-financial-approval-probability-api-openapi.yml",
+    "even-financial-lead-api-openapi.yml",
+    "even-financial-offer-preview-api-openapi.yml",
+    "even-financial-prefill-api-openapi.yml",
+    "even-financial-ui-utils-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

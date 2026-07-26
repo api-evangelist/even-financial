@@ -1,0 +1,8 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/even-financial-openapi-original.json
+workflows:
+- file: even-financial-submit-lead-rate-table.yml
+  workflowId: submitLeadAndGetRateTable
+  title: Submit a lead and retrieve its rate table
+  summary: Submit a consumer lead to Engine by MoneyLion and read back the resulting rate table of offers.

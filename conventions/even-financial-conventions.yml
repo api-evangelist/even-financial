@@ -1,0 +1,37 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/even-financial-openapi-original.json
+docs: https://engine.tech/docs/api-reference/
+authentication:
+  style: http-bearer
+  header: Authorization
+  format: 'Bearer {token}'
+  token_classes: [publishable, confidential, experimental]
+  cross_ref: authentication/even-financial-authentication.yml
+idempotency:
+  supported: false
+  note: No Idempotency-Key header or idempotency contract is documented in the OpenAPI or docs.
+pagination:
+  style: cursor
+  params: [paginationToken, sinceTimestamp, untilTimestamp]
+  applies_to: Analytics (supplyAnalytics) endpoints
+  note: Cursor pagination via an opaque paginationToken, bounded by since/until timestamps.
+versioning:
+  style: request-header
+  header: API-Version
+  value: date-stamp
+  cross_ref: lifecycle/even-financial-lifecycle.yml
+error_envelope:
+  shape: application/json array of ApiError objects
+  fields: [attribute, type, details]
+  format: custom (not RFC 9457)
+  cross_ref: errors/even-financial-problem-types.yml
+rate_limiting:
+  signaled: false
+  note: No standard rate-limit response headers (X-RateLimit-*, Retry-After) are documented in the spec.
+tracing:
+  request_id_header: null
+metadata:
+  client_tags: >-
+    Partners can append arbitrary Client Tags to leads for reporting and attribution
+    (see channel-partner-reporting/appending-client-tags-for-reporting-and-attribution).

@@ -1,0 +1,156 @@
+# Developer Center
+
+## Developer Center
+
+- [Welcome!](https://even-financial.gitbook.io/developer-center/welcome.md): This is the partner source for documentation, technical specs, and more across the entire Engine by MoneyLion Platform.
+- [Internal ReadMe - Do Not Unhide](https://even-financial.gitbook.io/developer-center/internal-readme.md)
+- [Top of Funnel Calculators](https://even-financial.gitbook.io/developer-center/embeddable-integrations/top-of-funnel-calculators.md): Integrate Embeddable Calculators onto your site to guide the user journey
+- [Personal Loan Calculator](https://even-financial.gitbook.io/developer-center/embeddable-integrations/top-of-funnel-calculators/personal-loan-calculator.md): Integrate Calculators Into Your Site
+- [Debt Consolidation Loan Calculator](https://even-financial.gitbook.io/developer-center/embeddable-integrations/top-of-funnel-calculators/debt-consolidation-loan-calculator.md): Integrate Calculators Into Your Site
+- [Personal Loan vs Debt Relief Calculator](https://even-financial.gitbook.io/developer-center/embeddable-integrations/top-of-funnel-calculators/personal-loan-vs-debt-relief-calculator.md): Integrate Personal Loans vs Debt Relief Calculators Into Your Site
+- [Savings Calculator](https://even-financial.gitbook.io/developer-center/embeddable-integrations/top-of-funnel-calculators/embeddable-calculators.md): Integrate Savings Calculators Into Your Site
+- [Partner Pages](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages.md)
+- [Personal Loans Marketplace](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/partner-pages.md): How to get started with an Engine by MoneyLion marketplace Partner Page integration for Personal Loans
+- [Preferred Look Partner Pages](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/partner-pages/preferred-look.md)
+- [Bridge Partner Pages](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/partner-pages/bridge.md)
+- [New Marketplaces](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/special-offer.md)
+- [Credit Cards Marketplace](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/credit-cards-marketplace.md)
+- [Banking (Deposits) Marketplace](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/banking-deposits-marketplace.md)
+- [Auto Insurance Marketplace](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/auto-insurance-marketplace.md)
+- [Frond-End Customization Options](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/customization.md): Customize the look and feel of your loans partner page experience.
+- [Pre-Populating Existing Customer Data](https://even-financial.gitbook.io/developer-center/embeddable-integrations/partner-pages/pre-populating-existing-customer-data.md)
+- [Embeds](https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds.md)
+- [Personal Loans Marketplace](https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds/embeds.md): How to get started with an Engine by MoneyLion marketplace Embed integration for Personal Loans
+- [Credit Cards Marketplace](https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds/credit-cards-marketplace.md)
+- [Banking (Deposits) Marketpalce](https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds/banking-deposits-marketpalce.md)
+- [New Marketplaces](https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds/embeds-1.md): How to get started with an Engine by MoneyLion marketplace Embed integration for New Marketplaces.
+- [Auto Insurance Marketplace](https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds/auto-insurance-marketplace.md)
+- [Offer Caoursel](https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds/offer-caoursel.md)
+- [Pre-Populating Existing Customer Data](https://even-financial.gitbook.io/developer-center/embeddable-integrations/widgets-and-embeds/pre-populating-existing-customer-data.md)
+- [Mobile SDKs](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks.md): Welcome to Engine by MoneyLion’s React Native SDK Integration Guide.
+- [Personal Loans](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/personal-loans.md): Choosing an Integration Approach for Personal Loans Mobile SDKs
+- [Recommended](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/personal-loans/recommended.md): How to get started with your Personal Loans Mobile React Native SDK integration (Recommended)
+- [Event Handlers for Real-Time Tracking](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/personal-loans/recommended/native-event-handlers.md): Instructions for using event handlers in the Engine Mobile SDK
+- [Experimental](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/personal-loans/experimental.md): Personal Loans Web Wrapper SDK Integration Guide (Experimental)
+- [Prefill Lead Data](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/personal-loans/experimental/prefill.md): Prefilling Lead Data for Personal Loans (Web Wrapper)
+- [Client Tags](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/personal-loans/experimental/client-tags.md): Client Tags for Reporting (Personal Loans, Web Wrapper)
+- [Event Handlers](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/personal-loans/experimental/event-handlers.md): Event Handlers for Tracking (Personal Loans, Web Wrapper)
+- [Credit Cards](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/credit-cards.md): Credit Cards Mobile SDK Integration Guide (Web Wrapper)
+- [Prefill Lead Data](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/credit-cards/prefill.md): Prefilling Lead Data for Credit Cards (Web Wrapper)
+- [Client Tags](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/credit-cards/client-tags.md): Client Tags for Reporting (Credit Cards, Web Wrapper)
+- [Event Handlers](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/credit-cards/event-handlers.md): Event Handlers for Tracking (Credit Cards, Web Wrapper)
+- [Debt Relief](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/debt-relief.md)
+- [Offer Carousel](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/offer-carousel.md): Welcome to the Offer Carousel React Native SDK Integration Guide
+- [Changelogs](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/changelogs.md)
+- [React Native Personal Loan SDK](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/changelogs/personal-loan.md)
+- [React Native Offer Carousel SDK](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/changelogs/offer-carousel.md)
+- [React Native Debt Relief SDK](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/changelogs/debt-relief.md)
+- [Flutter Personal Loans SDK](https://even-financial.gitbook.io/developer-center/embeddable-integrations/mobile-sdks/changelogs/flutter-wrapper-sdk.md)
+- [Offer Wall API](https://even-financial.gitbook.io/developer-center/hybrid-api-integrations/offer-wall-api-integrations.md)
+- [1st & 2nd Look Marketplace](https://even-financial.gitbook.io/developer-center/hybrid-api-integrations/offer-wall-api-integrations/1st-and-2nd-look-marketplace.md)
+- [New Marketplaces - Offer Carousel](https://even-financial.gitbook.io/developer-center/hybrid-api-integrations/offer-wall-api-integrations/new-marketplaces-offer-carousel.md)
+- [Second Party Prefill API](https://even-financial.gitbook.io/developer-center/hybrid-api-integrations/second-party-prefill-api.md)
+- [Loans Marketplaces](https://even-financial.gitbook.io/developer-center/hybrid-api-integrations/second-party-prefill-api/loans-marketplaces.md)
+- [Credit Cards Marketplace](https://even-financial.gitbook.io/developer-center/hybrid-api-integrations/second-party-prefill-api/credit-cards-marketplace.md)
+- [Offer Preview API Integrations](https://even-financial.gitbook.io/developer-center/hybrid-api-integrations/offer-preview-api-integrations.md)
+- [Personal Loans](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal.md): How to get started with an Engine by MoneyLion Loans Marketplace Native API Integration
+- [Collecting User Information for Personal Loans](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/collecting-user-information.md)
+- [Jornaya Consent Capture Requirements](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/jornaya-consent-capture-requirements.md)
+- [Displaying Personal Loan Offers](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/displaying-offers.md)
+- [API Specifications](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/api-specifications.md)
+- [FAQs](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/faq.md)
+- [General Compliance Guidelines](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/compliance.md): Compliance guidelines for native API integrations for Loans/Savings/2nd Look Marketplace
+- [Consumer Information Fields](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/compliance/consumer-information-fields.md)
+- [Disclosures](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/compliance/disclosures.md)
+- [Consents](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/compliance/consents.md)
+- [Additional Compliance Recommendations & Best Practices](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/compliance/additional-compliance-recommendations-and-best-practices.md)
+- [Offer Display Fields](https://even-financial.gitbook.io/developer-center/native-api-integrations/personal/compliance/offer-display-fields.md)
+- [2nd Look Marketplace](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace.md)
+- [2nd Look Marketplace (Financial Services Providers)](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/financial-service-providers.md): API BUILD GUIDANCE
+- [2nd Look Marketplace (Channel Partners)](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/channel-partners.md): Alternative Financial Product Offers in Loans Vertical
+- [Collecting User Information for 2LM](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/channel-partners/collecting-user-information-for-2lm.md)
+- [Displaying 2L Marketplace Offers](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/channel-partners/displaying-offers.md)
+- [API Specifications](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/channel-partners/api-specifications.md)
+- [General Compliance Guidelines](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/compliance.md): Compliance guidelines for native API integrations for Loans/Savings/2nd Look Marketplace
+- [Consumer Information Fields](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/compliance/consumer-information-fields.md)
+- [Disclosures](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/compliance/disclosures.md)
+- [Consents](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/compliance/consents.md)
+- [Additional Compliance Recommendations & Best Practices](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/compliance/additional-compliance-recommendations-and-best-practices.md)
+- [Offer Display Fields](https://even-financial.gitbook.io/developer-center/native-api-integrations/2nd-look-marketplace/compliance/offer-display-fields.md)
+- [Banking & Savings](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings.md): Savings marketplace native api integration guide
+- [Collection User Information for Savings](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/information-collection-for-savings-offers.md)
+- [Displaying Savings Offers](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/displaying-savings-offers.md)
+- [Marketplace Display Requirements](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/marketplace-display-requirements.md)
+- [Reporting](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/reporting.md)
+- [API Specifications](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/api-specifications.md)
+- [General Compliance Guidelines](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/compliance.md): Compliance guidelines for native API integrations for Loans/Savings/2nd Look Marketplace
+- [Consumer Information Fields](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/compliance/consumer-information-fields.md)
+- [Disclosures](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/compliance/disclosures.md)
+- [Consents](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/compliance/consents.md)
+- [Additional Compliance Recommendations & Best Practices](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/compliance/additional-compliance-recommendations-and-best-practices.md)
+- [Offer Display Fields](https://even-financial.gitbook.io/developer-center/native-api-integrations/savings/compliance/offer-display-fields.md)
+- [Credit Cards Marketplace](https://even-financial.gitbook.io/developer-center/native-api-integrations/credit-cards-marketplace.md): How to get started with an Engine by MoneyLion Credit Cards Marketplace Native API Integration
+- [Getting Started](https://even-financial.gitbook.io/developer-center/native-api-integrations/credit-cards-marketplace/getting-started.md)
+- [Flow Design](https://even-financial.gitbook.io/developer-center/native-api-integrations/credit-cards-marketplace/flow-design.md)
+- [Collecting User Information for Credit Cards](https://even-financial.gitbook.io/developer-center/native-api-integrations/credit-cards-marketplace/collecting-user-information-for-credit-cards.md)
+- [Displaying Credit Card Offers](https://even-financial.gitbook.io/developer-center/native-api-integrations/credit-cards-marketplace/displaying-credit-card-offers.md)
+- [API Specifications](https://even-financial.gitbook.io/developer-center/native-api-integrations/credit-cards-marketplace/api-specifications.md)
+- [Compliance Guidelines](https://even-financial.gitbook.io/developer-center/native-api-integrations/credit-cards-marketplace/compliance-guidelines.md): Compliance guidelines for native API integrations for Loans/Savings/2nd Look Marketplace
+- [Auto Loan Refinancing (ALR)](https://even-financial.gitbook.io/developer-center/native-api-integrations/auto-refinancing.md): HOW TO GET STARTED WITH AN ENGINE BY MONEYLION NATIVE API INTEGRATION
+- [Collecting User Information](https://even-financial.gitbook.io/developer-center/native-api-integrations/auto-refinancing/collecting-user-information.md)
+- [Displaying Auto Loan Refinance Offers](https://even-financial.gitbook.io/developer-center/native-api-integrations/auto-refinancing/displaying-offers.md)
+- [API Specifications](https://even-financial.gitbook.io/developer-center/native-api-integrations/auto-refinancing/api-specifications.md)
+- [FAQs](https://even-financial.gitbook.io/developer-center/native-api-integrations/auto-refinancing/faq.md)
+- [Home Equity Line of Credit (HELOC)](https://even-financial.gitbook.io/developer-center/native-api-integrations/heloc.md): BEST PRACTICES & POLICY
+- [Displaying Offers HELOC](https://even-financial.gitbook.io/developer-center/native-api-integrations/heloc/displaying-offers.md): Guidelines for displaying Home Equity Line of Credit offers
+- [Risk Factors & Requirements](https://even-financial.gitbook.io/developer-center/native-api-integrations/heloc/risk-factors-and-requirements.md)
+- [Dos & Don’ts for All HELOC Supply Partners](https://even-financial.gitbook.io/developer-center/native-api-integrations/heloc/dos-and-donts-for-all-heloc-supply-partners.md)
+- [Dos & Don’ts for HELOC Native Partners (API)](https://even-financial.gitbook.io/developer-center/native-api-integrations/heloc/dos-and-donts-for-heloc-native-partners-api.md)
+- [Our Embed/Partner Page Implementation](https://even-financial.gitbook.io/developer-center/native-api-integrations/heloc/our-embed-partner-page-implementation.md)
+- [HELOC-specific disclosures](https://even-financial.gitbook.io/developer-center/native-api-integrations/heloc/heloc-specific-disclosures.md)
+- [Offer Searches Overview](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/offer-searches-overview.md)
+- [API Versions](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions.md)
+- [2025-10-15](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2025-10-15.md)
+- [Offer Searches](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2025-10-15/offer-searches.md)
+- [Models](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2025-10-15/models.md)
+- [2025-12-09](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2025-12-09.md)
+- [Offer Searches](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2025-12-09/offer-searches.md)
+- [Models](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2025-12-09/models.md)
+- [2026-02-25](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2026-02-25.md)
+- [Offer Searches](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2026-02-25/offer-searches.md)
+- [Models](https://even-financial.gitbook.io/developer-center/alpha-offer-searches-api/api-versions/2026-02-25/models.md)
+- [Engine Analytics API](https://even-financial.gitbook.io/developer-center/channel-partner-reporting/engine-analytics-api.md)
+- [Looker Reporting](https://even-financial.gitbook.io/developer-center/channel-partner-reporting/looker-reporting.md)
+- [Postback Reporting](https://even-financial.gitbook.io/developer-center/channel-partner-reporting/postback-reporting.md): This page describes how to take advantage of Engine by MoneyLion's Postback reporting capabilities
+- [Appending Client Tags for Reporting & Attribution](https://even-financial.gitbook.io/developer-center/channel-partner-reporting/appending-client-tags-for-reporting-and-attribution.md): This page has instructions for appending your own Client Tags to leads coming through Engine's marketplace.
+- [Channel Partner Reporting - Control Center](https://even-financial.gitbook.io/developer-center/channel-partner-reporting/channel-partner-reporting-control-center.md)
+- [Channel Partner Reporting - Analytics API](https://even-financial.gitbook.io/developer-center/channel-partner-reporting/channel-partner-reporting-analytics-api.md)
+- [Antiscam SDK (Android)](https://even-financial.gitbook.io/developer-center/cyber-safety-and-identity-solutions/antiscam-sdk-android.md)
+- [Antiscam SDK (iOS)](https://even-financial.gitbook.io/developer-center/cyber-safety-and-identity-solutions/antiscam-sdk-ios.md)
+- [Identity SDK](https://even-financial.gitbook.io/developer-center/cyber-safety-and-identity-solutions/identity-sdk.md)
+- [Privacy Services API](https://even-financial.gitbook.io/developer-center/cyber-safety-and-identity-solutions/privacy-services-api.md)
+- [Subscription API](https://even-financial.gitbook.io/developer-center/cyber-safety-and-identity-solutions/subscription-api.md)
+- [SSO Integration: Embedded Cyber Safety & Identity Products](https://even-financial.gitbook.io/developer-center/cyber-safety-and-identity-solutions/sso-integration-embedded-cyber-safety-and-identity-products.md)
+- [Brand Guidelines and Assets](https://even-financial.gitbook.io/developer-center/references/brand-guidelines-and-assets.md): How to represent Engine by MoneyLion, and the assets you’ll need to do so.
+- [Appendix](https://even-financial.gitbook.io/developer-center/references/appendix.md)
+- [Appendix A - Notices](https://even-financial.gitbook.io/developer-center/references/appendix/a.md): Consumer Information Fields – Additional Compliance Recommendation And Best Practices
+- [Appendix B - Disclosures](https://even-financial.gitbook.io/developer-center/references/appendix/b.md): Disclosures
+- [Appendix C - Consents](https://even-financial.gitbook.io/developer-center/references/appendix/c.md): Consents
+- [Appendix D: API Field to Offer Card Mappings](https://even-financial.gitbook.io/developer-center/references/appendix/appendix-d-api-field-to-offer-card-mappings.md): This page contains screenshots of how offer response fields from the Engine API should be displayed in your UI.
+- [Appendix F: Secured Loan Speedbump details](https://even-financial.gitbook.io/developer-center/references/appendix/appendix-f-secured-loan-speedbump-details.md)
+
+
+---
+
+# Agent Instructions
+This documentation is published with GitBook. GitBook is the documentation platform designed so that both humans and AI agents can read, navigate, and reason over technical content effectively. Learn more at gitbook.com.
+
+## Querying This Documentation
+If you need additional information, you can query the documentation dynamically by asking a question.
+Perform an HTTP GET request on a page URL with the `ask` query parameter:
+```
+GET https://even-financial.gitbook.io/developer-center/welcome.md?ask=<question>
+```
+The question should be specific, self-contained, and written in natural language.
+The response will contain a direct answer to the question and relevant excerpts and sources from the documentation.
+Use this mechanism when the answer is not explicitly present in the current page, you need clarification or additional context, or you want to retrieve related documentation sections.

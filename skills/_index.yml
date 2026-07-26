@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/even-financial-openapi-original.json
+skills:
+- file: even-financial-submit-lead-rate-table.md
+  name: Submit a lead and get a rate table
+  api: openapi/even-financial-openapi-original.json
+  operations: [submitLead, getRateTableForSpecifiedLead, getRateTable, getLead, updateLead]
+- file: even-financial-preview-offers.md
+  name: Preview product offers
+  api: openapi/even-financial-openapi-original.json
+  operations: [getPreviewLoanOffers, getPreviewCreditCardOffers, getPreviewSavingsOffers, getFeaturedFinancialInstitutions]
+- file: even-financial-approval-probability.md
+  name: Get a loan approval probability report
+  api: openapi/even-financial-openapi-original.json
+  operations: [createLoansApprovalProbabilityReport, getLoansApprovalProbabilityReport]

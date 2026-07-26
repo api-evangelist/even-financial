@@ -1,0 +1,27 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Engine by MoneyLion (Even Financial)
+  version: 1.0.0
+extends: openapi/even-financial-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-slug: even-financial
+    x-apievangelist-provider: Engine by MoneyLion (formerly Even Financial)
+    x-apievangelist-enriched: '2026-07-19'
+    x-apievangelist-artifacts:
+    - authentication/even-financial-authentication.yml
+    - conventions/even-financial-conventions.yml
+    - errors/even-financial-problem-types.yml
+    - lifecycle/even-financial-lifecycle.yml
+    - data-model/even-financial-data-model.yml
+- target: $.info
+  update:
+    x-agent-readiness-notes: >-
+      Bearer-token auth (no OAuth). Cursor pagination on analytics endpoints via paginationToken.
+      Date-header versioning (API-Version). No idempotency contract or standard rate-limit headers.
+      Errors are a JSON array of ApiError objects (not RFC 9457).
+- target: $.externalDocs
+  update:
+    x-developer-center: https://even-financial.gitbook.io/developer-center
+    x-status-page: https://status.engine.tech
