@@ -303,6 +303,8 @@ apis:
   - type: APIReference
     url: https://engine.tech/docs/api-reference/
 common:
+- type: Overlay
+  url: overlays/even-financial-openapi-overlay.yaml
 - type: DeveloperPortal
   url: https://even-financial.gitbook.io/developer-center
 - type: Documentation
