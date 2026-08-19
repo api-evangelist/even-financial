@@ -1,0 +1,134 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Engine by MoneyLion Analytics Lead API",
+    "version": "1.106.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Lead",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Submit lead",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engine.tech/leads/rateTables",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submit a lead and get a rate table. If the rate table has a non-empty `pendingResponses` array, reload it via the \"Get rate table\" endpoint. For more details see [the Lead overview](https://engine.tech/docs/api-reference/#even-financial-api-lead)."
+        },
+        {
+          "info": {
+            "name": "Submit a lead and get a rate table",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engine.tech/leads/:leadUuid/rateTables",
+            "params": [
+              {
+                "name": "leadUuid",
+                "value": "",
+                "type": "path",
+                "description": "The UUID of the lead we want to create a rate table for."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submit a lead and get a rate table"
+        },
+        {
+          "info": {
+            "name": "Get rate table",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/originator/rateTables/:uuid",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the rate table for a specified UUID. If the UUID is unkown, a `404 Not Found` response will be returned.\n\nUsually used to poll a rate table that has pending responses immediately after creation via the \"Submit lead\" endpoint. For more details see [the Lead overview](https://engine.tech/docs/api-reference/#even-financial-api-lead)."
+        },
+        {
+          "info": {
+            "name": "Get lead",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/leads/:uuid",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the lead for a specified UUID. If the UUID is unkown, a `404 Not Found` response will be returned."
+        },
+        {
+          "info": {
+            "name": "Update a lead",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.engine.tech/leads/:uuid",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a `Lead` by its UUID. Array fields (like `productTypes`) with new values are _merged_ with existing values."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,60 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Engine by MoneyLion Analytics Prefill API",
+    "version": "1.106.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Prefill",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get prefill data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/originator/prefills/:prefillToken",
+            "params": [
+              {
+                "name": "prefillToken",
+                "value": "",
+                "type": "path",
+                "description": "The UUID of the prefill token"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "First-party Prefill data."
+        },
+        {
+          "info": {
+            "name": "Prefill data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engine.tech/originator/prefills",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Second-party Prefill data."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

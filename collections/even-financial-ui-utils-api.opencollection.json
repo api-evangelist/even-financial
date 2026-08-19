@@ -1,0 +1,176 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Engine by MoneyLion Analytics UI Utils API",
+    "version": "1.106.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "UI Utils",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get university names",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/leads/universities",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Fragment of a university name to seach for."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip before the first returned result."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results to return."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a list of university names that correspond to the specified fragment.\n\nThis is useful for implementing an autocomplete input for the `educationInformation.universityAttended` lead field when searching for student loan refinancing loans. See the [Student Loan Refinancing overview](https://engine.tech/docs/api-reference/#student-loan-refinancing)."
+        },
+        {
+          "info": {
+            "name": "Get vehicle years",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/leads/vehicles/years",
+            "params": [
+              {
+                "name": "minYear",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "maxYear",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all available vehicle years\n\nThis is useful for implementing a select input for vehicle years when searching for auto loan refinancing loans. A valid combination of year, make, model, and trim corresponds to a vehicle UUID that can be used in the `vehicleInformation.vehicleUuid` field. See the [Auto Loan Refinancing overview](https://engine.tech/docs/api-reference/#auto-loan-refinancing)."
+        },
+        {
+          "info": {
+            "name": "Get vehicle makes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/leads/vehicles/makes",
+            "params": [
+              {
+                "name": "year",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all makes for the given vehicle year\n\nThis is useful for implementing a select input for vehicle makes when searching for auto loan refinancing loans. A valid combination of year, make, model, and trim corresponds to a vehicle UUID that can be used in the `vehicleInformation.vehicleUuid` field. See the [Auto Loan Refinancing overview](https://engine.tech/docs/api-reference/#auto-loan-refinancing)."
+        },
+        {
+          "info": {
+            "name": "Get vehicle models",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/leads/vehicles/models",
+            "params": [
+              {
+                "name": "year",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "make",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all models for the given vehicle year and make\n\nThis is useful for implementing a select input for vehicle models when searching for auto loan refinancing loans. A valid combination of year, make, model, and trim corresponds to a vehicle UUID that can be used in the `vehicleInformation.vehicleUuid` field. See the [Auto Loan Refinancing overview](https://engine.tech/docs/api-reference/#auto-loan-refinancing)."
+        },
+        {
+          "info": {
+            "name": "Get vehicle trims",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/leads/vehicles/trims",
+            "params": [
+              {
+                "name": "year",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "make",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "model",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get vehicle details, including trims and uuids, for the given year, make, and model\n\nThis is useful for implementing a select input for vehicle trims when searching for auto loan refinancing loans. A valid combination of year, make, model, and trim corresponds to a vehicle UUID that can be used in the `vehicleInformation.vehicleUuid` field. The uuid field returned in successful response objects corresponds to a valid `vehicleUuid`. See the [Auto Loan Refinancing overview](https://engine.tech/doc"
+        },
+        {
+          "info": {
+            "name": "Get featured financial institutions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/uiUtil/featuredFinancialInstitutions",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a list of featured financial institution names and logos that can be displayed prior to collecting personal information in a search application to improve the user experience.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

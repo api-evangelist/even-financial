@@ -1,0 +1,176 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Engine by MoneyLion Analytics API",
+    "version": "1.106.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Analytics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get lead events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/supplyAnalytics/leadEvents",
+            "headers": [
+              {
+                "name": "API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "sinceTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "The lower bound for when an event hit Engine's system. Use this on your initial request.\n"
+              },
+              {
+                "name": "untilTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "The upper bound of events to include (exclusive - timestamps less than this parameter)\n"
+              },
+              {
+                "name": "paginationToken",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor for subsequent requests. Obtained from previous response.\n"
+              },
+              {
+                "name": "eventType",
+                "value": "",
+                "type": "query",
+                "description": "List of event types to filter by if specified. Pass multiple values either as repeated parameters or a single parameter with comma separated values.\n"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "### What is the Lead Events API used for?\n\nWith the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\nThe endpoint returns events associated with each lead. The event type is indicated by the eventType property. Each event will also include metadata applicable to the eventType. It allows easy consumption of the events into your database so that you can integrate it into your BI framework and compare it alon"
+        },
+        {
+          "info": {
+            "name": "Get lead payouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/supplyAnalytics/leadPayouts",
+            "headers": [
+              {
+                "name": "API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "sinceTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "The lower bound for when an event hit Engine's system. Use this on your initial request.\n"
+              },
+              {
+                "name": "untilTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "The upper bound of events to include (exclusive - timestamps less than this parameter)\n"
+              },
+              {
+                "name": "paginationToken",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor for subsequent requests. Obtained from previous response.\n"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "### What is the Lead Payouts API used for?\n\nWith Lead payout API you can collect granular payout information for leads you have submitted. It returns payout events associated with a lead. Event data is limited to the amount that was paid out, and when the payout was booked.\n\nWe recently added two additional optional fields to the payout event information tied to leads:\n\n\n  - `financialInstitutionUuid`\n  - `financialInstitutionName`\n\n\nThese fields will tie conversion events to specific Financial "
+        },
+        {
+          "info": {
+            "name": "Get lead client tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/supplyAnalytics/leadClientTags",
+            "headers": [
+              {
+                "name": "API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "sinceTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "The lower bound for when an event hit Engine's system. Use this on your initial request.\n"
+              },
+              {
+                "name": "untilTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "The upper bound of events to include (exclusive - timestamps less than this parameter)\n"
+              },
+              {
+                "name": "paginationToken",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor for subsequent requests. Obtained from previous response.\n"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "### What is the Lead Client Tags API used for?\n\nClient tags (also known as Custom Lead Attributes) are arbitrary key:value pairs of information that can be set using the API or URL of a partner page to enable custom segmentation. Client tags provides you a method to be able to segment leads to support uses cases like:\n\n\n - See how various traffic sources on the supply partners site perform\n - See what preferences their users from different segments have\n\n\nThe lead client tag endpoint returns cli"
+        },
+        {
+          "info": {
+            "name": "Get all combined information for a lead",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/supplyAnalytics/leadsInfo/:leadUuid",
+            "headers": [
+              {
+                "name": "API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "leadUuid",
+                "value": "",
+                "type": "path",
+                "description": "The UUID of the lead you wish to obtain the information for."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Provides a snapshot of all information about a lead - events, payouts and client tags.\n\nIn rare cases with extremely large data volume, results may be truncated to fit the response size limit and HTTP 206 will be returned along with `warnings`.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

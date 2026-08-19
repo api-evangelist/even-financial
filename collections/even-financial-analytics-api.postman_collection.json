@@ -1,0 +1,1178 @@
+{
+  "item": [
+    {
+      "id": "23972e06-f4ef-4c04-986a-1496ac15ea57",
+      "name": "Analytics",
+      "description": {
+        "content": "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "49720e83-7634-4130-bd2b-293fe2f52104",
+          "name": "Get lead events",
+          "request": {
+            "name": "Get lead events",
+            "description": {
+              "content": "### What is the Lead Events API used for?\n\nWith the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\nThe endpoint returns events associated with each lead. The event type is indicated by the eventType property. Each event will also include metadata applicable to the eventType. It allows easy consumption of the events into your database so that you can integrate it into your BI framework and compare it alongside data from other systems to assess performance holistically.\n\n### How does it work?\n\nThe endpoint is cursor based. You can consume batches of events for the product tied to your sub account. All that is required is a bearer token and previous `paginationToken` or `sinceTimestamp`. The endpoint will respond with all of the events that have happened from that point forward subject to optional `untilTimestamp` parameter and page size limit. It will also include a pointer to the next page (`paginationToken`) to be used for a subsequent call. This endpoint should be polled hourly to fetch new events.\n\nFor convenience, we provide a `shouldContinuePolling` flag to signal if data has been published at the location of the `nextUrl`. Since the endpoint will return as much data as it can, unless there is more data that can fit in a single response, this flag will usually be false as all available data has been returned.\n\nThe endpoint is designed for paging forward through data in order to populate your local database. By relying on the `nextUrl` parameter provided in the preceding call's response, we can guarantee a) you will see no gaps, and b) you will see no duplicates.\n\nIf constructing the url manually, subsequent requests should use `paginationToken` from the last response and omit `sinceTimestamp`.\n\nThis endpoint should be polled no more frequently than every 5 minutes, we recommend hourly. Data for this endpoint is made available with a 5 minute SLA.\n\nIf the current time is '2020-01-01T00:15:00Z' UTC, making a request to this endpoint with the timestamp set to '2020-01-01T00:14:00Z' will error because of the 5 minute SLA. Making a request with a timestamp of '2020-01-01T00:09:00Z' however, will succeed.\n\n### Event Definitions\n\nCommon Attributes\n\n<table>\n  <thead>\n    <tr>\n      <th>Attribute Name</th>\n      <th>Type</th>\n      <th>Format</th>\n      <th>Enum</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>eventType</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>leadCreated appSubmitted apiApproved apiRejected offerClicked affiliateOfferClicked applied approved listed opened funded conversation lenderQualifiedLead</td>\n    </tr>\n    <tr>\n      <td>leadUuid</td>\n      <td>string</td>\n      <td>uuid</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>leadCreatedAt</td>\n      <td>string</td>\n      <td>date-time</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>eventCreatedAt</td>\n      <td>string</td>\n      <td>date-time</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>eventDeletedAt</td>\n      <td>string</td>\n      <td>date-time</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>amountInCents</td>\n      <td>double</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>supplySubAccountName</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>supplySubAccountUuid</td>\n      <td>string</td>\n      <td>uuid</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>financialInstitutionName</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>financialInstitutionUuid</td>\n      <td>string</td>\n      <td>uuid</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>unifiedProductType</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>productType</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>creditCard insurance lifeInsurance loan mortgage savings other</td>\n    </tr>\n    <tr>\n      <td>productSubType</td>\n      <td>string</td>\n      <td>&#xa0;</td>\n      <td>&#xa0;</td>\n    </tr>\n    <tr>\n      <td>isTest</td>\n      <td>boolean</td>\n      <td>&#xa0;</td>\n      <td>Whether a Lead was created using a test access token</td>\n    </tr>\n    <tr>\n      <td>paginationTimestamp</td>\n      <td>string</td>\n      <td>date-time</td>\n      <td>Time when the event entered our system.</td>\n    </tr>\n  </tbody>\n</table>\n\nCommon Event Types\n\n<table>\n  <thead>\n    <tr>\n      <th> Event Type </th>\n      <th> Required Attributes </th>\n      <th> Optional Attributes </th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td> leadCreated </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt </td>\n      <td> </td>\n    </tr>\n    <tr>\n      <td> appSubmitted </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt </td>\n      <td> </td>\n    </tr>\n    <tr>\n      <td> apiApproved </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> apiRejected </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> offerClicked </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> affiliateOfferClicked </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> applied </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> approved </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> listed </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> opened </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n  </tbody>\n</table>\n\nEvent Types for Personal Loans Funnel\n\n<table>\n  <thead>\n    <tr>\n      <th> Event Type </th>\n      <th> Definition </th>\n      <th> Required Attributes </th>\n      <th> Optional Attributes </th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td> leadCreated </td>\n      <td> A user enters the marketplace funnel </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> appSubmitted </td>\n      <td> The lead has filled out the information in the Engine by MoneyLion application and a rate table has been created </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> apiApproved </td>\n      <td> Financial institution has pre-approved or pre-qualified a user for at least one offer </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> apiRejected </td>\n      <td> Financial institution has not pre-approved or pre-qualified a user for any offers </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> offerClicked </td>\n      <td> The user clicks on or is auto redirected into an offer </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> affiliateOfferClicked </td>\n      <td> The user clicks on or is auto redirected into an affiliate offer </td>\n      <td> See under common event types </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> applied </td>\n      <td> The user applied for an offer in the financial institution's experience </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType amountInCents </td>\n    </tr>\n    <tr>\n      <td> approved </td>\n      <td> The user was approved for an offer after applying in the financial institution's experience </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType amountInCents </td>\n    </tr>\n    <tr>\n      <td> listed </td>\n      <td> The user's loan was listed on the financial institution's marketplace for funding </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType amountInCents </td>\n    </tr>\n    <tr>\n      <td> funded </td>\n      <td> The user has a loan funded </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType amountInCents </td>\n    </tr>\n    <tr>\n      <td> opened </td>\n      <td> The user monetizes with a special offer </td>\n      <td> See under common events </td>\n      <td></td>\n    </tr>\n    <tr>\n      <td> conversion </td>\n      <td> This event varies by lender, and will be deprecated. </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n    <tr>\n      <td> lenderQualifiedLead </td>\n      <td> Financial institution further collected information from a lead </td>\n      <td> eventType leadUuid leadCreatedAt eventCreatedAt financialInstitutionName financialInstitutionUuid amountInCents </td>\n      <td> unifiedProductType productType productSubType </td>\n    </tr>\n  </tbody>\n</table>\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "supplyAnalytics",
+                "leadEvents"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "sinceTimestamp",
+                  "value": "<dateTime>",
+                  "description": "The lower bound for when an event hit Engine's system. Use this on your initial request.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "untilTimestamp",
+                  "value": "<dateTime>",
+                  "description": "The upper bound of events to include (exclusive - timestamps less than this parameter)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "paginationToken",
+                  "value": "<string>",
+                  "description": "Opaque cursor for subsequent requests. Obtained from previous response.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "eventType",
+                  "value": "<string>,<string>",
+                  "description": "List of event types to filter by if specified. Pass multiple values either as repeated parameters or a single parameter with comma separated values.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                "key": "API-Version",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "3bd99700-31f0-4793-9b6a-d3e503a242a1",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadEvents"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nextUrl\": \"https://api.engine.tech/supplyAnalytics/leadEvents?paginationToken=gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g\",\n  \"shouldContinuePolling\": false,\n  \"paginationToken\": \"gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g\",\n  \"data\": [\n    {\n      \"id\": \"5550066157addee59022a5e69b12f26feba5c6ff461210309a4fc846a38c404d\",\n      \"leadUuid\": \"4bbb25a6-6fcf-4ed3-88f9-6daacb0f8b33\",\n      \"leadCreatedAt\": \"2021-01-01T11:24:45Z\",\n      \"eventType\": \"offerClicked\",\n      \"eventCreatedAt\": \"2019-09-22T17:44:22Z\",\n      \"financialInstitutionUuid\": \"da14e06b-0866-4f02-a3b2-9443501b25b9\",\n      \"financialInstitutionName\": \"OpenSky®\",\n      \"isTest\": false,\n      \"paginationTimestamp\": \"2019-09-22T17:51:00Z\"\n    },\n    {\n      \"id\": \"faa7b339d89453e284e68e76d0c7b0600f04c276a895a3cbc720803164c45434\",\n      \"leadUuid\": \"39afdb4a-ef26-42ed-a313-e28288f95099\",\n      \"leadCreatedAt\": \"2021-01-01T20:42:06Z\",\n      \"eventType\": \"apiApproved\",\n      \"eventCreatedAt\": \"2019-10-10T20:44:28Z\",\n      \"financialInstitutionUuid\": \"da14e06b-0866-4f02-a3b2-9443501b25b9\",\n      \"financialInstitutionName\": \"LendingClub\",\n      \"isTest\": false,\n      \"paginationTimestamp\": \"2019-10-10T20:51:00Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "df68c045-2d76-45ca-ac99-c4695c0eb263",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadEvents"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "15c5c628-c825-429a-9513-0e1bee6da362",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadEvents"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>,<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"attribute\": \"timestamp\",\n    \"type\": \"missing\",\n    \"message\": \"timestamp must be specified\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "494c1739-172e-46bd-a678-ab4689bc1094",
+          "name": "Get lead payouts",
+          "request": {
+            "name": "Get lead payouts",
+            "description": {
+              "content": "### What is the Lead Payouts API used for?\n\nWith Lead payout API you can collect granular payout information for leads you have submitted. It returns payout events associated with a lead. Event data is limited to the amount that was paid out, and when the payout was booked.\n\nWe recently added two additional optional fields to the payout event information tied to leads:\n\n\n  - `financialInstitutionUuid`\n  - `financialInstitutionName`\n\n\nThese fields will tie conversion events to specific Financial Institutions (Lenders) for your knowledge and analytical use. We include these additional fields to disambiguate which financial institution a given payout originates from in the case of multiple payouts against a given lead. Not all lead payout events can be traced back to a financial institution, so these fields are optional. The Financial Institution Name is not guaranteed to be a stable identifier of the entity; Financial Institution UUID is.\n\nLeadPayout `deletedAt` will report the time that the payout was deleted. Payouts get deleted when there are post dated Contract changes or partner reporting errors requiring reingestion of EDEs.\n\n### How does it work?\n\nThe endpoint is cursor based. You can consume batches of events for the product tied to your company uuid. All that is required is a bearer token and previous `paginationToken` or `sinceTimestamp`. The endpoint will respond with all of the events that have happened from that point forward subject to optional `untilTimestamp` parameter and page size limit (currently 40000 records but this could change). It will also include a pointer to the next page (`paginationToken`) to be used for a subsequent call. This endpoint should be polled hourly to fetch new events.\n\nFor convenience, we provide a `shouldContinuePolling` flag to signal if data has been published at the location of the `nextUrl`. Since the endpoint will return as much data as it can, unless there is more data that can fit in a single response, this flag will usually be false as all available data has been returned.\n\nThe endpoint is designed for paging forward through data in order to populate your local database. By relying on the `nextUrl` parameter provided in the preceding call's response, we can guarantee a) you will see no gaps, and b) you will see no duplicates.\n\nIf constructing the url manually, subsequent requests should use `paginationToken` from the last response and omit `sinceTimestamp`.\n\nThis endpoint should be polled no more frequently than every 5 minutes, we recommend hourly. Data for this endpoint is made available with a 5 minute SLA. If the current time is '2020-01-01T00:15:00Z' UTC, making a request to this endpoint with the timestamp set to '2020-01-01T00:14:00Z' will error because of the 5 minute SLA. Making a request with a timestamp of '2020-01-01T00:09:00Z' however will succeed.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "supplyAnalytics",
+                "leadPayouts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "sinceTimestamp",
+                  "value": "<dateTime>",
+                  "description": "The lower bound for when an event hit Engine's system. Use this on your initial request.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "untilTimestamp",
+                  "value": "<dateTime>",
+                  "description": "The upper bound of events to include (exclusive - timestamps less than this parameter)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "paginationToken",
+                  "value": "<string>",
+                  "description": "Opaque cursor for subsequent requests. Obtained from previous response.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                "key": "API-Version",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b510785b-1a2b-4f5d-aa1b-01ea49f83ea0",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadPayouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nextUrl\": \"https://api.engine.tech/supplyAnalytics/leadPayouts?paginationToken=gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g\",\n  \"shouldContinuePolling\": false,\n  \"paginationToken\": \"gFqksQ5bGTVFoEbYs15RK9Y4JnMyjaA2qdH9kfkMQCWnKLL5BKxcyZUbXVQszy3fr8CjLvAYfnGpBfais9g\",\n  \"data\": [\n    {\n      \"leadUuid\": \"dda9f837-2560-4b42-bc85-f6edd047a4d5\",\n      \"bookedAt\": \"2021-01-01T00:00:00Z\",\n      \"payoutInCents\": 20000,\n      \"paginationTimestamp\": \"2021-01-01T00:07:00Z\"\n    },\n    {\n      \"leadUuid\": \"a61d7cc3-3ad8-45b9-ba35-6572789203b3\",\n      \"bookedAt\": \"2021-01-02T00:00:00Z\",\n      \"payoutInCents\": 10000,\n      \"paginationTimestamp\": \"2021-01-02T00:07:00Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a81f9ff4-02cc-4a1c-acc7-6ed683ec83dd",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadPayouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "abbfc90e-2dba-434b-b6af-9a58496bdb13",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadPayouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"attribute\": \"timestamp\",\n    \"type\": \"missing\",\n    \"message\": \"timestamp must be specified\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "259612f6-bbe5-42e3-8006-3f363ceedc43",
+          "name": "Get lead client tags",
+          "request": {
+            "name": "Get lead client tags",
+            "description": {
+              "content": "### What is the Lead Client Tags API used for?\n\nClient tags (also known as Custom Lead Attributes) are arbitrary key:value pairs of information that can be set using the API or URL of a partner page to enable custom segmentation. Client tags provides you a method to be able to segment leads to support uses cases like:\n\n\n - See how various traffic sources on the supply partners site perform\n - See what preferences their users from different segments have\n\n\nThe lead client tag endpoint returns client tags associated with a lead.\n\nClient tags are intended for segmentation and attribution (e.g., campaign ID, article source, user cohort). They should not contain personally identifiable information (PII) such as names, email addresses, phone numbers, or social security numbers.\n\nFor more information on how to send client tags to Engine please refer to: https://engine.tech/developer-center/references/appendix/appendix-e-appending-client-tags-to-leads-posted-to-engine\n\n### How does it work?\n\nThe endpoint is cursor based. You can consume batches of events for the product tied to your company uuid. All that is required is a bearer token and previous `paginationToken` or `sinceTimestamp`. The endpoint will respond with all of the events that have happened from that point forward subject to optional `untilTimestamp` parameter and page size limit (currently 40000 records but this could change). It will also include a pointer to the next page (`paginationToken`) to be used for a subsequent call. This endpoint should be polled hourly to fetch new events.\n\nFor convenience, we provide a `shouldContinuePolling` flag to signal if data has been published at the location of the `nextUrl`. Since the endpoint will return as much data as it can, unless there is more data that can fit in a single response, this flag will usually be false as all available data has been returned.\n\nThe endpoint is designed for paging forward through data in order to populate your local database. By relying on the “nextUrl” parameter provided in the preceding call’s response, we can guarantee a) you will see no gaps, and b) you will see no duplicates.\n\nIf constructing the url manually, subsequent requests should use `paginationToken` from the last response and omit `sinceTimestamp`.\n\nThis endpoint should be polled no more frequently than every 5 minutes, we recommend hourly. Data for this endpoint is made available with a 5 minute SLA. If the current time is '2020-01-01T00:15:00Z' UTC, making a request to this endpoint with the timestamp set to '2020-01-01T00:14:00Z' will error because of the 5 minute SLA. Making a request with a timestamp of '2020-01-01T00:09:00Z' however will succeed.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "supplyAnalytics",
+                "leadClientTags"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "sinceTimestamp",
+                  "value": "<dateTime>",
+                  "description": "The lower bound for when an event hit Engine's system. Use this on your initial request.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "untilTimestamp",
+                  "value": "<dateTime>",
+                  "description": "The upper bound of events to include (exclusive - timestamps less than this parameter)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "paginationToken",
+                  "value": "<string>",
+                  "description": "Opaque cursor for subsequent requests. Obtained from previous response.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                "key": "API-Version",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b6142bf2-a3d4-4a6e-863b-39b548a071b7",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadClientTags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"$ref\": \"#/components/examples/LeadClientTagResponse\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "28ad5f0e-aa19-4785-9882-7d252a6d320e",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadClientTags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bb605b0c-0684-46ba-aac0-e6c1c154c6d4",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadClientTags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sinceTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "untilTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "paginationToken",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.\n",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"attribute\": \"timestamp\",\n    \"type\": \"missing\",\n    \"message\": \"timestamp must be specified\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0e96a278-16ff-4178-bb4b-bbfbd03b625e",
+          "name": "Get all combined information for a lead",
+          "request": {
+            "name": "Get all combined information for a lead",
+            "description": {
+              "content": "Provides a snapshot of all information about a lead - events, payouts and client tags.\n\nIn rare cases with extremely large data volume, results may be truncated to fit the response size limit and HTTP 206 will be returned along with `warnings`.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "supplyAnalytics",
+                "leadsInfo",
+                ":leadUuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "leadUuid",
+                  "description": "(Required) The UUID of the lead you wish to obtain the information for."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.",
+                "key": "API-Version",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2c440e87-1a01-4b36-ba0f-5538ebf73b6a",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadsInfo",
+                    ":leadUuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "leadUuid",
+                      "description": "(Required) The UUID of the lead you wish to obtain the information for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"events\": [\n      {\n        \"id\": \"string\",\n        \"isTest\": false,\n        \"leadUuid\": \"93fefb37-a032-21d5-cb5b-cd3394d6e961\",\n        \"leadCreatedAt\": \"2017-04-10T06:31:17.155Z\",\n        \"eventType\": \"conversion\",\n        \"eventCreatedAt\": \"1990-06-13T11:50:40.919Z\",\n        \"paginationTimestamp\": \"1951-06-08T21:41:03.899Z\",\n        \"supplySubAccountUuid\": \"a3373e37-8ee0-c22a-3dda-8e7b2501431b\",\n        \"supplySubAccountName\": \"string\",\n        \"eventDeletedAt\": \"1952-04-27T06:25:21.245Z\",\n        \"eventData\": {\n          \"productType\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"amountInCents\": 9641.52644612023,\n        \"financialInstitutionUuid\": \"25955fef-a115-b883-9f28-92d55e968fa2\",\n        \"financialInstitutionName\": \"string\",\n        \"unifiedProductType\": \"string\",\n        \"productType\": \"loan\",\n        \"productSubType\": \"rewards\",\n        \"offerUuid\": \"84aa952e-607f-ba9d-e830-36a75b9f53f0\"\n      },\n      {\n        \"id\": \"string\",\n        \"isTest\": false,\n        \"leadUuid\": \"4435d7ad-327c-d84e-3b35-5873b0c944e7\",\n        \"leadCreatedAt\": \"1947-04-23T22:16:26.212Z\",\n        \"eventType\": \"affiliateOfferClicked\",\n        \"eventCreatedAt\": \"1964-10-26T04:47:38.920Z\",\n        \"paginationTimestamp\": \"1988-09-19T09:36:59.797Z\",\n        \"supplySubAccountUuid\": \"8c551da5-7a79-8783-c420-50d4a978af8a\",\n        \"supplySubAccountName\": \"string\",\n        \"eventDeletedAt\": \"2008-05-11T20:33:57.301Z\",\n        \"eventData\": {\n          \"productType\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"amountInCents\": 4094.351081605093,\n        \"financialInstitutionUuid\": \"811a6a52-ae60-a4f8-57aa-5ddbc5703986\",\n        \"financialInstitutionName\": \"string\",\n        \"unifiedProductType\": \"string\",\n        \"productType\": \"life_insurance\",\n        \"productSubType\": \"employment_opportunity\",\n        \"offerUuid\": \"52ffd4ac-b972-b7ef-aa42-bac8b7e73c8f\"\n      }\n    ],\n    \"payouts\": [\n      {\n        \"leadUuid\": \"f702b4ee-68d1-e865-e99e-c4396acea200\",\n        \"bookedAt\": \"1964-09-24T02:14:56.438Z\",\n        \"paginationTimestamp\": \"2017-02-11T06:26:29.232Z\",\n        \"supplySubAccountUuid\": \"6b0984cc-fec5-f701-2644-4cf9a6007fac\",\n        \"supplySubAccountName\": \"string\",\n        \"payoutInCents\": 9072.859398226385,\n        \"uuid\": \"29ff270a-2d48-31cd-232a-5d8752daf828\",\n        \"deletedAt\": \"1959-02-08T06:36:43.904Z\",\n        \"financialInstitutionName\": \"string\",\n        \"financialInstitutionUuid\": \"6f3ef515-109e-cbb0-f87d-f2103466b6b2\",\n        \"unifiedProductType\": \"string\",\n        \"productType\": \"generic\"\n      },\n      {\n        \"leadUuid\": \"1b300e4e-d4e8-d87f-dba9-1c8e0a761c1d\",\n        \"bookedAt\": \"1967-01-03T08:02:20.293Z\",\n        \"paginationTimestamp\": \"1948-03-27T10:45:01.600Z\",\n        \"supplySubAccountUuid\": \"b3d83481-e452-75e3-5b17-d5206136622b\",\n        \"supplySubAccountName\": \"string\",\n        \"payoutInCents\": 9221.879945191953,\n        \"uuid\": \"d5313111-e2af-8233-7586-52f80c9e8f9b\",\n        \"deletedAt\": \"2026-03-03T10:28:35.318Z\",\n        \"financialInstitutionName\": \"string\",\n        \"financialInstitutionUuid\": \"fa030ff1-72e7-ed66-a7d1-3d06e1e80ef9\",\n        \"unifiedProductType\": \"string\",\n        \"productType\": \"auto_insurance\"\n      }\n    ],\n    \"clientTags\": [\n      {\n        \"hash\": \"string\",\n        \"leadUuid\": \"af52c462-0b5b-8c98-ad86-88234f6d273b\",\n        \"key\": \"string\",\n        \"value\": \"string\",\n        \"createdAt\": \"1956-02-04T13:30:37.247Z\",\n        \"paginationTimestamp\": \"1964-06-23T22:37:38.178Z\"\n      },\n      {\n        \"hash\": \"string\",\n        \"leadUuid\": \"012225f8-460a-f6ef-8970-24fbd677a006\",\n        \"key\": \"string\",\n        \"value\": \"string\",\n        \"createdAt\": \"2020-12-16T18:17:22.751Z\",\n        \"paginationTimestamp\": \"1962-12-12T10:34:33.535Z\"\n      }\n    ]\n  },\n  \"warnings\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bd48c785-7f59-4a9c-b87b-fd5df27a0b22",
+              "name": "Partial Content - results were truncated to fit response size limit",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadsInfo",
+                    ":leadUuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "leadUuid",
+                      "description": "(Required) The UUID of the lead you wish to obtain the information for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Partial Content",
+              "code": 206,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"events\": [\n      {\n        \"id\": \"string\",\n        \"isTest\": true,\n        \"leadUuid\": \"5cf49aea-55f9-6101-2920-646b07a68274\",\n        \"leadCreatedAt\": \"2020-01-11T20:18:12.903Z\",\n        \"eventType\": \"rateLocked\",\n        \"eventCreatedAt\": \"2019-08-29T13:46:23.133Z\",\n        \"paginationTimestamp\": \"2005-01-31T19:30:03.747Z\",\n        \"supplySubAccountUuid\": \"3f6298a8-96c9-1368-2471-e9c2f822c027\",\n        \"supplySubAccountName\": \"string\",\n        \"eventDeletedAt\": \"1948-05-31T08:25:06.603Z\",\n        \"eventData\": {\n          \"productType\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"amountInCents\": 7635.66387714696,\n        \"financialInstitutionUuid\": \"9fb998af-7fd8-180d-4cc9-2ece5bae99d9\",\n        \"financialInstitutionName\": \"string\",\n        \"unifiedProductType\": \"string\",\n        \"productType\": \"mortgage\",\n        \"productSubType\": \"debt_relief\",\n        \"offerUuid\": \"5bb5cdfb-e9bc-234c-8877-f79582abee2e\"\n      },\n      {\n        \"id\": \"string\",\n        \"isTest\": false,\n        \"leadUuid\": \"df4eb458-330e-2b72-acac-872ffff5b58b\",\n        \"leadCreatedAt\": \"2023-10-06T18:58:45.566Z\",\n        \"eventType\": \"affiliateOfferClicked\",\n        \"eventCreatedAt\": \"1980-11-26T03:14:04.719Z\",\n        \"paginationTimestamp\": \"2022-02-05T18:52:07.795Z\",\n        \"supplySubAccountUuid\": \"d6414e29-e644-1285-186f-fd8ad83d2d3c\",\n        \"supplySubAccountName\": \"string\",\n        \"eventDeletedAt\": \"2011-06-01T10:20:22.741Z\",\n        \"eventData\": {\n          \"productType\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"amountInCents\": 3562.003618094941,\n        \"financialInstitutionUuid\": \"3c2801a1-1bf2-a97e-1ab9-bd8a2068474c\",\n        \"financialInstitutionName\": \"string\",\n        \"unifiedProductType\": \"string\",\n        \"productType\": \"loan\",\n        \"productSubType\": \"installment_loans\",\n        \"offerUuid\": \"b5b6e882-458a-13df-8090-fdb2eb6bd60f\"\n      }\n    ],\n    \"payouts\": [\n      {\n        \"leadUuid\": \"98cf9a1a-2763-bb4e-9fbb-c2918312671c\",\n        \"bookedAt\": \"1970-11-30T04:40:35.389Z\",\n        \"paginationTimestamp\": \"1998-08-09T10:14:10.092Z\",\n        \"supplySubAccountUuid\": \"6f078e13-004c-bbe4-d60c-0bf8acb63501\",\n        \"supplySubAccountName\": \"string\",\n        \"payoutInCents\": 451.2214086843136,\n        \"uuid\": \"39d50cf8-fba5-36c2-31aa-5aa0109c11d1\",\n        \"deletedAt\": \"1994-06-09T13:02:00.425Z\",\n        \"financialInstitutionName\": \"string\",\n        \"financialInstitutionUuid\": \"d0e70611-052b-ed2a-0486-9d466d5a02d0\",\n        \"unifiedProductType\": \"string\",\n        \"productType\": \"generic\"\n      },\n      {\n        \"leadUuid\": \"ad8f271e-f49a-671a-5932-8a545a0e0c94\",\n        \"bookedAt\": \"1964-05-06T13:35:26.666Z\",\n        \"paginationTimestamp\": \"1969-03-03T08:10:50.200Z\",\n        \"supplySubAccountUuid\": \"a6ddaba1-5cd1-de76-d37d-84fd6547c515\",\n        \"supplySubAccountName\": \"string\",\n        \"payoutInCents\": 5643.2825739639065,\n        \"uuid\": \"678574b4-bf36-ee84-bb9b-24a4f89b76b8\",\n        \"deletedAt\": \"2018-08-30T22:58:30.048Z\",\n        \"financialInstitutionName\": \"string\",\n        \"financialInstitutionUuid\": \"598baa16-fc72-e99a-7336-834cf56b8d4c\",\n        \"unifiedProductType\": \"string\",\n        \"productType\": \"insurance\"\n      }\n    ],\n    \"clientTags\": [\n      {\n        \"hash\": \"string\",\n        \"leadUuid\": \"d97ac9d3-08a1-675f-c4b7-25b06c3f2358\",\n        \"key\": \"string\",\n        \"value\": \"string\",\n        \"createdAt\": \"2024-10-03T15:18:15.222Z\",\n        \"paginationTimestamp\": \"1949-07-23T05:03:05.945Z\"\n      },\n      {\n        \"hash\": \"string\",\n        \"leadUuid\": \"b3f21e8c-89ea-4ce0-a2b8-c377a18dabe2\",\n        \"key\": \"string\",\n        \"value\": \"string\",\n        \"createdAt\": \"2026-05-17T18:11:17.578Z\",\n        \"paginationTimestamp\": \"2019-10-08T03:00:49.151Z\"\n      }\n    ]\n  },\n  \"warnings\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "035c6ab4-f15d-4074-9306-484632c8d67c",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadsInfo",
+                    ":leadUuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "leadUuid",
+                      "description": "(Required) The UUID of the lead you wish to obtain the information for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c466197f-4c74-4d3c-9e15-4e7659515195",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadsInfo",
+                    ":leadUuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "leadUuid",
+                      "description": "(Required) The UUID of the lead you wish to obtain the information for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"message\": \"string\"\n  },\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\"\n    },\n    \"message\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e85ce29e-c42a-4242-94a4-e980a6b94520",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supplyAnalytics",
+                    "leadsInfo",
+                    ":leadUuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "leadUuid",
+                      "description": "(Required) The UUID of the lead you wish to obtain the information for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Supply Analytics API version header. Must be set to 2025-04-01 for v3.",
+                    "key": "API-Version",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"message\": \"string\"\n  },\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\"\n    },\n    \"message\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.engine.tech",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "342ac297-149c-483f-b21e-6ce288a6dd14",
+    "name": "Engine by MoneyLion Analytics API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n\n\nContact Support:\n Name: API Support\n Email: help@engine.tech",
+      "type": "text/plain"
+    }
+  }
+}

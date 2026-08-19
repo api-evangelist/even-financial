@@ -1,0 +1,1369 @@
+{
+  "item": [
+    {
+      "id": "1fabc5b9-0972-4c0b-a0d6-32b0eb501fe5",
+      "name": "Lead",
+      "description": {
+        "content": "A lead combines information about a user with search criteria for financial products, and is submitted in exchange for a rate table.\n\nA rate table is a list of financial offers that match a submitted lead.\n\n### Lead Details\n\nNo fields are required on a lead, but depending on the type of product requested, a minimum subset is required in order to potentially receive personalized offers. For details, see [the Financial Products overview](https://engine.tech/docs/api-reference/#financial-products).\n\nA lead may request multiple product types, in which case the returned rate table will include a list for each product type with matching offers.\n\n### Asynchronous Rate Tables\n\nOften a rate table will be built asynchronously. This means that although the rate table gets returned, the API may still be waiting for responses from one or more financial institutions. In these cases, you should poll the rate table until all responses are resolved before displaying the offers to the end user.\n\nSo, if you submit a lead via the \"Submit lead\" endpoint and the returned rate table has a non-empty `pendingResponses` array, you should reload the rate table via the \"Get rate table\" endpoint, and continue to do so until `pendingResponses` is empty.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "65c0b1db-2a67-41a8-bd49-016016744946",
+          "name": "Submit lead",
+          "request": {
+            "name": "Submit lead",
+            "description": {
+              "content": "Submit a lead and get a rate table. If the rate table has a non-empty `pendingResponses` array, reload it via the \"Get rate table\" endpoint. For more details see [the Lead overview](https://engine.tech/docs/api-reference/#even-financial-api-lead).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "leads",
+                "rateTables"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5dc7cd6e-a0fc-48e1-aa89-a9f29c7cf96d",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    "rateTables"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"loan\"\n  ],\n  \"personalInformation\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john@example.com\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"primaryPhone\": \"2125556789\",\n    \"address1\": \"175 5th Ave\",\n    \"zipcode\": \"10010\",\n    \"monthsAtAddress\": 72,\n    \"activeMilitary\": false,\n    \"militaryVeteran\": false,\n    \"dateOfBirth\": \"1993-10-09\",\n    \"ssn\": \"111-22-3333\"\n  },\n  \"personalReferenceInformation\": {},\n  \"loanInformation\": {\n    \"purpose\": \"debt_consolidation\",\n    \"loanAmount\": 10000\n  },\n  \"mortgageInformation\": {\n    \"propertyStatus\": \"own_with_mortgage\"\n  },\n  \"creditCardInformation\": {},\n  \"savingsInformation\": {},\n  \"creditInformation\": {\n    \"providedCreditRating\": \"good\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"employed\",\n    \"employmentPayFrequency\": \"biweekly\",\n    \"annualIncome\": 80000\n  },\n  \"employmentInformation\": {},\n  \"legalInformation\": {\n    \"consentsToFcra\": true,\n    \"consentsToTcpa\": true,\n    \"consentsToSms\": false,\n    \"fcraLanguage\": \"By checking this box/clicking 'agree' I hereby consent to the 'E-Sign Agreement', the 'Credit Authorization Agreement', the Terms of Service and Privacy Policy, and I am providing written consent under the Fair Credit Reporting Act (FCRA) for [Engine by MoneyLion and/or Insert Company Name], its partners and financial institutions to obtain consumer report information from my credit profile. I request that my information be provided to their partners, lenders, and financial services partners to provide me with financial recommendations, which may also include debt relief, credit repair, credit monitoring or other related services\",\n    \"tcpaLanguage\": \"I agree to be contacted by [Engine by MoneyLion and/or Insert Company Name] its partners and their affiliated companies and financial institutions via email, postal mail service and/or at the telephone number(s) I have provided above to explore various financial products and services I inquired about, including contact through automatic dialing systems, artificial or pre-recorded voice messaging, or text message. Consent is not required as a condition to utilize the service, and you may choose to be contacted by an individual customer care representative(s) by calling XXXXX or emailing XXXX\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"bachelors\"\n  },\n  \"coApplicantInformation\": {},\n  \"healthInformation\": {},\n  \"lifeInsuranceInformation\": {},\n  \"refinanceLoans\": [],\n  \"identificationInformation\": {},\n  \"clientTags\": {\n    \"transid\": [\n      \"fk912234\"\n    ],\n    \"subid\": [\n      \"ag67125\"\n    ]\n  },\n  \"isTest\": false,\n  \"sessionUuid\": \"c363ec58-c5f0-54ff-b8f7-0f5f630213d9\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uuid\": \"b9b212a8-b284-5986-813e-a8d8e87c1863\",\n  \"leadUuid\": \"144bd0ea-b9c6-52d5-a7ef-dccb223d060d\",\n  \"loanAmount\": 10000,\n  \"loanOffers\": [\n    {\n      \"uuid\": \"e1c401fd-198c-53df-b5e7-f84f5dbd8c1a\",\n      \"minAmount\": null,\n      \"maxFeeRate\": null,\n      \"maxFeeFixed\": 526,\n      \"prepaymentFee\": null,\n      \"payout\": 10,\n      \"minMonthlyPayment\": null,\n      \"originator\": {\n        \"key\": \"alpha\",\n        \"name\": \"Alpha, Inc.\",\n        \"description\": \"Consequatur est dolorum fugit. Dicta dolorem autem perspiciatis et.\",\n        \"images\": [\n          {\n            \"sizeKey\": \"120x40\",\n            \"url\": \"https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png\"\n          }\n        ],\n        \"disclaimer\": \"Et deserunt ut temporibus quia. Sed suscipit ad nostrum dolorem qui a.\",\n        \"companyUuid\": \"1088017a-2ed9-5328-b03d-8351a6e58f7e\",\n        \"financialInstitutionUuid\": \"32bd2f7c-79fd-5c54-bcb5-3a46454a465c\"\n      },\n      \"minApr\": null,\n      \"feeRate\": null,\n      \"productSubType\": \"personal_loan\",\n      \"aprDescription\": \"Fixed APR\",\n      \"minFeeRate\": null,\n      \"maxApr\": 29.99,\n      \"conversionProbability\": 0.13022707252777743,\n      \"monthlyPayment\": 296.06,\n      \"terms\": null,\n      \"recommendationScore\": 1330,\n      \"productSubTypeDisclaimer\": null,\n      \"monthlyPaymentDescription\": \"Est. Monthly Payment\",\n      \"maxMonthlyPayment\": 296.06,\n      \"originatorId\": \"59e39e01-afae-5a54-8690-24eb4f6dd025\",\n      \"maxAmount\": 7500,\n      \"allowPrepayment\": false,\n      \"termUnit\": \"month\",\n      \"productType\": \"loan\",\n      \"coApplicant\": false,\n      \"preQualified\": true,\n      \"displayTermUnit\": null,\n      \"sponsored\": false,\n      \"url\": \"https://offers.evenfinancial.com/ref/978bbfa4-a076-5538-b199-933b16374114\",\n      \"meanApr\": 29.99,\n      \"minFeeFixed\": null,\n      \"aprType\": \"fixed\",\n      \"termLength\": 36,\n      \"meanTotalPayment\": 10658.16,\n      \"preApproved\": true,\n      \"termDescription\": \"Term of Loan\",\n      \"minTotalPayment\": null,\n      \"maxTotalPayment\": 10658.16,\n      \"feeFixed\": 525,\n      \"secured\": false,\n      \"meanMonthlyPayment\": 296.06\n    }\n  ],\n  \"mortgageOffers\": [],\n  \"savingsOffers\": [],\n  \"specialOffers\": [],\n  \"creditCardOffers\": [],\n  \"pendingResponses\": [\n    {\n      \"partner\": {\n        \"uuid\": \"91d08be0-2a8c-4d28-b399-7e1b38e2522e\",\n        \"name\": \"Beta Inc.\",\n        \"description\": \"Voluptas quas aspernatur aut nihil rerum. Voluptatibus laboriosam amet porro veniam ut.\",\n        \"disclaimer\": \"Est delectus et rem consequatur magni. Molestiae asperiores sit debitis et id corporis.\",\n        \"imageUrl\": \"https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png\"\n      },\n      \"productTypes\": [\n        \"loan\"\n      ]\n    }\n  ],\n  \"pendingOriginators\": [\n    {\n      \"key\": \"beta\",\n      \"name\": \"Beta Inc.\",\n      \"description\": \"Voluptas quas aspernatur aut nihil rerum. Voluptatibus laboriosam amet porro veniam ut.\",\n      \"images\": [\n        {\n          \"sizeKey\": \"120x40\",\n          \"url\": \"https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png\"\n        }\n      ],\n      \"disclaimer\": \"Est delectus et rem consequatur magni. Molestiae asperiores sit debitis et id corporis.\",\n      \"companyUuid\": \"f9605e88-3992-59da-b1a4-77c71cf2dd12\",\n      \"financialInstitutionUuid\": \"91d08be0-2a8c-4d28-b399-7e1b38e2522e\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "96732c67-06ba-492a-a5bf-66cadd10af29",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    "rateTables"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"loan\"\n  ],\n  \"personalInformation\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john@example.com\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"primaryPhone\": \"2125556789\",\n    \"address1\": \"175 5th Ave\",\n    \"zipcode\": \"10010\",\n    \"monthsAtAddress\": 72,\n    \"activeMilitary\": false,\n    \"militaryVeteran\": false,\n    \"dateOfBirth\": \"1993-10-09\",\n    \"ssn\": \"111-22-3333\"\n  },\n  \"personalReferenceInformation\": {},\n  \"loanInformation\": {\n    \"purpose\": \"debt_consolidation\",\n    \"loanAmount\": 10000\n  },\n  \"mortgageInformation\": {\n    \"propertyStatus\": \"own_with_mortgage\"\n  },\n  \"creditCardInformation\": {},\n  \"savingsInformation\": {},\n  \"creditInformation\": {\n    \"providedCreditRating\": \"good\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"employed\",\n    \"employmentPayFrequency\": \"biweekly\",\n    \"annualIncome\": 80000\n  },\n  \"employmentInformation\": {},\n  \"legalInformation\": {\n    \"consentsToFcra\": true,\n    \"consentsToTcpa\": true,\n    \"consentsToSms\": false,\n    \"fcraLanguage\": \"By checking this box/clicking 'agree' I hereby consent to the 'E-Sign Agreement', the 'Credit Authorization Agreement', the Terms of Service and Privacy Policy, and I am providing written consent under the Fair Credit Reporting Act (FCRA) for [Engine by MoneyLion and/or Insert Company Name], its partners and financial institutions to obtain consumer report information from my credit profile. I request that my information be provided to their partners, lenders, and financial services partners to provide me with financial recommendations, which may also include debt relief, credit repair, credit monitoring or other related services\",\n    \"tcpaLanguage\": \"I agree to be contacted by [Engine by MoneyLion and/or Insert Company Name] its partners and their affiliated companies and financial institutions via email, postal mail service and/or at the telephone number(s) I have provided above to explore various financial products and services I inquired about, including contact through automatic dialing systems, artificial or pre-recorded voice messaging, or text message. Consent is not required as a condition to utilize the service, and you may choose to be contacted by an individual customer care representative(s) by calling XXXXX or emailing XXXX\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"bachelors\"\n  },\n  \"coApplicantInformation\": {},\n  \"healthInformation\": {},\n  \"lifeInsuranceInformation\": {},\n  \"refinanceLoans\": [],\n  \"identificationInformation\": {},\n  \"clientTags\": {\n    \"transid\": [\n      \"fk912234\"\n    ],\n    \"subid\": [\n      \"ag67125\"\n    ]\n  },\n  \"isTest\": false,\n  \"sessionUuid\": \"c363ec58-c5f0-54ff-b8f7-0f5f630213d9\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Invalid fields present: 123 is not a valid ssn\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "67b2ce81-4797-4834-aabc-82be691cfcee",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    "rateTables"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"loan\"\n  ],\n  \"personalInformation\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john@example.com\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"primaryPhone\": \"2125556789\",\n    \"address1\": \"175 5th Ave\",\n    \"zipcode\": \"10010\",\n    \"monthsAtAddress\": 72,\n    \"activeMilitary\": false,\n    \"militaryVeteran\": false,\n    \"dateOfBirth\": \"1993-10-09\",\n    \"ssn\": \"111-22-3333\"\n  },\n  \"personalReferenceInformation\": {},\n  \"loanInformation\": {\n    \"purpose\": \"debt_consolidation\",\n    \"loanAmount\": 10000\n  },\n  \"mortgageInformation\": {\n    \"propertyStatus\": \"own_with_mortgage\"\n  },\n  \"creditCardInformation\": {},\n  \"savingsInformation\": {},\n  \"creditInformation\": {\n    \"providedCreditRating\": \"good\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"employed\",\n    \"employmentPayFrequency\": \"biweekly\",\n    \"annualIncome\": 80000\n  },\n  \"employmentInformation\": {},\n  \"legalInformation\": {\n    \"consentsToFcra\": true,\n    \"consentsToTcpa\": true,\n    \"consentsToSms\": false,\n    \"fcraLanguage\": \"By checking this box/clicking 'agree' I hereby consent to the 'E-Sign Agreement', the 'Credit Authorization Agreement', the Terms of Service and Privacy Policy, and I am providing written consent under the Fair Credit Reporting Act (FCRA) for [Engine by MoneyLion and/or Insert Company Name], its partners and financial institutions to obtain consumer report information from my credit profile. I request that my information be provided to their partners, lenders, and financial services partners to provide me with financial recommendations, which may also include debt relief, credit repair, credit monitoring or other related services\",\n    \"tcpaLanguage\": \"I agree to be contacted by [Engine by MoneyLion and/or Insert Company Name] its partners and their affiliated companies and financial institutions via email, postal mail service and/or at the telephone number(s) I have provided above to explore various financial products and services I inquired about, including contact through automatic dialing systems, artificial or pre-recorded voice messaging, or text message. Consent is not required as a condition to utilize the service, and you may choose to be contacted by an individual customer care representative(s) by calling XXXXX or emailing XXXX\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"bachelors\"\n  },\n  \"coApplicantInformation\": {},\n  \"healthInformation\": {},\n  \"lifeInsuranceInformation\": {},\n  \"refinanceLoans\": [],\n  \"identificationInformation\": {},\n  \"clientTags\": {\n    \"transid\": [\n      \"fk912234\"\n    ],\n    \"subid\": [\n      \"ag67125\"\n    ]\n  },\n  \"isTest\": false,\n  \"sessionUuid\": \"c363ec58-c5f0-54ff-b8f7-0f5f630213d9\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b47f1dc2-695a-433b-821f-5a05ec7f1b77",
+              "name": "Duplicate lead",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    "rateTables"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"loan\"\n  ],\n  \"personalInformation\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john@example.com\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"primaryPhone\": \"2125556789\",\n    \"address1\": \"175 5th Ave\",\n    \"zipcode\": \"10010\",\n    \"monthsAtAddress\": 72,\n    \"activeMilitary\": false,\n    \"militaryVeteran\": false,\n    \"dateOfBirth\": \"1993-10-09\",\n    \"ssn\": \"111-22-3333\"\n  },\n  \"personalReferenceInformation\": {},\n  \"loanInformation\": {\n    \"purpose\": \"debt_consolidation\",\n    \"loanAmount\": 10000\n  },\n  \"mortgageInformation\": {\n    \"propertyStatus\": \"own_with_mortgage\"\n  },\n  \"creditCardInformation\": {},\n  \"savingsInformation\": {},\n  \"creditInformation\": {\n    \"providedCreditRating\": \"good\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"employed\",\n    \"employmentPayFrequency\": \"biweekly\",\n    \"annualIncome\": 80000\n  },\n  \"employmentInformation\": {},\n  \"legalInformation\": {\n    \"consentsToFcra\": true,\n    \"consentsToTcpa\": true,\n    \"consentsToSms\": false,\n    \"fcraLanguage\": \"By checking this box/clicking 'agree' I hereby consent to the 'E-Sign Agreement', the 'Credit Authorization Agreement', the Terms of Service and Privacy Policy, and I am providing written consent under the Fair Credit Reporting Act (FCRA) for [Engine by MoneyLion and/or Insert Company Name], its partners and financial institutions to obtain consumer report information from my credit profile. I request that my information be provided to their partners, lenders, and financial services partners to provide me with financial recommendations, which may also include debt relief, credit repair, credit monitoring or other related services\",\n    \"tcpaLanguage\": \"I agree to be contacted by [Engine by MoneyLion and/or Insert Company Name] its partners and their affiliated companies and financial institutions via email, postal mail service and/or at the telephone number(s) I have provided above to explore various financial products and services I inquired about, including contact through automatic dialing systems, artificial or pre-recorded voice messaging, or text message. Consent is not required as a condition to utilize the service, and you may choose to be contacted by an individual customer care representative(s) by calling XXXXX or emailing XXXX\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"bachelors\"\n  },\n  \"coApplicantInformation\": {},\n  \"healthInformation\": {},\n  \"lifeInsuranceInformation\": {},\n  \"refinanceLoans\": [],\n  \"identificationInformation\": {},\n  \"clientTags\": {\n    \"transid\": [\n      \"fk912234\"\n    ],\n    \"subid\": [\n      \"ag67125\"\n    ]\n  },\n  \"isTest\": false,\n  \"sessionUuid\": \"c363ec58-c5f0-54ff-b8f7-0f5f630213d9\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Lead  duplicates an existing lead\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4987cf18-90fb-4dac-8b5c-9ee31019ff97",
+          "name": "Submit a lead and get a rate table",
+          "request": {
+            "name": "Submit a lead and get a rate table",
+            "description": {},
+            "url": {
+              "path": [
+                "leads",
+                ":leadUuid",
+                "rateTables"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "leadUuid",
+                  "description": "(Required) The UUID of the lead we want to create a rate table for."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4051316a-86af-4fd6-aa1a-f54ccc753292",
+              "name": "The generated `RateTable`",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":leadUuid",
+                    "rateTables"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "leadUuid",
+                      "description": "(Required) The UUID of the lead we want to create a rate table for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uuid\": \"b9b212a8-b284-5986-813e-a8d8e87c1863\",\n  \"leadUuid\": \"144bd0ea-b9c6-52d5-a7ef-dccb223d060d\",\n  \"loanAmount\": 10000,\n  \"loanOffers\": [\n    {\n      \"uuid\": \"e1c401fd-198c-53df-b5e7-f84f5dbd8c1a\",\n      \"minAmount\": null,\n      \"maxFeeRate\": null,\n      \"maxFeeFixed\": 526,\n      \"prepaymentFee\": null,\n      \"payout\": 10,\n      \"minMonthlyPayment\": null,\n      \"originator\": {\n        \"key\": \"alpha\",\n        \"name\": \"Alpha, Inc.\",\n        \"description\": \"Consequatur est dolorum fugit. Dicta dolorem autem perspiciatis et.\",\n        \"images\": [\n          {\n            \"sizeKey\": \"120x40\",\n            \"url\": \"https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png\"\n          }\n        ],\n        \"disclaimer\": \"Et deserunt ut temporibus quia. Sed suscipit ad nostrum dolorem qui a.\",\n        \"companyUuid\": \"1088017a-2ed9-5328-b03d-8351a6e58f7e\",\n        \"financialInstitutionUuid\": \"32bd2f7c-79fd-5c54-bcb5-3a46454a465c\"\n      },\n      \"minApr\": null,\n      \"feeRate\": null,\n      \"productSubType\": \"personal_loan\",\n      \"aprDescription\": \"Fixed APR\",\n      \"minFeeRate\": null,\n      \"maxApr\": 29.99,\n      \"conversionProbability\": 0.13022707252777743,\n      \"monthlyPayment\": 296.06,\n      \"terms\": null,\n      \"recommendationScore\": 1330,\n      \"productSubTypeDisclaimer\": null,\n      \"monthlyPaymentDescription\": \"Est. Monthly Payment\",\n      \"maxMonthlyPayment\": 296.06,\n      \"originatorId\": \"59e39e01-afae-5a54-8690-24eb4f6dd025\",\n      \"maxAmount\": 7500,\n      \"allowPrepayment\": false,\n      \"termUnit\": \"month\",\n      \"productType\": \"loan\",\n      \"coApplicant\": false,\n      \"preQualified\": true,\n      \"displayTermUnit\": null,\n      \"sponsored\": false,\n      \"url\": \"https://offers.evenfinancial.com/ref/978bbfa4-a076-5538-b199-933b16374114\",\n      \"meanApr\": 29.99,\n      \"minFeeFixed\": null,\n      \"aprType\": \"fixed\",\n      \"termLength\": 36,\n      \"meanTotalPayment\": 10658.16,\n      \"preApproved\": true,\n      \"termDescription\": \"Term of Loan\",\n      \"minTotalPayment\": null,\n      \"maxTotalPayment\": 10658.16,\n      \"feeFixed\": 525,\n      \"secured\": false,\n      \"meanMonthlyPayment\": 296.06\n    }\n  ],\n  \"mortgageOffers\": [],\n  \"savingsOffers\": [],\n  \"specialOffers\": [],\n  \"creditCardOffers\": [],\n  \"pendingResponses\": [\n    {\n      \"partner\": {\n        \"uuid\": \"91d08be0-2a8c-4d28-b399-7e1b38e2522e\",\n        \"name\": \"Beta Inc.\",\n        \"description\": \"Voluptas quas aspernatur aut nihil rerum. Voluptatibus laboriosam amet porro veniam ut.\",\n        \"disclaimer\": \"Est delectus et rem consequatur magni. Molestiae asperiores sit debitis et id corporis.\",\n        \"imageUrl\": \"https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png\"\n      },\n      \"productTypes\": [\n        \"loan\"\n      ]\n    }\n  ],\n  \"pendingOriginators\": [\n    {\n      \"key\": \"beta\",\n      \"name\": \"Beta Inc.\",\n      \"description\": \"Voluptas quas aspernatur aut nihil rerum. Voluptatibus laboriosam amet porro veniam ut.\",\n      \"images\": [\n        {\n          \"sizeKey\": \"120x40\",\n          \"url\": \"https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png\"\n        }\n      ],\n      \"disclaimer\": \"Est delectus et rem consequatur magni. Molestiae asperiores sit debitis et id corporis.\",\n      \"companyUuid\": \"f9605e88-3992-59da-b1a4-77c71cf2dd12\",\n      \"financialInstitutionUuid\": \"91d08be0-2a8c-4d28-b399-7e1b38e2522e\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fd555674-52a3-4d5b-97d1-096ab670cd23",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":leadUuid",
+                    "rateTables"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "leadUuid",
+                      "description": "(Required) The UUID of the lead we want to create a rate table for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"message\": \"string\"\n  },\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"message\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "467d8b22-3462-4aba-b66a-841dc5336d8b",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":leadUuid",
+                    "rateTables"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "leadUuid",
+                      "description": "(Required) The UUID of the lead we want to create a rate table for."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "da24d07e-231c-4763-86f0-96e889fcf93c",
+          "name": "Get rate table",
+          "request": {
+            "name": "Get rate table",
+            "description": {
+              "content": "Get the rate table for a specified UUID. If the UUID is unkown, a `404 Not Found` response will be returned.\n\nUsually used to poll a rate table that has pending responses immediately after creation via the \"Submit lead\" endpoint. For more details see [the Lead overview](https://engine.tech/docs/api-reference/#even-financial-api-lead).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "originator",
+                "rateTables",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "uuid",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9b642a2a-67df-4cc0-9fbf-ec60ab7ebb54",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "originator",
+                    "rateTables",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uuid\": \"b9b212a8-b284-5986-813e-a8d8e87c1863\",\n  \"leadUuid\": \"144bd0ea-b9c6-52d5-a7ef-dccb223d060d\",\n  \"loanAmount\": 10000,\n  \"partnerPageUrl\": \"https://consumer.fiona.com/partner/channel/loan/application?results=b9b212a8-b284-5986-813e-a8d8e87c1863&step=results\",\n  \"embedUrl\": \"https://embed.evenfinancial.com/ui/multi-product/index.html?partner=channel&access_token=c76e2145-d37d-5e39-9199-2c2d8f0830ab&company_uuid=7c552546-c8d5-5740-8514-f7d77f387236&step=results&results=b9b212a8-b284-5986-813e-a8d8e87c1863&available_products=loan&productType=loan\",\n  \"loanOffers\": [\n    {\n      \"uuid\": \"e1c401fd-198c-53df-b5e7-f84f5dbd8c1a\",\n      \"minAmount\": null,\n      \"maxFeeRate\": null,\n      \"maxFeeFixed\": 526,\n      \"prepaymentFee\": null,\n      \"payout\": 10,\n      \"minMonthlyPayment\": null,\n      \"originator\": {\n        \"key\": \"alpha\",\n        \"name\": \"Alpha, Inc.\",\n        \"description\": \"Consequatur est dolorum fugit. Dicta dolorem autem perspiciatis et.\",\n        \"images\": [\n          {\n            \"sizeKey\": \"120x40\",\n            \"url\": \"https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png\"\n          }\n        ],\n        \"disclaimer\": \"Et deserunt ut temporibus quia. Sed suscipit ad nostrum dolorem qui a.\",\n        \"companyUuid\": \"1088017a-2ed9-5328-b03d-8351a6e58f7e\",\n        \"financialInstitutionUuid\": \"32bd2f7c-79fd-5c54-bcb5-3a46454a465c\"\n      },\n      \"minApr\": null,\n      \"feeRate\": null,\n      \"productSubType\": \"personal_loan\",\n      \"aprDescription\": \"Fixed APR\",\n      \"minFeeRate\": null,\n      \"maxApr\": 29.99,\n      \"conversionProbability\": 0.13022707252777743,\n      \"monthlyPayment\": 296.06,\n      \"terms\": null,\n      \"recommendationScore\": 1330,\n      \"productSubTypeDisclaimer\": null,\n      \"monthlyPaymentDescription\": \"Est. Monthly Payment\",\n      \"maxMonthlyPayment\": 296.06,\n      \"originatorId\": \"59e39e01-afae-5a54-8690-24eb4f6dd025\",\n      \"maxAmount\": 7500,\n      \"allowPrepayment\": false,\n      \"termUnit\": \"month\",\n      \"productType\": \"loan\",\n      \"coApplicant\": false,\n      \"preQualified\": true,\n      \"displayTermUnit\": null,\n      \"sponsored\": false,\n      \"url\": \"https://offers.evenfinancial.com/ref/978bbfa4-a076-5538-b199-933b16374114\",\n      \"meanApr\": 29.99,\n      \"minFeeFixed\": null,\n      \"aprType\": \"fixed\",\n      \"termLength\": 36,\n      \"meanTotalPayment\": 10658.16,\n      \"preApproved\": true,\n      \"termDescription\": \"Term of Loan\",\n      \"minTotalPayment\": null,\n      \"maxTotalPayment\": 10658.16,\n      \"feeFixed\": 525,\n      \"secured\": false,\n      \"meanMonthlyPayment\": 296.06\n    },\n    {\n      \"uuid\": \"11f3b40a-4be4-5ed4-b248-52df976d6209\",\n      \"minAmount\": null,\n      \"maxFeeRate\": null,\n      \"maxFeeFixed\": 0,\n      \"prepaymentFee\": null,\n      \"payout\": 10,\n      \"minMonthlyPayment\": null,\n      \"originator\": {\n        \"key\": \"beta\",\n        \"name\": \"Beta Inc.\",\n        \"description\": \"Voluptas quas aspernatur aut nihil rerum. Voluptatibus laboriosam amet porro veniam ut.\",\n        \"images\": [\n          {\n            \"sizeKey\": \"120x40\",\n            \"url\": \"https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png\"\n          }\n        ],\n        \"disclaimer\": \"Est delectus et rem consequatur magni. Molestiae asperiores sit debitis et id corporis.\",\n        \"companyUuid\": \"f9605e88-3992-59da-b1a4-77c71cf2dd12\",\n        \"financialInstitutionUuid\": \"91d08be0-2a8c-4d28-b399-7e1b38e2522e\"\n      },\n      \"minApr\": null,\n      \"feeRate\": null,\n      \"productSubType\": \"personal_loan\",\n      \"aprDescription\": \"Fixed APR\",\n      \"minFeeRate\": null,\n      \"maxApr\": 64.79,\n      \"conversionProbability\": 0.07311888039112091,\n      \"monthlyPayment\": 414.59,\n      \"terms\": null,\n      \"recommendationScore\": 1000,\n      \"productSubTypeDisclaimer\": null,\n      \"monthlyPaymentDescription\": \"Est. Monthly Payment\",\n      \"maxMonthlyPayment\": 414.59,\n      \"originatorId\": \"netcredit\",\n      \"maxAmount\": 7100,\n      \"allowPrepayment\": false,\n      \"termUnit\": \"month\",\n      \"productType\": \"loan\",\n      \"coApplicant\": false,\n      \"preQualified\": true,\n      \"displayTermUnit\": null,\n      \"sponsored\": false,\n      \"url\": \"https://offers.evenfinancial.com/ref/689ff123-9a90-5997-8450-c57889b44bd9\",\n      \"meanApr\": 64.79,\n      \"minFeeFixed\": null,\n      \"aprType\": \"fixed\",\n      \"termLength\": 48,\n      \"meanTotalPayment\": 19900.32,\n      \"preApproved\": true,\n      \"termDescription\": \"Term of Loan\",\n      \"minTotalPayment\": null,\n      \"maxTotalPayment\": 19900.32,\n      \"feeFixed\": 0,\n      \"secured\": false,\n      \"meanMonthlyPayment\": 414.59\n    }\n  ],\n  \"mortgageOffers\": [],\n  \"savingsOffers\": [],\n  \"specialOffers\": [],\n  \"creditCardOffers\": [],\n  \"pendingResponses\": [],\n  \"pendingOriginators\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "65851a29-1c9e-473b-a5f7-78f32843ed5b",
+              "name": "Malformed request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "originator",
+                    "rateTables",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Bad request.\",\n    \"details\": \"Cannot parse parameter uuid as UUID: Invalid UUID string: 123\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1b6ab48-40df-4f2d-abde-c4f9ee07a064",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "originator",
+                    "rateTables",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "309ff4b9-882f-4589-bd77-f6debc85c808",
+              "name": "Unknown UUID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "originator",
+                    "rateTables",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Lead UUID is invalid\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d97b2881-310e-4a11-9267-f9dbaf587fb8",
+          "name": "Get lead",
+          "request": {
+            "name": "Get lead",
+            "description": {
+              "content": "Get the lead for a specified UUID. If the UUID is unkown, a `404 Not Found` response will be returned.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "leads",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "uuid",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a82bbf61-4515-47d0-8c38-da0f51621643",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uuid\": \"7c48037d-3dfa-5bff-9e0e-bcd3dda80f96\",\n  \"companyUUID\": \"5c3b5da2-ce2e-5686-8df9-73c00c4cfd6b\",\n  \"leadProviderName\": \"Platinum Personal Finance\",\n  \"productTypes\": [\n    \"loan\"\n  ],\n  \"personalInformation\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john@example.com\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"primaryPhone\": \"2125556789\",\n    \"address1\": \"175 5th Ave\",\n    \"zipcode\": \"10010\",\n    \"monthsAtAddress\": 72,\n    \"activeMilitary\": false,\n    \"militaryVeteran\": false,\n    \"dateOfBirth\": \"1993-10-09\",\n    \"ssn\": \"111-22-3333\"\n  },\n  \"personalReferenceInformation\": {},\n  \"loanInformation\": {\n    \"purpose\": \"debt_consolidation\",\n    \"loanAmount\": 10000\n  },\n  \"mortgageInformation\": {\n    \"propertyStatus\": \"own_with_mortgage\"\n  },\n  \"creditCardInformation\": {},\n  \"savingsInformation\": {},\n  \"creditInformation\": {\n    \"providedCreditRating\": \"good\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"employed\",\n    \"employmentPayFrequency\": \"biweekly\",\n    \"annualIncome\": 80000\n  },\n  \"employmentInformation\": {},\n  \"legalInformation\": {\n    \"consentsToFcra\": true,\n    \"consentsToTcpa\": true,\n    \"consentsToSms\": false,\n    \"tcpaLanguage\": \"I agree to be contacted by Engine by MoneyLion and its partners...\",\n    \"fcraLanguage\": \"By checking this box/clicking 'agree' I hereby consent...\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"bachelors\"\n  },\n  \"coApplicantInformation\": {},\n  \"healthInformation\": {},\n  \"lifeInsuranceInformation\": {},\n  \"refinanceLoans\": [],\n  \"identificationInformation\": {},\n  \"vehicleInformation\": {},\n  \"clientTags\": {\n    \"transid\": [\n      \"fk912234\"\n    ],\n    \"subid\": [\n      \"ag67125\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"8.8.8.8\"\n  },\n  \"isTest\": false,\n  \"sessionUuid\": \"c363ec58-c5f0-54ff-b8f7-0f5f630213d9\",\n  \"status\": \"initialized\",\n  \"createdAt\": \"05/01/2021 20:00:00.000\",\n  \"updatedAt\": \"05/01/2021 20:00:00.000\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "39bbcb9a-fe5b-483f-ad54-513d093ee2eb",
+              "name": "Malformed request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Bad request.\",\n    \"details\": \"Cannot parse parameter uuid as UUID: Invalid UUID string: 123\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f46c893b-0a97-47f8-bcd6-108b265b1ccd",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "95519a29-6770-4e46-a26f-27fdb9c5ef0a",
+              "name": "Unknown UUID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Lead UUID is invalid\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fbeec1f8-767a-454e-a27c-716859e52030",
+          "name": "Update a lead",
+          "request": {
+            "name": "Update a lead",
+            "description": {
+              "content": "Update a `Lead` by its UUID. Array fields (like `productTypes`) with new values are _merged_ with existing values.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "leads",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "uuid",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "18792052-c0bd-4264-a5ab-b6860da8dc65",
+              "name": "Lead updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"uuid\": \"1bca49ae-fa7a-3359-d588-700f51b60897\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7bde9d79-26bc-4eed-a4ec-9d9d6585fe5a",
+              "name": "Invalid data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Cannot parse parameter uuid as UUID: Invalid UUID string: 123\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c806b215-b781-4cb5-a12d-efb6e76ddd88",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a2794b6-0fac-4821-b9d1-27d6f97ef054",
+              "name": "`Lead` with the given UUID does not exist",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "leads",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productTypes\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"uuid\": \"<uuid>\",\n  \"sessionUuid\": \"<uuid>\",\n  \"deviceId\": \"<uuid>\",\n  \"loanInformation\": {\n    \"purpose\": \"<string>\",\n    \"loanAmount\": \"<integer>\"\n  },\n  \"personalInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"aliasFirstName\": \"<string>\",\n    \"aliasLastName\": \"<string>\",\n    \"email\": \"<email>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"workPhone\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"bestTimeToCall\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"addressMoveInDate\": \"<date>\",\n    \"zipcode\": \"<string>\",\n    \"monthsAtAddress\": \"<integer>\",\n    \"driversLicenseNumber\": \"<string>\",\n    \"driversLicenseState\": \"<string>\",\n    \"ipAddress\": \"<ip>\",\n    \"activeMilitary\": \"<boolean>\",\n    \"militaryVeteran\": \"<boolean>\",\n    \"dateOfBirth\": \"<date>\",\n    \"educationLevel\": \"<string>\",\n    \"ssn\": \"<string>\",\n    \"citizenshipStatus\": \"<string>\"\n  },\n  \"personalReferenceInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"primaryPhone\": \"<string>\",\n    \"relationType\": \"<string>\"\n  },\n  \"mortgageInformation\": {\n    \"propertyType\": \"<string>\",\n    \"propertyValue\": \"<integer>\",\n    \"mortgageBalance\": \"<integer>\",\n    \"lenderName\": \"<string>\",\n    \"hasFHALoan\": \"<boolean>\",\n    \"currentWithLoan\": \"<boolean>\",\n    \"propertyStatus\": \"<string>\",\n    \"mortgageType\": \"<string>\",\n    \"mortgageAmount\": \"<integer>\",\n    \"downPaymentAmount\": \"<integer>\",\n    \"propertyState\": \"<string>\",\n    \"propertyCounty\": \"<string>\",\n    \"propertyAddress1\": \"<string>\",\n    \"propertyAddress2\": \"<string>\",\n    \"propertyZipcode\": \"<string>\",\n    \"propertyCity\": \"<string>\",\n    \"refinanceAmount\": \"<integer>\",\n    \"cashOutAmount\": \"<integer>\",\n    \"occupancyType\": \"<string>\",\n    \"refinanceType\": \"<string>\",\n    \"propertySearchStatus\": \"<string>\",\n    \"numUnits\": \"<integer>\",\n    \"closingDate\": \"<date>\",\n    \"purchaseStatus\": \"<string>\",\n    \"purchaseDate\": \"<date>\",\n    \"monthlyHoaFee\": \"<number>\",\n    \"mortgageCompany\": \"<string>\",\n    \"mortgageEscrowAmount\": \"<number>\",\n    \"includeFhaLoans\": \"<boolean>\",\n    \"includeVaLoans\": \"<boolean>\",\n    \"requestedLoanTerms\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"mortechCreditRating\": \"<string>\"\n  },\n  \"creditCardInformation\": {\n    \"allowAnnualFee\": \"<boolean>\",\n    \"cardPurposes\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"savingsInformation\": {\n    \"minDepositAmount\": \"<integer>\",\n    \"maxDepositAmount\": \"<integer>\"\n  },\n  \"creditInformation\": {\n    \"providedCreditRating\": \"<string>\",\n    \"providedNumericCreditScore\": \"<integer>\"\n  },\n  \"financialInformation\": {\n    \"employmentStatus\": \"<string>\",\n    \"employmentPayFrequency\": \"<string>\",\n    \"annualIncome\": \"<integer>\",\n    \"monthlyNetIncome\": \"<integer>\",\n    \"bankName\": \"<string>\",\n    \"bankRoutingNumber\": \"<string>\",\n    \"bankAccountType\": \"<string>\",\n    \"creditCardDebt\": \"<integer>\",\n    \"monthsAtBank\": \"<integer>\",\n    \"bankAccountNumber\": \"<string>\",\n    \"monthlyDebt\": \"<integer>\",\n    \"totalAssets\": \"<integer>\",\n    \"monthlyHousingPayment\": \"<integer>\",\n    \"availableAssets\": \"<integer>\",\n    \"additionalIncome\": \"<integer>\",\n    \"additionalIncomeFrequency\": \"<string>\",\n    \"hasDirectDeposit\": \"<boolean>\",\n    \"totalUnsecuredDebt\": \"<integer>\"\n  },\n  \"employmentInformation\": {\n    \"employerName\": \"<string>\",\n    \"employerAddress\": \"<string>\",\n    \"employerAddress2\": \"<string>\",\n    \"employerCity\": \"<string>\",\n    \"employerPhone\": \"<string>\",\n    \"employerState\": \"<string>\",\n    \"employerZip\": \"<string>\",\n    \"jobTitle\": \"<string>\",\n    \"monthsEmployed\": \"<integer>\",\n    \"directDeposit\": \"<boolean>\",\n    \"payDate1\": \"<date>\",\n    \"payDate2\": \"<date>\",\n    \"startDate\": \"<date>\"\n  },\n  \"legalInformation\": {\n    \"consentsToFcra\": \"<boolean>\",\n    \"consentsToSms\": \"<boolean>\",\n    \"consentsToTcpa\": \"<boolean>\",\n    \"batchConsentVersion\": \"<string>\",\n    \"fcraLanguage\": \"<string>\",\n    \"tcpaLanguage\": \"<string>\",\n    \"batchConsentLanguage\": \"<string>\"\n  },\n  \"educationInformation\": {\n    \"educationLevel\": \"<string>\",\n    \"graduateDegreeType\": \"<string>\",\n    \"universityAttended\": \"<string>\",\n    \"universityOpeId\": \"<string>\",\n    \"graduationDate\": \"<date>\",\n    \"graduateGraduationDate\": \"<date>\",\n    \"graduateLastAttendedDate\": \"<date>\",\n    \"graduateUniversityAttended\": \"<string>\",\n    \"graduateUniversityOpeId\": \"<string>\",\n    \"undergraduateGraduationDate\": \"<date>\",\n    \"undergraduateLastAttendedDate\": \"<date>\",\n    \"undergraduateUniversityAttended\": \"<string>\",\n    \"undergraduateUniversityOpeId\": \"<string>\"\n  },\n  \"coApplicantInformation\": {\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"dateOfBirth\": \"<date>\",\n    \"annualIncome\": \"<integer>\",\n    \"streetAddress1\": \"<string>\",\n    \"streetAddress2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<state>\",\n    \"zipcode\": \"<string>\"\n  },\n  \"healthInformation\": {\n    \"gender\": \"<string>\",\n    \"heightInInches\": \"<integer>\",\n    \"weightInPounds\": \"<integer>\",\n    \"tobaccoSmoker\": \"<boolean>\"\n  },\n  \"autoInsuranceInformation\": {\n    \"numberOfVehicles\": \"<integer>\",\n    \"hasAutoInsurance\": \"<boolean>\",\n    \"priorCarrierInformation\": {\n      \"carrierName\": \"<string>\",\n      \"timeInsuredMonths\": \"<integer>\"\n    },\n    \"policyEffectiveDate\": \"<date>\",\n    \"coverageInformation\": {\n      \"bodilyInjuryAmount\": \"<integer>\",\n      \"propertyDamageAmount\": \"<integer>\",\n      \"collisionAmount\": \"<integer>\"\n    },\n    \"garageInformation\": {\n      \"address1\": \"<string>\",\n      \"address2\": \"<string>\",\n      \"city\": \"<string>\",\n      \"state\": \"<string>\",\n      \"zipCode\": \"<string>\"\n    },\n    \"vehiclesInformation\": [\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      },\n      {\n        \"monthlyPayment\": \"<integer>\",\n        \"estimatedMileage\": \"<integer>\",\n        \"vehicleIdentificationNumber\": \"<string>\",\n        \"vehicleUuid\": \"<uuid>\"\n      }\n    ],\n    \"driversInformation\": [\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      },\n      {\n        \"role\": \"<string>\",\n        \"gender\": \"<string>\",\n        \"personalInformation\": {\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"aliasFirstName\": \"<string>\",\n          \"aliasLastName\": \"<string>\",\n          \"email\": \"<email>\",\n          \"city\": \"<string>\",\n          \"state\": \"<state>\",\n          \"workPhone\": \"<string>\",\n          \"primaryPhone\": \"<string>\",\n          \"bestTimeToCall\": \"<string>\",\n          \"address1\": \"<string>\",\n          \"address2\": \"<string>\",\n          \"addressMoveInDate\": \"<date>\",\n          \"zipcode\": \"<string>\",\n          \"monthsAtAddress\": \"<integer>\",\n          \"driversLicenseNumber\": \"<string>\",\n          \"driversLicenseState\": \"<string>\",\n          \"ipAddress\": \"<ip>\",\n          \"activeMilitary\": \"<boolean>\",\n          \"militaryVeteran\": \"<boolean>\",\n          \"dateOfBirth\": \"<date>\",\n          \"educationLevel\": \"<string>\",\n          \"ssn\": \"<string>\",\n          \"citizenshipStatus\": \"<string>\"\n        }\n      }\n    ]\n  },\n  \"refinanceLoans\": [\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    },\n    {\n      \"accountNumber\": \"<string>\",\n      \"incomeBasedRepayment\": \"<boolean>\",\n      \"interestRate\": \"<number>\",\n      \"loanAmount\": \"<integer>\",\n      \"loanServicer\": \"<string>\",\n      \"loanType\": \"<string>\",\n      \"nextPaymentAmount\": \"<number>\",\n      \"nextPaymentDate\": \"<date>\"\n    }\n  ],\n  \"identificationInformation\": {\n    \"idNumber\": \"<string>\",\n    \"idState\": \"<string>\",\n    \"idType\": \"<string>\"\n  },\n  \"clientTags\": {\n    \"key_0\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"sessionInformation\": {\n    \"ipAddress\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"browserFingerprint\": \"<string>\"\n  },\n  \"formCompleted\": \"<boolean>\",\n  \"referralCompanyUuid\": \"<uuid>\",\n  \"trackingUuid\": \"<uuid>\",\n  \"partnerUserId\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.engine.tech",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "89fce041-d4b8-4439-b204-9ddb212cc69f",
+    "name": "Engine by MoneyLion Analytics Lead API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n\n\nContact Support:\n Name: API Support\n Email: help@engine.tech",
+      "type": "text/plain"
+    }
+  }
+}

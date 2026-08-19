@@ -1,0 +1,562 @@
+{
+  "item": [
+    {
+      "id": "1ae864fe-2cd5-4595-ab1b-d3028884915f",
+      "name": "Approval Probability",
+      "description": {
+        "content": "Approval probability reports contains data about the likelihood that a user with specified attributes will be approved for particular product offers.\n\nThe user attributes are passed in the request's `POST` body. Attributes are specific to the product in questions and do not include personally identifiable information.\n\nThe approval probabilty data is calculated per financial institution, as well as across the entire Engine by MoneyLion network. Within each of these groups, offer probablilities may be further broken down according to product attributes. For loans, for example, approval probabilities are associated with offer APR range and optionally product sub-type.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "68105809-9492-455d-9694-54b11b3c4b21",
+          "name": "Get a loan approval probability report",
+          "request": {
+            "name": "Get a loan approval probability report",
+            "description": {
+              "content": "Get a report on approval probabilities for loan offers for a specified cohort of users.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "approvalProbability",
+                "loanReports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"annualIncome\": \"<integer>\",\n  \"creditRating\": \"<string>\",\n  \"totalDebt\": \"<integer>\",\n  \"countOfDerogatories\": \"<integer>\",\n  \"state\": \"<state>\",\n  \"loanPurpose\": \"<string>\",\n  \"loanAmount\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c389bf87-d3e9-452e-8cbd-75872049e387",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "approvalProbability",
+                    "loanReports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"annualIncome\": 75000,\n  \"creditRating\": \"excellent\",\n  \"totalDebt\": 10000,\n  \"countOfDerogatories\": 0,\n  \"state\": \"NY\",\n  \"loanPurpose\": \"debt_consolidation\",\n  \"loanAmount\": 10000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"annualIncome\": 75000,\n  \"creditRating\": \"excellent\",\n  \"totalDebt\": 10000,\n  \"countOfDerogatories\": 0,\n  \"state\": \"NY\",\n  \"loanPurpose\": \"debt_consolidation\",\n  \"loanAmount\": 10000,\n  \"networkProbabilities\": [\n    {\n      \"probability\": 79.67534,\n      \"aprLow\": 12.76,\n      \"aprHigh\": 19.85\n    }\n  ],\n  \"financialInsitutions\": [\n    {\n      \"uuid\": \"005b235e-9388-5e96-9d43-d1b6fd587652\",\n      \"name\": \"Alpha, Inc.\",\n      \"logoUrl\": \"https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png\",\n      \"probabilities\": [\n        {\n          \"probability\": 49.945,\n          \"aprLow\": 15.25,\n          \"aprHigh\": 19.85\n        }\n      ]\n    },\n    {\n      \"uuid\": \"c5e7db20-81a4-4fe4-9100-fb8b3ae84f02\",\n      \"name\": \"Beta Inc.\",\n      \"logoUrl\": \"https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png\",\n      \"probabilities\": [\n        {\n          \"probability\": 84.5421,\n          \"aprLow\": 12.76,\n          \"aprHigh\": 18.85\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5e813306-c37d-4458-84d3-48b044f204e4",
+              "name": "Malformed request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "approvalProbability",
+                    "loanReports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"annualIncome\": 75000,\n  \"creditRating\": \"excellent\",\n  \"totalDebt\": 10000,\n  \"countOfDerogatories\": 0,\n  \"state\": \"NY\",\n  \"loanPurpose\": \"debt_consolidation\",\n  \"loanAmount\": 10000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Bad request.\",\n    \"details\": \"Cannot parse parameter uuid as UUID: Invalid UUID string: 123\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f41a1c3a-29b6-4f1b-b48d-01731dbe2b02",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "approvalProbability",
+                    "loanReports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"annualIncome\": 75000,\n  \"creditRating\": \"excellent\",\n  \"totalDebt\": 10000,\n  \"countOfDerogatories\": 0,\n  \"state\": \"NY\",\n  \"loanPurpose\": \"debt_consolidation\",\n  \"loanAmount\": 10000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "435c2de5-756b-4ea8-b673-87719b951b60",
+              "name": "Invalid request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "approvalProbability",
+                    "loanReports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"annualIncome\": 75000,\n  \"creditRating\": \"excellent\",\n  \"totalDebt\": 10000,\n  \"countOfDerogatories\": 0,\n  \"state\": \"NY\",\n  \"loanPurpose\": \"debt_consolidation\",\n  \"loanAmount\": 10000\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"message\": \"string\"\n  },\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"message\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "de424def-a8d4-4a41-95bc-ae9117cb3101",
+          "name": "Get approval probability loan report",
+          "request": {
+            "name": "Get approval probability loan report",
+            "description": {
+              "content": "Get the approval probability report for a specified UUID. If the UUID is unkown, a `404 Not Found` response will be returned.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "approvalProbability",
+                "loanReports",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "uuid",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2250eb94-514f-442b-a3ed-b52a4497e6e5",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "approvalProbability",
+                    "loanReports",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"annualIncome\": 75000,\n  \"creditRating\": \"excellent\",\n  \"totalDebt\": 10000,\n  \"countOfDerogatories\": 0,\n  \"state\": \"NY\",\n  \"loanPurpose\": \"debt_consolidation\",\n  \"loanAmount\": 10000,\n  \"networkProbabilities\": [\n    {\n      \"probability\": 79.67534,\n      \"aprLow\": 12.76,\n      \"aprHigh\": 19.85\n    }\n  ],\n  \"financialInsitutions\": [\n    {\n      \"uuid\": \"005b235e-9388-5e96-9d43-d1b6fd587652\",\n      \"name\": \"Alpha, Inc.\",\n      \"logoUrl\": \"https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png\",\n      \"probabilities\": [\n        {\n          \"probability\": 49.945,\n          \"aprLow\": 15.25,\n          \"aprHigh\": 19.85\n        }\n      ]\n    },\n    {\n      \"uuid\": \"c5e7db20-81a4-4fe4-9100-fb8b3ae84f02\",\n      \"name\": \"Beta Inc.\",\n      \"logoUrl\": \"https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png\",\n      \"probabilities\": [\n        {\n          \"probability\": 84.5421,\n          \"aprLow\": 12.76,\n          \"aprHigh\": 18.85\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "44fa3bdd-4d66-497b-aea7-c6a8b26ec595",
+              "name": "Malformed request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "approvalProbability",
+                    "loanReports",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Bad request.\",\n    \"details\": \"Cannot parse parameter uuid as UUID: Invalid UUID string: 123\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "90ab5d50-73f2-454d-9f62-b388c619c381",
+              "name": "Unauthorized request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "approvalProbability",
+                    "loanReports",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"message\": \"Access token is missing\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5f1c3074-649a-4097-b927-662ccf58a91b",
+              "name": "Unknown UUID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "approvalProbability",
+                    "loanReports",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"message\": \"string\"\n  },\n  {\n    \"attribute\": \"string\",\n    \"type\": \"string\",\n    \"details\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"message\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.engine.tech",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "06fb5e19-09cf-454a-972c-d690a089ea37",
+    "name": "Engine by MoneyLion Analytics Approval Probability API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "### Introduction\n\nWelcome to Engine by MoneyLion's Integration Guide for our Supply Analytics data product, which provides funnel, payout and client tag data on specific leads and lead segments to better improve your monetization, consumer  experience and efficiency of user acquisition.\n\nRefer to [Developer Center](https://engine.tech/developer-center/loans-savings-second-look-marketplace/reporting-options-for-channel-partners/channel-partner-reporting-analytics-api-1) for detailed information on how to use this API.\n\nSupply Analytics offers three different reporting endpoints optimized for streaming time series datasets out of the Engine by MoneyLion API and into your system via periodic polling, as well as an endpoint to obtain a snapshot of all information regarding a single lead. This document contains everything needed to understand and integrate with all 4 endpoints offered.\n### API Versions\nThis document describes version 3 of the Supply Analytics API. The previous version available to partners is referred to as version 1. Version 2 was an internal release.\nAll HTTP requests for this version must include header `API-Version: 2025-04-01`.\n\n### API Endpoints\n\nWe currently offer the following reporting endpoints providing real time insights into the funnel from user acquisition through conversion:\n\n1. LeadEvents: This endpoint tracks the lead funnel’s journey. With the Lead Events API, you can pull KPI related data for your funnel, measure conversions, and iterate so that you can meet your business goals.\n\n2. LeadPayouts: This endpoint tracks payout by conversion on a per-lead basis.\n\n3. LeadClientTags: This endpoint is used to check and confirm which client tags (ie. subID, clickID, or trafficsource) you have appended to each lead (unique Engine by MoneyLion generated leadUuid). It provides better customer segmentation and attribution by returning your supplied client-tags (key/value) pairs associated with a lead. It's explained with examples in depth in the \"Get  lead client tags endpoint\" section.\n\nThe above endpoints can be used to stream information into your system and will be referred to as streaming endpoints. Additionally, we have the following endpoint to access an on-demand snapshot of lead information:\n\n4. LeadsInfo: This endpoint provides a combined snapshot of information about a single lead — all of its events, payouts and client tags in a single request.\n\n### Basic Request to Supply Analytics API\n\nEvery request to the Supply Analytics API streaming endpoints will return a JSON object with the following properties:\n\n- `data` is the array of objects that should be analyzed / loaded into your\n  database.\n\n- `nextUrl` is the URL that should be persisted and used for the next\n  request. It will include a `paginationToken`.\n\n- `shouldContinuePolling` is a boolean which signals if calling `nextUrl`\n  will have published data available.\n\n- `paginationToken` is an opaque cursor that identifies the end of the\n  current page and is used for the next request. It is already included in\n  `nextUrl` and also provided separately for convenience.\n\n\nEvents from financial institutions or other external systems may not be shared with Engine by MoneyLion for hours or days after they occur; using `paginationToken` ensures that backfilled records are not missed.\n\nA response contains all available data subject to the response size limit and any applied filters (such as `untilTimestamp`). Requesting a URL with a `sinceTimestamp` that is less than five minutes old will return an error, as it can take a few minutes to prepare the response. We suggest polling hourly as a starting point, but as long as you follow shouldContinuePolling, you can poll at any interval (>5 minutes). For convenience, we provide a `shouldContinuePolling` flag to indicate whether you should continue to poll the Supply Analytics endpoint. If `true`, continue with the `nextUrl`. If not, no further data is currently available.\n``` curl -X GET \\\n  'https://api.engine.tech/supplyAnalytics/leadEvents?sinceTimestamp=2019-08-24T14%3A15%3A22Z' \\\n  -H 'Accept: application/json' \\\n  -H 'Authorization: Bearer {access-token}' \\\n  -H 'API-Version: 2025-04-01'\n```\nSince `paginationToken` is initially not known, the initial request may specify the `sinceTimestamp` parameter. In the absence of both of them, the endpoint will start with the oldest record in the system. The `nextUrl` from response will only include `paginationToken`.\n### Developer's Note About Time Zones\nTimestamps without an explicit timezone (timezones missing a suffix of `Z`, for example) are interpreted as UTC. However, we recommend passing an explicit timezone offset of Z in the timestamp query string parameter. All timestamps in responses, whether in the event as a field, or in the `nextUrl`, are UTC.\n### Developer's Note About Flexible JSON Objects\nEngine by MoneyLion's goal is to enrich the data provided by the Supply Analytics endpoint over time to improve your insight and analytical abilities. Therefore, it is recommended that any integration or initial setup be created with the future possibility of additional data fields in mind. These will take the form of additional JSON keys. We'd recommend that your integration remain compatible if there are additional JSON key-values present. This will allow new rollouts and improvements to the supply analytics endpoint to happen as smoothly as possible.\n### Backfilling\nWhen backfilling, the `sinceTimestamp` of your initial request URL should be to your starting point. You should request each subsequent URL in succession until you're caught up. You can use `untilTimestamp` to define the end time of backfill windows.\n\n### Resources\nPartners can contact their assigned Engine by MoneyLion Partner Manager or partnersupport@engine.tech for help.\n\n\nContact Support:\n Name: API Support\n Email: help@engine.tech",
+      "type": "text/plain"
+    }
+  }
+}

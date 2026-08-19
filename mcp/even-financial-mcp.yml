@@ -118,3 +118,9 @@ tools:
   method: GET
   path: /uiUtil/featuredFinancialInstitutions
   source_operation: openapi/even-financial-openapi-original.json#getFeaturedFinancialInstitutions
+deployment:
+  mode: none
+  verified: derived
+  tools: 22
+  checked: '2026-08-12'
+  source: catalog MCP census

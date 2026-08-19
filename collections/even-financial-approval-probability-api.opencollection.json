@@ -1,0 +1,59 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Engine by MoneyLion Analytics Approval Probability API",
+    "version": "1.106.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Approval Probability",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a loan approval probability report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engine.tech/approvalProbability/loanReports",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a report on approval probabilities for loan offers for a specified cohort of users."
+        },
+        {
+          "info": {
+            "name": "Get approval probability loan report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engine.tech/approvalProbability/loanReports/:uuid",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the approval probability report for a specified UUID. If the UUID is unkown, a `404 Not Found` response will be returned."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
