@@ -35,6 +35,17 @@ created: '2026-07-17'
 modified: '2026-07-19'
 tags:
 - Company
+- Financial-Services
+- Embedded Finance
+- Fintech
+- Lending
+- Personal Loans
+- Credit Cards
+- Marketplace
+- Recommendation Engine
+- Lead Generation
+tags_raw:
+- Company
 - Financial Services
 - Embedded Finance
 - Fintech
@@ -284,6 +295,8 @@ apis:
   humanURL: https://engine.tech/docs/api-reference/
   baseURL: https://api.engine.tech
   tags:
+  - Pre-Fill
+  tags_raw:
   - Prefill
   properties:
   - type: OpenAPI
