@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   summary: Submit a consumer lead to Engine by MoneyLion and read back the resulting rate table of offers.
 sourceDescriptions:
-- name: engine
-  url: ../openapi/even-financial-openapi-original.json
+- name: leadApi
+  url: ../openapi/even-financial-lead-api-openapi.yml
   type: openapi
 workflows:
 - workflowId: submitLeadAndGetRateTable
