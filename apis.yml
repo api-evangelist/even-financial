@@ -328,6 +328,9 @@ apis:
   - type: APIReference
     url: https://engine.tech/docs/api-reference/
 common:
+- type: CapabilityMap
+  url: capabilities/even-financial-capability-edges.yml
+  name: Even Financial Business Capability Map
 - type: Overlay
   url: overlays/even-financial-openapi-overlay.yaml
 - type: DeveloperPortal
