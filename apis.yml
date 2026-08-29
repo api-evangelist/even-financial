@@ -9,6 +9,18 @@ description: >-
   mobile SDKs, plus approval-probability reports and channel-partner analytics. Even Financial was
   founded in 2015, backed by Canaan Partners, and rebranded to Engine by MoneyLion in 2023 following
   MoneyLion's acquisition.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
