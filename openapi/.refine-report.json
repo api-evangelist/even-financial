@@ -1,12 +1,7 @@
 {
   "provider": "even-financial",
   "sources": [
-    "even-financial-analytics-api-openapi.yml",
-    "even-financial-approval-probability-api-openapi.yml",
-    "even-financial-lead-api-openapi.yml",
-    "even-financial-offer-preview-api-openapi.yml",
-    "even-financial-prefill-api-openapi.yml",
-    "even-financial-ui-utils-api-openapi.yml"
+    "_original/even-financial-openapi-original.json"
   ],
   "outputs": [
     "even-financial-analytics-api-openapi.yml",
@@ -16,9 +11,24 @@
     "even-financial-prefill-api-openapi.yml",
     "even-financial-ui-utils-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "even-financial-openapi-original.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "even-financial-openapi-original.json: declared missing tag: Prefill",
+    "superseded outputs removed: even-financial-pre-fill-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 6 total)"
+  ],
+  "skipped": [
+    "even-financial-analytics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "even-financial-approval-probability-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "even-financial-lead-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "even-financial-offer-preview-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "even-financial-pre-fill-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "even-financial-ui-utils-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
