@@ -241,95 +241,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/ApiError'
 components:
-  schemas:
-    VehicleDetails:
-      type: object
-      required:
-      - year
-      - make
-      - model
-      - trim
-      - uuid
-      - ucgVehicleId
-      properties:
-        year:
-          type: integer
-          format: int32
-          description: Year of the vehicle.
-        make:
-          type: string
-          description: Make of the vehicle.
-        model:
-          type: string
-          description: Model of the vehicle.
-        trim:
-          type: string
-          description: Trim of the vehicle.
-        uuid:
-          type: string
-          format: uuid
-          description: A unique identifier for this vehicle.
-        ucgVehicleId:
-          type: integer
-          format: int64
-          description: NADA Used Card Guide vehicle id.
-    ApiError:
-      type: object
-      properties:
-        attribute:
-          type: string
-          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
-
-            '
-        type:
-          type: string
-          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
-
-            '
-        details:
-          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
-
-            '
-          allOf:
-          - $ref: '#/components/schemas/ApiErrorDetails'
-        message:
-          type: string
-          description: 'A human-readable, English description of the error.
-
-            '
-    ApiErrorDetails:
-      type: object
-      additionalProperties:
-        type: string
-    FeaturedFinancialInstitution:
-      type: object
-      required:
-      - uuid
-      - name
-      - logoUrl
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-          description: 'A unique identifier for the financial institution.
-
-            '
-        name:
-          type: string
-          readOnly: true
-          description: 'The name of the financial institution. This value is subject to
-
-            change, so `financialInstitutionUuid` should be used for grouping.
-
-            '
-        logoUrl:
-          type: string
-          format: url
-          readOnly: true
-          description: 'The URL of an image logo for the associated financial institution.
-
-            '
   examples:
     FeaturedFinancialInstitutions:
       summary: Featured financial institutions
@@ -383,6 +294,95 @@ components:
               summary: Access token was not specified
               value:
               - message: Access token is missing
+  schemas:
+    FeaturedFinancialInstitution:
+      type: object
+      required:
+      - uuid
+      - name
+      - logoUrl
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+          description: 'A unique identifier for the financial institution.
+
+            '
+        name:
+          type: string
+          readOnly: true
+          description: 'The name of the financial institution. This value is subject to
+
+            change, so `financialInstitutionUuid` should be used for grouping.
+
+            '
+        logoUrl:
+          type: string
+          format: url
+          readOnly: true
+          description: 'The URL of an image logo for the associated financial institution.
+
+            '
+    ApiError:
+      type: object
+      properties:
+        attribute:
+          type: string
+          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
+
+            '
+        type:
+          type: string
+          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
+
+            '
+        details:
+          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ApiErrorDetails'
+        message:
+          type: string
+          description: 'A human-readable, English description of the error.
+
+            '
+    VehicleDetails:
+      type: object
+      required:
+      - year
+      - make
+      - model
+      - trim
+      - uuid
+      - ucgVehicleId
+      properties:
+        year:
+          type: integer
+          format: int32
+          description: Year of the vehicle.
+        make:
+          type: string
+          description: Make of the vehicle.
+        model:
+          type: string
+          description: Model of the vehicle.
+        trim:
+          type: string
+          description: Trim of the vehicle.
+        uuid:
+          type: string
+          format: uuid
+          description: A unique identifier for this vehicle.
+        ucgVehicleId:
+          type: integer
+          format: int64
+          description: NADA Used Card Guide vehicle id.
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
   securitySchemes:
     publishableBearerToken:
       type: http

@@ -406,79 +406,6 @@ paths:
           $ref: '#/components/responses/InvalidRequest'
 components:
   schemas:
-    ConversionEventData:
-      type: object
-      title: conversion
-      properties:
-        payoutInCents:
-          type: integer
-          format: int32
-          description: 'The number of cents paid out for the conversion event.
-
-            '
-        productType:
-          $ref: '#/components/schemas/ProductType'
-          description: 'The product type of the converted offer.
-
-            '
-    LeadClientTag:
-      type: object
-      required:
-      - hash
-      - leadUuid
-      - key
-      - value
-      - createdAt
-      - paginationTimestamp
-      properties:
-        hash:
-          type: string
-          description: 'A unique hash for the client tag to assist with deduplication.
-
-            '
-        leadUuid:
-          type: string
-          format: uuid
-          description: 'The UUID of the lead that this client tag belongs to.
-
-            '
-        key:
-          type: string
-          description: 'The key of this client tag.
-
-            '
-        value:
-          type: string
-          description: 'The latest value for the client tag key.
-
-            '
-        createdAt:
-          type: string
-          format: date-time
-          description: 'The time that this client tag was added to the lead.
-
-            '
-        paginationTimestamp:
-          type: string
-          format: date-time
-          description: 'Time when event was captured by our system. Used for pagination.
-
-            '
-    FundedEventData:
-      type: object
-      title: funded
-      properties:
-        amount:
-          type: integer
-          format: int32
-          description: 'The dollar amount of the offer that was funded.
-
-            '
-        productType:
-          $ref: '#/components/schemas/ProductType'
-          description: 'The product type of the funded offer.
-
-            '
     LeadInfoResponse:
       type: object
       required:
@@ -525,94 +452,13 @@ components:
           description: 'The product type of the rejected offer.
 
             '
-    LeadPayout:
+    OpenedEventData:
       type: object
-      required:
-      - leadUuid
-      - bookedAt
-      - paginationTimestamp
-      - supplySubAccountUuid
-      - supplySubAccountName
+      title: opened
       properties:
-        leadUuid:
-          type: string
-          format: uuid
-          description: 'The unique identifier for the associated lead.
-
-            '
-        bookedAt:
-          type: string
-          format: date-time
-          description: 'The time that this payout to a supply partner was booked.
-
-            '
-        payoutInCents:
-          type: number
-          format: double
-          description: 'The payout amount in cents made available to the supply partner. May be fractional.
-
-            '
-        uuid:
-          type: string
-          format: uuid
-          description: 'The unique identifier for the associated payout event.
-
-            '
-        deletedAt:
-          type: string
-          format: date-time
-          description: 'If a payout to a supply partner was revoked, this value will report the time that the payout was revoked.
-
-            '
-        supplySubAccountUuid:
-          type: string
-          format: uuid
-          description: 'The unique identifier for the associated supply sub-account.
-
-            '
-        supplySubAccountName:
-          type: string
-          description: 'The name of the associated supply sub-account. This value is subject to change, so `supplySubAccountUuid` should be used as a stable identifier.
-
-            '
-        financialInstitutionName:
-          type: string
-          description: 'The name of the associated financial institution. This value is subject to change, so `financialInstitutionUuid` should be used as a stable identifier.
-
-            '
-        financialInstitutionUuid:
-          type: string
-          format: uuid
-          description: 'A unique identifier for the associated financial institution. Only present for event types associated with financial institutions.
-
-            '
-        unifiedProductType:
-          allOf:
-          - $ref: '#/components/schemas/OfferCatalogProductType'
-          - description: 'The product type of financial offer. Replaces `productType` and `productSubType`.
-
-              '
-        productType:
-          allOf:
-          - $ref: '#/components/schemas/ProductType'
-          - description: 'A legacy product type of financial offer.
-
-              '
-        paginationTimestamp:
-          $ref: '#/components/schemas/LeadClientTag/properties/paginationTimestamp'
-    ListedEventData:
-      type: object
-      title: listed
-      properties:
-        amount:
-          type: integer
-          format: int32
-          description: 'The dollar amount of the offer that was listed.
-
-            '
         productType:
           $ref: '#/components/schemas/ProductType'
-          description: 'The product type of the offer that was listed.
+          description: 'The product type of the offer for which the account was opened.
 
             '
     EventData:
@@ -626,25 +472,20 @@ components:
       - $ref: '#/components/schemas/ListedEventData'
       - $ref: '#/components/schemas/OfferClickedEventData'
       - $ref: '#/components/schemas/OpenedEventData'
-    OfferClickedEventData:
-      type: object
-      title: offerClicked
-      properties:
-        productType:
-          $ref: '#/components/schemas/ProductType'
-          description: 'The product type of the clicked offer.
-
-            '
-    ApiApprovedEventData:
-      type: object
-      title: apiApproved
-      properties:
-        productType:
-          $ref: '#/components/schemas/ProductType'
-          description: 'The product type of the approved offer.
-
-            '
-    LeadPayoutResponse:
+    ProductType:
+      type: string
+      enum:
+      - credit_card
+      - generic
+      - auto_insurance
+      - insurance
+      - life_insurance
+      - loan
+      - mortgage
+      - savings
+      - other
+      - unknown
+    LeadClientTagsResponse:
       type: object
       required:
       - nextUrl
@@ -654,25 +495,39 @@ components:
       properties:
         nextUrl:
           type: string
-          description: 'The URL for the next request.
+          description: 'A URL which identifies where the next batch of LeadClientTags can be queried for.
 
             '
         paginationToken:
-          $ref: '#/components/schemas/LeadClientTagsResponse/properties/paginationToken'
+          type: string
+          description: 'An opaque string that identifies the end of the current page of data and is used as a cursor for consecutive requests.
+
+            '
         shouldContinuePolling:
           type: boolean
           description: "If true, data is currently available at `nextUrl`. \n  Calling the `nextUrl` at the current time will return the next batch of data.  \nIf false, calling `nextUrl` at the current time will return an error response from the API.  \n  Data will be made available at a later time (at the next hour mark).\n"
         data:
           type: array
-          description: 'Lead payout data for the requested time window.
+          items:
+            $ref: '#/components/schemas/LeadClientTag'
+          description: 'Lead client tag data for the requested time window.
 
             '
-          items:
-            $ref: '#/components/schemas/LeadPayout'
-    ApiErrorDetails:
+    ApprovedEventData:
       type: object
-      additionalProperties:
-        type: string
+      title: approved
+      properties:
+        amount:
+          type: integer
+          format: int32
+          description: 'The dollar amount of the approved offer.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the approved offer.
+
+            '
     LeadEvent:
       type: object
       required:
@@ -776,39 +631,31 @@ components:
           description: Whether a `Lead` was created using a test access token
         paginationTimestamp:
           $ref: '#/components/schemas/LeadClientTag/properties/paginationTimestamp'
-    EventType:
-      type: string
-      enum:
-      - leadCreated
-      - appSubmitted
-      - apiApproved
-      - apiRejected
-      - offerClicked
-      - affiliateOfferClicked
-      - lenderQualifiedLead
-      - applied
-      - approved
-      - listed
-      - opened
-      - funded
-      - conversion
-      - firstPayment
-      - isContacted
-      - salesQualified
-      - firstContact
-      - rateLocked
-    RejectReason:
-      type: string
-      enum:
-      - low_fico
-      - no_fico
-      - major_derogatory
-      - underwriting_decline
-      - debt_to_income_ratio
-      - not_in_active_state
-      - incorrect_data_provided
-      - duplicate
-    LeadEventResponse:
+    ListedEventData:
+      type: object
+      title: listed
+      properties:
+        amount:
+          type: integer
+          format: int32
+          description: 'The dollar amount of the offer that was listed.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the offer that was listed.
+
+            '
+    OfferClickedEventData:
+      type: object
+      title: offerClicked
+      properties:
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the clicked offer.
+
+            '
+    LeadPayoutResponse:
       type: object
       required:
       - nextUrl
@@ -828,11 +675,54 @@ components:
           description: "If true, data is currently available at `nextUrl`. \n  Calling the `nextUrl` at the current time will return the next batch of data.  \nIf false, calling `nextUrl` at the current time will return an error response from the API.  \n  Data will be made available at a later time (at the next hour mark).\n"
         data:
           type: array
-          description: 'Lead event data for the requested time window.
+          description: 'Lead payout data for the requested time window.
 
             '
           items:
-            $ref: '#/components/schemas/LeadEvent'
+            $ref: '#/components/schemas/LeadPayout'
+    LeadClientTag:
+      type: object
+      required:
+      - hash
+      - leadUuid
+      - key
+      - value
+      - createdAt
+      - paginationTimestamp
+      properties:
+        hash:
+          type: string
+          description: 'A unique hash for the client tag to assist with deduplication.
+
+            '
+        leadUuid:
+          type: string
+          format: uuid
+          description: 'The UUID of the lead that this client tag belongs to.
+
+            '
+        key:
+          type: string
+          description: 'The key of this client tag.
+
+            '
+        value:
+          type: string
+          description: 'The latest value for the client tag key.
+
+            '
+        createdAt:
+          type: string
+          format: date-time
+          description: 'The time that this client tag was added to the lead.
+
+            '
+        paginationTimestamp:
+          type: string
+          format: date-time
+          description: 'Time when event was captured by our system. Used for pagination.
+
+            '
     ProductSubType:
       type: string
       description: A type of financial product
@@ -891,37 +781,53 @@ components:
       - home_equity_agreements
       - cash_advance_moneylion
       - unknown
-    OfferCatalogProductType:
+    RejectReason:
       type: string
-      description: Offer Catalog Product types to identify what vertical the sub account is set for (demand only)
-    LeadClientTagsResponse:
+      enum:
+      - low_fico
+      - no_fico
+      - major_derogatory
+      - underwriting_decline
+      - debt_to_income_ratio
+      - not_in_active_state
+      - incorrect_data_provided
+      - duplicate
+    FundedEventData:
       type: object
-      required:
-      - nextUrl
-      - paginationToken
-      - shouldContinuePolling
-      - data
+      title: funded
       properties:
-        nextUrl:
-          type: string
-          description: 'A URL which identifies where the next batch of LeadClientTags can be queried for.
+        amount:
+          type: integer
+          format: int32
+          description: 'The dollar amount of the offer that was funded.
 
             '
-        paginationToken:
-          type: string
-          description: 'An opaque string that identifies the end of the current page of data and is used as a cursor for consecutive requests.
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the funded offer.
 
             '
-        shouldContinuePolling:
-          type: boolean
-          description: "If true, data is currently available at `nextUrl`. \n  Calling the `nextUrl` at the current time will return the next batch of data.  \nIf false, calling `nextUrl` at the current time will return an error response from the API.  \n  Data will be made available at a later time (at the next hour mark).\n"
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/LeadClientTag'
-          description: 'Lead client tag data for the requested time window.
-
-            '
+    EventType:
+      type: string
+      enum:
+      - leadCreated
+      - appSubmitted
+      - apiApproved
+      - apiRejected
+      - offerClicked
+      - affiliateOfferClicked
+      - lenderQualifiedLead
+      - applied
+      - approved
+      - listed
+      - opened
+      - funded
+      - conversion
+      - firstPayment
+      - isContacted
+      - salesQualified
+      - firstContact
+      - rateLocked
     ApiError:
       type: object
       properties:
@@ -946,6 +852,9 @@ components:
           description: 'A human-readable, English description of the error.
 
             '
+    OfferCatalogProductType:
+      type: string
+      description: Offer Catalog Product types to identify what vertical the sub account is set for (demand only)
     AppliedEventData:
       type: object
       title: applied
@@ -961,73 +870,134 @@ components:
           description: 'The product type of the offer that was applied for.
 
             '
-    OpenedEventData:
+    ApiApprovedEventData:
       type: object
-      title: opened
+      title: apiApproved
       properties:
-        productType:
-          $ref: '#/components/schemas/ProductType'
-          description: 'The product type of the offer for which the account was opened.
-
-            '
-    ApprovedEventData:
-      type: object
-      title: approved
-      properties:
-        amount:
-          type: integer
-          format: int32
-          description: 'The dollar amount of the approved offer.
-
-            '
         productType:
           $ref: '#/components/schemas/ProductType'
           description: 'The product type of the approved offer.
 
             '
-    ProductType:
-      type: string
-      enum:
-      - credit_card
-      - generic
-      - auto_insurance
-      - insurance
-      - life_insurance
-      - loan
-      - mortgage
-      - savings
-      - other
-      - unknown
-  responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
-    InvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
-    UnauthorizedRequest:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
-          examples:
-            missingAccessToken:
-              summary: Access token was not specified
-              value:
-              - message: Access token is missing
+    ConversionEventData:
+      type: object
+      title: conversion
+      properties:
+        payoutInCents:
+          type: integer
+          format: int32
+          description: 'The number of cents paid out for the conversion event.
+
+            '
+        productType:
+          $ref: '#/components/schemas/ProductType'
+          description: 'The product type of the converted offer.
+
+            '
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
+    LeadPayout:
+      type: object
+      required:
+      - leadUuid
+      - bookedAt
+      - paginationTimestamp
+      - supplySubAccountUuid
+      - supplySubAccountName
+      properties:
+        leadUuid:
+          type: string
+          format: uuid
+          description: 'The unique identifier for the associated lead.
+
+            '
+        bookedAt:
+          type: string
+          format: date-time
+          description: 'The time that this payout to a supply partner was booked.
+
+            '
+        payoutInCents:
+          type: number
+          format: double
+          description: 'The payout amount in cents made available to the supply partner. May be fractional.
+
+            '
+        uuid:
+          type: string
+          format: uuid
+          description: 'The unique identifier for the associated payout event.
+
+            '
+        deletedAt:
+          type: string
+          format: date-time
+          description: 'If a payout to a supply partner was revoked, this value will report the time that the payout was revoked.
+
+            '
+        supplySubAccountUuid:
+          type: string
+          format: uuid
+          description: 'The unique identifier for the associated supply sub-account.
+
+            '
+        supplySubAccountName:
+          type: string
+          description: 'The name of the associated supply sub-account. This value is subject to change, so `supplySubAccountUuid` should be used as a stable identifier.
+
+            '
+        financialInstitutionName:
+          type: string
+          description: 'The name of the associated financial institution. This value is subject to change, so `financialInstitutionUuid` should be used as a stable identifier.
+
+            '
+        financialInstitutionUuid:
+          type: string
+          format: uuid
+          description: 'A unique identifier for the associated financial institution. Only present for event types associated with financial institutions.
+
+            '
+        unifiedProductType:
+          allOf:
+          - $ref: '#/components/schemas/OfferCatalogProductType'
+          - description: 'The product type of financial offer. Replaces `productType` and `productSubType`.
+
+              '
+        productType:
+          allOf:
+          - $ref: '#/components/schemas/ProductType'
+          - description: 'A legacy product type of financial offer.
+
+              '
+        paginationTimestamp:
+          $ref: '#/components/schemas/LeadClientTag/properties/paginationTimestamp'
+    LeadEventResponse:
+      type: object
+      required:
+      - nextUrl
+      - paginationToken
+      - shouldContinuePolling
+      - data
+      properties:
+        nextUrl:
+          type: string
+          description: 'The URL for the next request.
+
+            '
+        paginationToken:
+          $ref: '#/components/schemas/LeadClientTagsResponse/properties/paginationToken'
+        shouldContinuePolling:
+          type: boolean
+          description: "If true, data is currently available at `nextUrl`. \n  Calling the `nextUrl` at the current time will return the next batch of data.  \nIf false, calling `nextUrl` at the current time will return an error response from the API.  \n  Data will be made available at a later time (at the next hour mark).\n"
+        data:
+          type: array
+          description: 'Lead event data for the requested time window.
+
+            '
+          items:
+            $ref: '#/components/schemas/LeadEvent'
   examples:
     TimestampTooLate:
       summary: Timestamp not early enough
@@ -1072,6 +1042,36 @@ components:
           bookedAt: '2021-01-02T00:00:00Z'
           payoutInCents: 10000
           paginationTimestamp: '2021-01-02T00:07:00Z'
+  responses:
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+    UnauthorizedRequest:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            missingAccessToken:
+              summary: Access token was not specified
+              value:
+              - message: Access token is missing
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
   securitySchemes:
     publishableBearerToken:
       type: http

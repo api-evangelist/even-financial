@@ -154,177 +154,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  examples:
-    PreviewLoanOffers:
-      summary: Preview loan offers
-      value:
-      - uuid: 43292949-76eb-413e-9b0e-a332ae6e8ee3
-        productType: loan
-        productSubType: personal_loan
-        originator:
-          key: alpha
-          name: Alpha, Inc.
-          description: Consequatur est dolorum fugit. Dicta dolorem autem perspiciatis et.
-          images:
-          - sizeKey: 120x40
-            url: https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png
-          disclaimer: Et deserunt ut temporibus quia. Sed suscipit ad nostrum dolorem qui a.
-          companyUuid: 1088017a-2ed9-5328-b03d-8351a6e58f7e
-          financialInstitutionUuid: 32bd2f7c-79fd-5c54-bcb5-3a46454a465c
-        originatorId: null
-        termLength: 36
-        termUnit: month
-        maxAmount: 40000
-        minAmount: 2000
-        maxApr: 17.99
-        minApr: 17.99
-        meanApr: 17.99
-        feeRate: null
-        maxFeeRate: null
-        minFeeRate: null
-        feeFixed: null
-        maxFeeFixed: null
-        minFeeFixed: null
-        allowPrepayment: true
-        prepaymentFee: 0
-        monthlyPayment: 361.48
-        maxMonthlyPayment: 361.48
-        minMonthlyPayment: 361.48
-        meanMonthlyPayment: 361.48
-        maxTotalPayment: 13014
-        minTotalPayment: 13014
-        meanTotalPayment: 13014
-        terms: null
-        url: https://offers.evenfinancial.com/partner/ref/ba4b1f43-fe02-5b52-93f5-6644e5c721c0/43292949-76eb-413e-9b0e-a332ae6e8ee3
-        preQualified: false
-        preApproved: false
-        secured: false
-        sponsored: false
-        recommendationScore: 5
-        payout: null
-        aprType: fixed
-        coApplicant: false
-        aprDescription: null
-        displayTermUnit: null
-        productSubTypeDisclaimer: null
-        monthlyPaymentDescription: null
-        termDescription: null
-    PreviewSavingsOffers:
-      summary: Preview savings offers
-      value:
-      - uuid: 9284470f-e430-5473-aeeb-f61c91adabc9
-        productType: savings
-        productSubType: savings_account
-        partner:
-          uuid: 91d08be0-2a8c-4d28-b399-7e1b38e2522e
-          name: Beta Inc.
-          description: Voluptas quas aspernatur aut nihil rerum. Voluptatibus laboriosam amet porro veniam ut.
-          disclaimer: Est delectus et rem consequatur magni. Molestiae asperiores sit debitis et id corporis.
-          supportsPersonalizedOffers: false
-          supportsPreSelect: false
-          shouldDisplayPreSelect: true
-          imageUrl: https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png
-        url: https://offers.evenfinancial.com/ref/0803947c-08a5-59eb-ae58-8468c62bb5a8
-        recommendationScore: 170
-        disclaimer: Accounts offered by Axos Bank, Member FDIC
-        details:
-          name: Beta Savings
-          description: Pariatur et repellat quia aliquid. Sint qui aut harum qui aut.
-          details: Praesentium asperiores est quisquam ad qui est. Sint culpa harum id totam. Ex fugit magni quis tempora sit.
-          rate: 0.4
-          annualPercentYield: 0.4
-          compoundingMethod: continuous
-          minimumDeposit: 0
-          minimumDepositWithFees: 0
-          monthlyFee: 0
-          checkWriting: false
-          effectiveAsOf: '2021-01-01T12:00:00Z'
-    PreviewCreditCardOffers:
-      summary: Preview credit card offers
-      value:
-      - uuid: 4ac18f1c-2e85-5e74-8df7-54ca2f47ca27
-        productType: credit_card
-        productSubType: credit_card
-        partner:
-          uuid: 005b235e-9388-5e96-9d43-d1b6fd587652
-          name: Alpha, Inc.
-          description: Consequatur est dolorum fugit. Dicta dolorem autem perspiciatis et.
-          disclaimer: Et deserunt ut temporibus quia. Sed suscipit ad nostrum dolorem qui a.
-          supportsPersonalizedOffers: false
-          supportsPreSelect: true
-          shouldDisplayPreSelect: false
-          imageUrl: https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png
-          subtextOverride: Alpha
-        url: https://offers.evenfinancial.com/partner/ref/00adef6c-9fea-5910-99de-5cfb52979243/4ac18f1c-2e85-5e74-8df7-54ca2f47ca27
-        recommendationScore: 0.7
-        details:
-          cardName: Alpha Credit Card
-          cardImageUrl: https://assets.evenfinancial.com/requested/889123/Alpha%20Credit%20Card%20Art.png
-          cardPurposes:
-          - improve_credit
-          - new_to_credit
-          ratesUrl: https://www.example.com/cardmember_agreement
-          maxPurchaseApr: 25.99
-          minPurchaseApr: 25.99
-          purchaseAprText: APR varies based on creditworthiness
-          purchaseAprDisclaimer: APR may change
-          maxPurchaseIntroApr: 0
-          minPurchaseIntroApr: 0
-          purchaseIntroAprTerm: 12
-          purchaseIntroAprTermUnit: month
-          purchaseIntroAprText: 0% intro APR for 12 months
-          maxCashAdvanceApr: 26.99
-          minCashAdvanceApr: 26.99
-          cashAdvanceAprText: Cash advance APR is fixed
-          maxBalanceTransferApr: 25.99
-          minBalanceTransferApr: 25.99
-          balanceTransferAprText: Balance transfer APR is fixed
-          maxBalanceTransferIntroApr: 0
-          minBalanceTransferIntroApr: 0
-          balanceTransferIntroAprTerm: 12
-          balanceTransferIntroAprTermUnit: month
-          balanceTransferIntroAprText: 0% intro APR on balance transfers for 12 months
-          balanceTransferFee: 5
-          balanceTransferFeeDisclaimer: Balance transfer fee applies
-          maxAnnualFee: 39
-          minAnnualFee: 39
-          annualFeeDisclaimer: Annual fee may vary
-          annualIntroFee: 0
-          annualIntroFeeTerm: 1
-          introOfferAmount: 200
-          introOfferText: Earn $200 bonus after spending $500
-          introOfferType: cash_back
-          details:
-          - No deposit required
-          - No penalty APR
-          cardType: visa
-          aprType: variable
-          recommendedCreditRatings:
-          - limited
-          - poor
-          - fair
-          - good
-          recommendedCreditRatingsDisclaimer: Credit ratings are for guidance only
-          preQualified: false
-          preApproved: false
-          preSelected: false
-          rewardsDescription: Earn unlimited 1.5% cash back on all purchases
-          rewardsDisclaimer: Rewards may change
-          minDepositAmount: 200
-          minDepositDisclaimer: Minimum deposit required for secured card
-          badges:
-          - No Annual Fee
-          - Cash Back Rewards
   schemas:
-    ProvidedCreditRating:
-      type: string
-      enum:
-      - excellent
-      - good
-      - fair
-      - poor
-      - limited
-      - unknown
     CreditCardOffer:
       type: object
       description: An offer for a credit card
@@ -335,106 +165,40 @@ components:
           $ref: '#/components/schemas/CreditCardOfferDetails'
       allOf:
       - $ref: '#/components/schemas/Offer'
-    Originator:
-      type: object
-      required:
-      - key
-      - name
-      - images
-      properties:
-        key:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        images:
-          type: array
-          items:
-            $ref: '#/components/schemas/OriginatorImage'
-        disclaimer:
-          type: string
-        companyUuid:
-          type: string
-          format: uuid
-        financialInstitutionUuid:
-          type: string
-          format: uuid
-          description: 'A unique identifier for the associated financial institution. Only present for event types associated with financial institutions.
-
-            '
-    Partner:
-      type: object
-      required:
-      - uuid
-      - name
-      - description
-      - disclaimer
-      - supportsPreSelect
-      - shouldDisplayPreSelect
-      - supportsPersonalizedOffers
-      - imageUrl
-      properties:
-        uuid:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-        disclaimer:
-          type: string
-        supportsPreSelect:
-          type: boolean
-        shouldDisplayPreSelect:
-          type: boolean
-        supportsPersonalizedOffers:
-          type: boolean
-          description: Whether the partner supports returning pre-qualified or pre-approved offers
-        imageUrl:
-          type: string
-          format: url
-        subtextOverride:
-          type: string
-        headquarters:
-          type: string
-        assets:
-          type: string
-        brandName:
-          type: string
-          description: The external-facing name that will appear on offer cards, marketing materials, and other end user touchpoints
-        brandUuid:
-          type: string
-          format: uuid
-    IncentiveDetails:
-      type: object
-      required:
-      - amount
-      - unit
-      - display
-      - type
-      properties:
-        amount:
-          type: number
-          format: double
-        unit:
-          $ref: '#/components/schemas/IncentiveUnit'
-        display:
-          type: string
-          maxLength: 20
-        type:
-          $ref: '#/components/schemas/IncentiveType'
-    CompoundingMethod:
+    CardPurpose:
+      type: string
+      description: Purposes or categories related to a credit card
+      enum:
+      - balance_transfer
+      - cash_back
+      - earning_rewards
+      - improve_credit
+      - low_interest
+      - new_to_credit
+      - student
+      - travel_incentives
+    IntroOfferType:
       type: string
       enum:
-      - annually
-      - continuous
-      - daily
-      - monthly
-      - quarterly
-      - semiAnnually
-      - simple
-      - weekly
+      - miles
+      - points
+      - statement_credit
+    TermUnit:
+      type: string
+      description: 'Unit of measure for offer term lengths, or open for a single term.
+
+        '
+      enum:
+      - day
+      - month
+      - year
+      - open
+    AprType:
+      type: string
+      enum:
+      - variable
+      - regular
+      - fixed
     PreviewDetail:
       type: object
       properties:
@@ -444,179 +208,6 @@ components:
           type: string
       required:
       - description
-    IncentiveUnit:
-      type: string
-      description: 'Unit of measure for incentives.
-
-        '
-      enum:
-      - usd
-      - other
-    CardBenefit:
-      type: string
-      description: Benefits or benefit categories related to a credit card
-      enum:
-      - No Foreign Transaction Fees
-      - Purchase Protection
-      - Return Protection
-      - Price Protection
-      - Fraud Protection
-      - Extended Warranty
-      - Travel Accident Insurance
-      - Trip Interruption Insurance
-      - Car Rental Insurance
-      - Baggage Insurance
-      - Baggage Delay Insurance
-      - Hotel Burglary Insurance
-      - Travel & Emergency Assistance
-      - Roadside Assistance
-      - Concierge Service
-      - Lounge Access
-      - Identity Theft Assistance
-      - In-Flight Savings
-      - Free Checked Bag
-      - Priority Boarding
-      - No Blackout Dates
-      - Free Companion Ticket
-      - Discount Companion Ticket
-      - Global Entry or TSA PreCheck
-      - Private Jet Perks
-      - Lounge Access Discount
-      - 24/7 Cardholder Support
-      - Authorized User
-      - Entertainment Access
-      - Airline Fee Credit
-      - Late Fee Pass
-      - Credit Score Reporting
-      - No Flight Change Fees
-      - 24/7 Account Monitoring
-      - Amex Offers
-      - Visa Signature Offers
-      - MasterCard Offers
-      - Free Hotel Stay
-      - Extended Hotel Stay
-      - Dining Concierge
-      - 2 Lounge Passes
-      - Hilton Honors Silver Membership
-      - Hilton Honors Gold Membership
-      - World of Hyatt Discoverist Status
-      - SPG Gold Membership
-      - Marriott Rewards Silver Status
-      - Hertz Presidents Circle Elite Status
-      - 2 Free Checked Bags
-      - Auto Discounts
-      - InCircle Partnership
-      - ShopRunner
-      - WiFi Access
-      - ShopSafe
-      - BoA Preferred Rewards
-      - MasterCard Fuel Rewards Network
-      - Missed Event Ticket Protection
-      - Account Freezing
-      - Cell Phone Protection
-      - GPA Rewards
-      - In-Flight WiFi Credit
-      - Citi Private Pass
-      - Priceless Cities
-      - The Hotel Collection
-      - By Invitation Only
-      - Luxury Hotel Collection
-      - Expedia+ Silver Status
-      - Expedia+ Gold Status
-      - $100 American Airlines Discount
-      - Disney Parks Perks and Savings
-      - Ritz-Carlton Gold Elite Status
-      - Ritz-Carlton Club Level Upgrade
-      - Annual Travel Credit
-      - IHG Platinum Elite Status
-      - QuickBooks Connect
-      - ReceiptMatch
-      - Employee Spending Limits
-      - FX International Payments
-      - No Pre-Set Spending Limit
-      - Purchase Financing
-      - Amex Open Savings
-      - Amazon Special Financing
-      - $100 Ritz-Carlton Hotel Credit
-      - British Airways Companion Ticket
-      - Mercedes-Benz Gift Certificates
-      - Mercedes-Benz Excess Mileage Waiver
-      - JetBlue Annual Statement Credit
-      - 20% Discount on Delta Flights for Delta Private Jet Members
-      - Expense Report Features
-      - Business Cell Phone Protection
-      - Free Shipping on most Target.com orders
-      - 30 Extra Days for Returns
-      - Free clothing altertaions
-      - Personal shopping
-      - Shopmyway Savings
-      - Online Subscription Credit
-      - Uber Exclusive Access
-      - Airline Benefits
-      - Hotel Benefits
-      - Other Travel Benefits
-      - Emergency Assistance
-      - Experiences
-      - Shopping Benefits
-      - Cardholder Benefits
-      - Enhanced Security
-      - Business Benefits
-      - Other Benefits
-      - In-Flight Discounts
-      - Fee Coverage
-      - Flight Credits & Discounts
-      - Hotel Membership Status
-      - Hotel Credit & Free Stays
-      - Travel Credit
-      - Travel Experiences Programs
-      - Car Rental Membership Status
-      - Extra Gas Rewards
-      - Shopping Protection
-      - Shopping Discounts
-      - Free Shipping
-      - The Boingo American Express Preferred Plan
-      - AirSpace Lounge
-      - Uber Monthly Credit
-      - Ride Share Benefits
-      - Delta Sky Club
-      - Admirals Club Membership
-      - Priority Pass Select Membership (Prestige)
-      - Priority Pass Select Membership (Standard Plus)
-      - Daily Breakfast
-      - Early Check-in & Late Check-out
-      - Room Upgrades
-      - Complementary WiFi
-      - Amex Hotel Collection Credit
-      - Temporary Account Numbers
-      - One-Time 50% Discount on Companion Ticket
-      - Airline Travel Credit
-      - United Club Membership
-      - Chip Technology
-      - Earn More Miles for Sharing Travel Stories
-      - Mastercard World Elite Concierge and Luxury Travel Benefits
-      - 20% Savings on Delta In-Flight Purchases
-      - 25% Savings on United In-Flight Food and Drink Purchases
-      - $100 Hilton Properties Credit
-      - $250 Hilton Resort Credit
-      - Hilton Honors Diamond Membership
-      - Free Birthday Gift
-      - 2x Points During Your Birthday Month
-      - Car Rental VIP Perks
-      - Free shipping with the purchase of a bra
-      - Monthly Dining Credit
-      - Amazon Prime Student
-    IncentiveType:
-      type: string
-      description: 'Unit of measure for incentives.
-
-        '
-      enum:
-      - cash_back
-      - other
-    ApiErrorDetails:
-      type: object
-      additionalProperties:
-        type: string
     LoanOffer:
       type: object
       required:
@@ -734,11 +325,132 @@ components:
         amountPrefix:
           type: string
           description: Some loan offers require a prefix (e.g. `up to*`) to be displayed to the left of the displayed loan amount. This is a nullable field that may be up to six characters long.
+    IncentiveType:
+      type: string
+      description: 'Unit of measure for incentives.
+
+        '
+      enum:
+      - cash_back
+      - other
+    OriginatorImage:
+      type: object
+      required:
+      - sizeKey
+      - url
+      properties:
+        sizeKey:
+          type: string
+        url:
+          type: string
+    IncentiveDetails:
+      type: object
+      required:
+      - amount
+      - unit
+      - display
+      - type
+      properties:
+        amount:
+          type: number
+          format: double
+        unit:
+          $ref: '#/components/schemas/IncentiveUnit'
+        display:
+          type: string
+          maxLength: 20
+        type:
+          $ref: '#/components/schemas/IncentiveType'
+    ProductType:
+      type: string
+      enum:
+      - credit_card
+      - generic
+      - auto_insurance
+      - insurance
+      - life_insurance
+      - loan
+      - mortgage
+      - savings
+      - other
+      - unknown
+    IncentiveUnit:
+      type: string
+      description: 'Unit of measure for incentives.
+
+        '
+      enum:
+      - usd
+      - other
+    Partner:
+      type: object
+      required:
+      - uuid
+      - name
+      - description
+      - disclaimer
+      - supportsPreSelect
+      - shouldDisplayPreSelect
+      - supportsPersonalizedOffers
+      - imageUrl
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        disclaimer:
+          type: string
+        supportsPreSelect:
+          type: boolean
+        shouldDisplayPreSelect:
+          type: boolean
+        supportsPersonalizedOffers:
+          type: boolean
+          description: Whether the partner supports returning pre-qualified or pre-approved offers
+        imageUrl:
+          type: string
+          format: url
+        subtextOverride:
+          type: string
+        headquarters:
+          type: string
+        assets:
+          type: string
+        brandName:
+          type: string
+          description: The external-facing name that will appear on offer cards, marketing materials, and other end user touchpoints
+        brandUuid:
+          type: string
+          format: uuid
     FederalInsuranceType:
       type: string
       enum:
       - fdic
       - ncua
+    SavingsOffer:
+      type: object
+      description: An offer for a savings account
+      required:
+      - details
+      properties:
+        details:
+          $ref: '#/components/schemas/SavingsOfferDetails'
+      allOf:
+      - $ref: '#/components/schemas/Offer'
+    CompoundingMethod:
+      type: string
+      enum:
+      - annually
+      - continuous
+      - daily
+      - monthly
+      - quarterly
+      - semiAnnually
+      - simple
+      - weekly
     CreditCardOfferDetails:
       type: object
       required:
@@ -1003,6 +715,72 @@ components:
           type: array
           items:
             type: string
+    LoanPurpose:
+      type: string
+      enum:
+      - auto
+      - auto_purchase
+      - auto_refinance
+      - baby
+      - boat
+      - business
+      - car_repair
+      - cosmetic
+      - credit_card_refi
+      - debt_consolidation
+      - emergency
+      - engagement
+      - green
+      - home_improvement
+      - home_purchase
+      - home_refi
+      - household_expenses
+      - large_purchases
+      - life_event
+      - medical_dental
+      - motorcycle
+      - moving_relocation
+      - other
+      - rv
+      - special_occasion
+      - student_loan
+      - student_loan_refi
+      - taxes
+      - vacation
+      - wedding
+    ProvidedCreditRating:
+      type: string
+      enum:
+      - excellent
+      - good
+      - fair
+      - poor
+      - limited
+      - unknown
+    ApiError:
+      type: object
+      properties:
+        attribute:
+          type: string
+          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
+
+            '
+        type:
+          type: string
+          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
+
+            '
+        details:
+          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ApiErrorDetails'
+        message:
+          type: string
+          description: 'A human-readable, English description of the error.
+
+            '
     ProductSubType:
       type: string
       description: A type of financial product
@@ -1061,69 +839,13 @@ components:
       - home_equity_agreements
       - cash_advance_moneylion
       - unknown
-    LoanPurpose:
+    CardType:
       type: string
       enum:
-      - auto
-      - auto_purchase
-      - auto_refinance
-      - baby
-      - boat
-      - business
-      - car_repair
-      - cosmetic
-      - credit_card_refi
-      - debt_consolidation
-      - emergency
-      - engagement
-      - green
-      - home_improvement
-      - home_purchase
-      - home_refi
-      - household_expenses
-      - large_purchases
-      - life_event
-      - medical_dental
-      - motorcycle
-      - moving_relocation
-      - other
-      - rv
-      - special_occasion
-      - student_loan
-      - student_loan_refi
-      - taxes
-      - vacation
-      - wedding
-    IntroOfferType:
-      type: string
-      enum:
-      - miles
-      - points
-      - statement_credit
-    ApiError:
-      type: object
-      properties:
-        attribute:
-          type: string
-          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
-
-            '
-        type:
-          type: string
-          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
-
-            '
-        details:
-          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
-
-            '
-          allOf:
-          - $ref: '#/components/schemas/ApiErrorDetails'
-        message:
-          type: string
-          description: 'A human-readable, English description of the error.
-
-            '
+      - visa
+      - mastercard
+      - american_express
+      - discover
     SavingsOfferDetails:
       type: object
       required:
@@ -1190,28 +912,6 @@ components:
           items:
             type: string
             format: url
-    CardPurpose:
-      type: string
-      description: Purposes or categories related to a credit card
-      enum:
-      - balance_transfer
-      - cash_back
-      - earning_rewards
-      - improve_credit
-      - low_interest
-      - new_to_credit
-      - student
-      - travel_incentives
-    TermUnit:
-      type: string
-      description: 'Unit of measure for offer term lengths, or open for a single term.
-
-        '
-      enum:
-      - day
-      - month
-      - year
-      - open
     Offer:
       type: object
       required:
@@ -1246,61 +946,353 @@ components:
           format: date-time
         rank:
           type: integer
-    AprType:
+    CardBenefit:
       type: string
+      description: Benefits or benefit categories related to a credit card
       enum:
-      - variable
-      - regular
-      - fixed
-    OriginatorImage:
+      - No Foreign Transaction Fees
+      - Purchase Protection
+      - Return Protection
+      - Price Protection
+      - Fraud Protection
+      - Extended Warranty
+      - Travel Accident Insurance
+      - Trip Interruption Insurance
+      - Car Rental Insurance
+      - Baggage Insurance
+      - Baggage Delay Insurance
+      - Hotel Burglary Insurance
+      - Travel & Emergency Assistance
+      - Roadside Assistance
+      - Concierge Service
+      - Lounge Access
+      - Identity Theft Assistance
+      - In-Flight Savings
+      - Free Checked Bag
+      - Priority Boarding
+      - No Blackout Dates
+      - Free Companion Ticket
+      - Discount Companion Ticket
+      - Global Entry or TSA PreCheck
+      - Private Jet Perks
+      - Lounge Access Discount
+      - 24/7 Cardholder Support
+      - Authorized User
+      - Entertainment Access
+      - Airline Fee Credit
+      - Late Fee Pass
+      - Credit Score Reporting
+      - No Flight Change Fees
+      - 24/7 Account Monitoring
+      - Amex Offers
+      - Visa Signature Offers
+      - MasterCard Offers
+      - Free Hotel Stay
+      - Extended Hotel Stay
+      - Dining Concierge
+      - 2 Lounge Passes
+      - Hilton Honors Silver Membership
+      - Hilton Honors Gold Membership
+      - World of Hyatt Discoverist Status
+      - SPG Gold Membership
+      - Marriott Rewards Silver Status
+      - Hertz Presidents Circle Elite Status
+      - 2 Free Checked Bags
+      - Auto Discounts
+      - InCircle Partnership
+      - ShopRunner
+      - WiFi Access
+      - ShopSafe
+      - BoA Preferred Rewards
+      - MasterCard Fuel Rewards Network
+      - Missed Event Ticket Protection
+      - Account Freezing
+      - Cell Phone Protection
+      - GPA Rewards
+      - In-Flight WiFi Credit
+      - Citi Private Pass
+      - Priceless Cities
+      - The Hotel Collection
+      - By Invitation Only
+      - Luxury Hotel Collection
+      - Expedia+ Silver Status
+      - Expedia+ Gold Status
+      - $100 American Airlines Discount
+      - Disney Parks Perks and Savings
+      - Ritz-Carlton Gold Elite Status
+      - Ritz-Carlton Club Level Upgrade
+      - Annual Travel Credit
+      - IHG Platinum Elite Status
+      - QuickBooks Connect
+      - ReceiptMatch
+      - Employee Spending Limits
+      - FX International Payments
+      - No Pre-Set Spending Limit
+      - Purchase Financing
+      - Amex Open Savings
+      - Amazon Special Financing
+      - $100 Ritz-Carlton Hotel Credit
+      - British Airways Companion Ticket
+      - Mercedes-Benz Gift Certificates
+      - Mercedes-Benz Excess Mileage Waiver
+      - JetBlue Annual Statement Credit
+      - 20% Discount on Delta Flights for Delta Private Jet Members
+      - Expense Report Features
+      - Business Cell Phone Protection
+      - Free Shipping on most Target.com orders
+      - 30 Extra Days for Returns
+      - Free clothing altertaions
+      - Personal shopping
+      - Shopmyway Savings
+      - Online Subscription Credit
+      - Uber Exclusive Access
+      - Airline Benefits
+      - Hotel Benefits
+      - Other Travel Benefits
+      - Emergency Assistance
+      - Experiences
+      - Shopping Benefits
+      - Cardholder Benefits
+      - Enhanced Security
+      - Business Benefits
+      - Other Benefits
+      - In-Flight Discounts
+      - Fee Coverage
+      - Flight Credits & Discounts
+      - Hotel Membership Status
+      - Hotel Credit & Free Stays
+      - Travel Credit
+      - Travel Experiences Programs
+      - Car Rental Membership Status
+      - Extra Gas Rewards
+      - Shopping Protection
+      - Shopping Discounts
+      - Free Shipping
+      - The Boingo American Express Preferred Plan
+      - AirSpace Lounge
+      - Uber Monthly Credit
+      - Ride Share Benefits
+      - Delta Sky Club
+      - Admirals Club Membership
+      - Priority Pass Select Membership (Prestige)
+      - Priority Pass Select Membership (Standard Plus)
+      - Daily Breakfast
+      - Early Check-in & Late Check-out
+      - Room Upgrades
+      - Complementary WiFi
+      - Amex Hotel Collection Credit
+      - Temporary Account Numbers
+      - One-Time 50% Discount on Companion Ticket
+      - Airline Travel Credit
+      - United Club Membership
+      - Chip Technology
+      - Earn More Miles for Sharing Travel Stories
+      - Mastercard World Elite Concierge and Luxury Travel Benefits
+      - 20% Savings on Delta In-Flight Purchases
+      - 25% Savings on United In-Flight Food and Drink Purchases
+      - $100 Hilton Properties Credit
+      - $250 Hilton Resort Credit
+      - Hilton Honors Diamond Membership
+      - Free Birthday Gift
+      - 2x Points During Your Birthday Month
+      - Car Rental VIP Perks
+      - Free shipping with the purchase of a bra
+      - Monthly Dining Credit
+      - Amazon Prime Student
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
+    Originator:
       type: object
       required:
-      - sizeKey
-      - url
+      - key
+      - name
+      - images
       properties:
-        sizeKey:
+        key:
           type: string
-        url:
+        name:
           type: string
-    SavingsOffer:
-      type: object
-      description: An offer for a savings account
-      required:
-      - details
-      properties:
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/OriginatorImage'
+        disclaimer:
+          type: string
+        companyUuid:
+          type: string
+          format: uuid
+        financialInstitutionUuid:
+          type: string
+          format: uuid
+          description: 'A unique identifier for the associated financial institution. Only present for event types associated with financial institutions.
+
+            '
+  examples:
+    PreviewLoanOffers:
+      summary: Preview loan offers
+      value:
+      - uuid: 43292949-76eb-413e-9b0e-a332ae6e8ee3
+        productType: loan
+        productSubType: personal_loan
+        originator:
+          key: alpha
+          name: Alpha, Inc.
+          description: Consequatur est dolorum fugit. Dicta dolorem autem perspiciatis et.
+          images:
+          - sizeKey: 120x40
+            url: https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png
+          disclaimer: Et deserunt ut temporibus quia. Sed suscipit ad nostrum dolorem qui a.
+          companyUuid: 1088017a-2ed9-5328-b03d-8351a6e58f7e
+          financialInstitutionUuid: 32bd2f7c-79fd-5c54-bcb5-3a46454a465c
+        originatorId: null
+        termLength: 36
+        termUnit: month
+        maxAmount: 40000
+        minAmount: 2000
+        maxApr: 17.99
+        minApr: 17.99
+        meanApr: 17.99
+        feeRate: null
+        maxFeeRate: null
+        minFeeRate: null
+        feeFixed: null
+        maxFeeFixed: null
+        minFeeFixed: null
+        allowPrepayment: true
+        prepaymentFee: 0
+        monthlyPayment: 361.48
+        maxMonthlyPayment: 361.48
+        minMonthlyPayment: 361.48
+        meanMonthlyPayment: 361.48
+        maxTotalPayment: 13014
+        minTotalPayment: 13014
+        meanTotalPayment: 13014
+        terms: null
+        url: https://offers.evenfinancial.com/partner/ref/ba4b1f43-fe02-5b52-93f5-6644e5c721c0/43292949-76eb-413e-9b0e-a332ae6e8ee3
+        preQualified: false
+        preApproved: false
+        secured: false
+        sponsored: false
+        recommendationScore: 5
+        payout: null
+        aprType: fixed
+        coApplicant: false
+        aprDescription: null
+        displayTermUnit: null
+        productSubTypeDisclaimer: null
+        monthlyPaymentDescription: null
+        termDescription: null
+    PreviewSavingsOffers:
+      summary: Preview savings offers
+      value:
+      - uuid: 9284470f-e430-5473-aeeb-f61c91adabc9
+        productType: savings
+        productSubType: savings_account
+        partner:
+          uuid: 91d08be0-2a8c-4d28-b399-7e1b38e2522e
+          name: Beta Inc.
+          description: Voluptas quas aspernatur aut nihil rerum. Voluptatibus laboriosam amet porro veniam ut.
+          disclaimer: Est delectus et rem consequatur magni. Molestiae asperiores sit debitis et id corporis.
+          supportsPersonalizedOffers: false
+          supportsPreSelect: false
+          shouldDisplayPreSelect: true
+          imageUrl: https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png
+        url: https://offers.evenfinancial.com/ref/0803947c-08a5-59eb-ae58-8468c62bb5a8
+        recommendationScore: 170
+        disclaimer: Accounts offered by Axos Bank, Member FDIC
         details:
-          $ref: '#/components/schemas/SavingsOfferDetails'
-      allOf:
-      - $ref: '#/components/schemas/Offer'
-    CardType:
-      type: string
-      enum:
-      - visa
-      - mastercard
-      - american_express
-      - discover
-    ProductType:
-      type: string
-      enum:
-      - credit_card
-      - generic
-      - auto_insurance
-      - insurance
-      - life_insurance
-      - loan
-      - mortgage
-      - savings
-      - other
-      - unknown
+          name: Beta Savings
+          description: Pariatur et repellat quia aliquid. Sint qui aut harum qui aut.
+          details: Praesentium asperiores est quisquam ad qui est. Sint culpa harum id totam. Ex fugit magni quis tempora sit.
+          rate: 0.4
+          annualPercentYield: 0.4
+          compoundingMethod: continuous
+          minimumDeposit: 0
+          minimumDepositWithFees: 0
+          monthlyFee: 0
+          checkWriting: false
+          effectiveAsOf: '2021-01-01T12:00:00Z'
+    PreviewCreditCardOffers:
+      summary: Preview credit card offers
+      value:
+      - uuid: 4ac18f1c-2e85-5e74-8df7-54ca2f47ca27
+        productType: credit_card
+        productSubType: credit_card
+        partner:
+          uuid: 005b235e-9388-5e96-9d43-d1b6fd587652
+          name: Alpha, Inc.
+          description: Consequatur est dolorum fugit. Dicta dolorem autem perspiciatis et.
+          disclaimer: Et deserunt ut temporibus quia. Sed suscipit ad nostrum dolorem qui a.
+          supportsPersonalizedOffers: false
+          supportsPreSelect: true
+          shouldDisplayPreSelect: false
+          imageUrl: https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png
+          subtextOverride: Alpha
+        url: https://offers.evenfinancial.com/partner/ref/00adef6c-9fea-5910-99de-5cfb52979243/4ac18f1c-2e85-5e74-8df7-54ca2f47ca27
+        recommendationScore: 0.7
+        details:
+          cardName: Alpha Credit Card
+          cardImageUrl: https://assets.evenfinancial.com/requested/889123/Alpha%20Credit%20Card%20Art.png
+          cardPurposes:
+          - improve_credit
+          - new_to_credit
+          ratesUrl: https://www.example.com/cardmember_agreement
+          maxPurchaseApr: 25.99
+          minPurchaseApr: 25.99
+          purchaseAprText: APR varies based on creditworthiness
+          purchaseAprDisclaimer: APR may change
+          maxPurchaseIntroApr: 0
+          minPurchaseIntroApr: 0
+          purchaseIntroAprTerm: 12
+          purchaseIntroAprTermUnit: month
+          purchaseIntroAprText: 0% intro APR for 12 months
+          maxCashAdvanceApr: 26.99
+          minCashAdvanceApr: 26.99
+          cashAdvanceAprText: Cash advance APR is fixed
+          maxBalanceTransferApr: 25.99
+          minBalanceTransferApr: 25.99
+          balanceTransferAprText: Balance transfer APR is fixed
+          maxBalanceTransferIntroApr: 0
+          minBalanceTransferIntroApr: 0
+          balanceTransferIntroAprTerm: 12
+          balanceTransferIntroAprTermUnit: month
+          balanceTransferIntroAprText: 0% intro APR on balance transfers for 12 months
+          balanceTransferFee: 5
+          balanceTransferFeeDisclaimer: Balance transfer fee applies
+          maxAnnualFee: 39
+          minAnnualFee: 39
+          annualFeeDisclaimer: Annual fee may vary
+          annualIntroFee: 0
+          annualIntroFeeTerm: 1
+          introOfferAmount: 200
+          introOfferText: Earn $200 bonus after spending $500
+          introOfferType: cash_back
+          details:
+          - No deposit required
+          - No penalty APR
+          cardType: visa
+          aprType: variable
+          recommendedCreditRatings:
+          - limited
+          - poor
+          - fair
+          - good
+          recommendedCreditRatingsDisclaimer: Credit ratings are for guidance only
+          preQualified: false
+          preApproved: false
+          preSelected: false
+          rewardsDescription: Earn unlimited 1.5% cash back on all purchases
+          rewardsDisclaimer: Rewards may change
+          minDepositAmount: 200
+          minDepositDisclaimer: Minimum deposit required for secured card
+          badges:
+          - No Annual Fee
+          - Cash Back Rewards
   responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
     UnauthorizedRequest:
       description: Unauthorized request
       content:
@@ -1314,6 +1306,14 @@ components:
               summary: Access token was not specified
               value:
               - message: Access token is missing
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
   securitySchemes:
     publishableBearerToken:
       type: http
