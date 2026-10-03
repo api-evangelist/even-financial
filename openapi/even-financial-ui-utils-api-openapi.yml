@@ -272,58 +272,11 @@ components:
       - Northern Vermont University - Johnson (FKA Johnson State College + Lyndon State College)
       - Northern Vermont University - Lyndon (FKA Lyndon State College + Johnson State College)
       - University of Pittsburgh - Johnstown
-  responses:
-    InvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
-    UnauthorizedRequest:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
-          examples:
-            missingAccessToken:
-              summary: Access token was not specified
-              value:
-              - message: Access token is missing
   schemas:
-    FeaturedFinancialInstitution:
+    ApiErrorDetails:
       type: object
-      required:
-      - uuid
-      - name
-      - logoUrl
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-          description: 'A unique identifier for the financial institution.
-
-            '
-        name:
-          type: string
-          readOnly: true
-          description: 'The name of the financial institution. This value is subject to
-
-            change, so `financialInstitutionUuid` should be used for grouping.
-
-            '
-        logoUrl:
-          type: string
-          format: url
-          readOnly: true
-          description: 'The URL of an image logo for the associated financial institution.
-
-            '
+      additionalProperties:
+        type: string
     ApiError:
       type: object
       properties:
@@ -379,10 +332,57 @@ components:
           type: integer
           format: int64
           description: NADA Used Card Guide vehicle id.
-    ApiErrorDetails:
+    FeaturedFinancialInstitution:
       type: object
-      additionalProperties:
-        type: string
+      required:
+      - uuid
+      - name
+      - logoUrl
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+          description: 'A unique identifier for the financial institution.
+
+            '
+        name:
+          type: string
+          readOnly: true
+          description: 'The name of the financial institution. This value is subject to
+
+            change, so `financialInstitutionUuid` should be used for grouping.
+
+            '
+        logoUrl:
+          type: string
+          format: url
+          readOnly: true
+          description: 'The URL of an image logo for the associated financial institution.
+
+            '
+  responses:
+    UnauthorizedRequest:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            missingAccessToken:
+              summary: Access token was not specified
+              value:
+              - message: Access token is missing
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
   securitySchemes:
     publishableBearerToken:
       type: http
