@@ -84,528 +84,6 @@ paths:
           $ref: '#/components/responses/UnauthorizedRequest'
 components:
   schemas:
-    LeadEmploymentInformationJson:
-      type: object
-      properties:
-        employerName:
-          type: string
-        employerAddress:
-          type: string
-        employerAddress2:
-          type: string
-        employerCity:
-          type: string
-        employerPhone:
-          type: string
-        employerState:
-          type: string
-        employerZip:
-          type: string
-        jobTitle:
-          type: string
-        monthsEmployed:
-          type: integer
-          format: int32
-        directDeposit:
-          type: boolean
-          description: Whether a `Lead` uses direct deposit for their salary
-        payDate1:
-          type: string
-          format: date
-        payDate2:
-          type: string
-          format: date
-        startDate:
-          type: string
-          format: date
-          description: The date the lead started working at their current employer (YYYY-MM-DD)
-    LeadCoApplicantInformationJson:
-      type: object
-      description: 'The personal information of a co-applicant that may be considered in the
-
-        underwriting and approval of a loan.
-
-        '
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        dateOfBirth:
-          type: string
-          format: date
-        annualIncome:
-          type: integer
-          format: int32
-        streetAddress1:
-          type: string
-          description: Street address (primary address line)
-        streetAddress2:
-          type: string
-          description: Secondary address line
-        city:
-          type: string
-        state:
-          $ref: '#/components/schemas/State'
-        zipcode:
-          type: string
-          pattern: ^\d{5}([-\s]\d{4})?$
-    MortgageType:
-      type: string
-      enum:
-      - purchase
-      - refinance
-    ApiError:
-      type: object
-      properties:
-        attribute:
-          type: string
-          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
-
-            '
-        type:
-          type: string
-          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
-
-            '
-        details:
-          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
-
-            '
-          allOf:
-          - $ref: '#/components/schemas/ApiErrorDetails'
-        message:
-          type: string
-          description: 'A human-readable, English description of the error.
-
-            '
-    LoanPurpose:
-      type: string
-      enum:
-      - auto
-      - auto_purchase
-      - auto_refinance
-      - baby
-      - boat
-      - business
-      - car_repair
-      - cosmetic
-      - credit_card_refi
-      - debt_consolidation
-      - emergency
-      - engagement
-      - green
-      - home_improvement
-      - home_purchase
-      - home_refi
-      - household_expenses
-      - large_purchases
-      - life_event
-      - medical_dental
-      - motorcycle
-      - moving_relocation
-      - other
-      - rv
-      - special_occasion
-      - student_loan
-      - student_loan_refi
-      - taxes
-      - vacation
-      - wedding
-    Gender:
-      type: string
-      enum:
-      - male
-      - female
-    LeadMortgageInformationJson:
-      type: object
-      properties:
-        propertyType:
-          $ref: '#/components/schemas/PropertyType'
-        propertyValue:
-          type: integer
-          format: int32
-        mortgageBalance:
-          type: integer
-          format: int32
-        lenderName:
-          type: string
-        hasFHALoan:
-          type: boolean
-        currentWithLoan:
-          type: boolean
-        propertyStatus:
-          $ref: '#/components/schemas/PropertyStatus'
-        mortgageType:
-          $ref: '#/components/schemas/MortgageType'
-        mortgageAmount:
-          type: integer
-          format: int32
-          description: Amount the lead will borrow
-        downPaymentAmount:
-          type: integer
-          format: int32
-        propertyState:
-          type: string
-        propertyCounty:
-          type: string
-        propertyAddress1:
-          type: string
-          description: Street address (primary address line)
-        propertyAddress2:
-          type: string
-          description: Secondary address line
-        propertyZipcode:
-          type: string
-        propertyCity:
-          type: string
-        refinanceAmount:
-          type: integer
-          format: int32
-          description: Amount the lead will borrow for refinancing an existing mortgage
-        cashOutAmount:
-          type: integer
-          format: int32
-          description: Additional amount the lead will borrow against existing home equity in the case of refinance
-        occupancyType:
-          $ref: '#/components/schemas/OccupancyType'
-        refinanceType:
-          $ref: '#/components/schemas/RefinanceType'
-        propertySearchStatus:
-          $ref: '#/components/schemas/PropertySearchStatus'
-        numUnits:
-          type: integer
-          format: int32
-          description: The number of legal units on the property
-        closingDate:
-          type: string
-          format: date
-        purchaseStatus:
-          $ref: '#/components/schemas/PurchaseStatus'
-        purchaseDate:
-          type: string
-          format: date
-        monthlyHoaFee:
-          type: number
-          description: The amount of the HOA fee for the lead
-        mortgageCompany:
-          type: string
-          description: The name of the company holding the lead's mortgage
-        mortgageEscrowAmount:
-          type: number
-          description: The amount of escrow the lead pays
-        includeFhaLoans:
-          type: boolean
-          description: 'If true, the lead will receive FHA loan offers; if false, they will not.
-
-            '
-        includeVaLoans:
-          type: boolean
-          description: 'If true, the lead will receive VA loan offers; if false, they will not.
-
-            '
-        requestedLoanTerms:
-          type: array
-          items:
-            $ref: '#/components/schemas/MortgageLoanType'
-        mortechCreditRating:
-          $ref: '#/components/schemas/MortechCreditRating'
-    BankAccountType:
-      type: string
-      enum:
-      - checking
-      - savings
-      - other
-    LeadAutoInsuranceInformationJson:
-      type: object
-      properties:
-        numberOfVehicles:
-          type: integer
-          format: int32
-        hasAutoInsurance:
-          type: boolean
-        priorCarrierInformation:
-          type: object
-          title: Prior Carrier Information
-          properties:
-            carrierName:
-              type: string
-              description: Name of the prior insurance carrier
-            timeInsuredMonths:
-              type: integer
-              format: int32
-              description: Duration in months the lead was insured with the prior carrier
-        policyEffectiveDate:
-          type: string
-          format: date
-        coverageInformation:
-          type: object
-          title: Coverage Information
-          properties:
-            bodilyInjuryAmount:
-              type: integer
-              format: int32
-              description: Bodily injury coverage amount
-            propertyDamageAmount:
-              type: integer
-              format: int32
-              description: Property damage coverage amount
-            collisionAmount:
-              type: integer
-              format: int32
-              description: Collision coverage amount
-        garageInformation:
-          type: object
-          title: Garage Information
-          properties:
-            address1:
-              type: string
-              description: Street address line 1 of the garage location
-            address2:
-              type: string
-              description: Street address line 2 of the garage location (optional)
-            city:
-              type: string
-              description: City where the vehicle is garaged
-            state:
-              type: string
-              description: State where the vehicle is garaged
-            zipCode:
-              type: string
-              description: ZIP code of the garage address
-        vehiclesInformation:
-          type: array
-          items:
-            type: object
-            title: Vehicle information
-            properties:
-              monthlyPayment:
-                type: integer
-                format: int32
-                description: The lead's monthly auto loan payment
-              estimatedMileage:
-                type: integer
-                format: int32
-                description: The vehicle's estimated number of miles driven
-              vehicleIdentificationNumber:
-                type: string
-                description: The vehicle identification number (VIN) of the financed vehicle
-              vehicleUuid:
-                type: string
-                format: uuid
-                description: The UUID representing the unique Year/Make/Model/Trim of the financed vehicle
-        driversInformation:
-          type: array
-          items:
-            type: object
-            title: Driver Information
-            properties:
-              role:
-                type: string
-                enum:
-                - primary
-                - secondary
-                - unlisted
-              gender:
-                $ref: '#/components/schemas/Gender'
-                description: Driver's gender
-              personalInformation:
-                $ref: '#/components/schemas/LeadPersonalInformation'
-                description: Personal information of the driver
-    LeadSavingsInformationJson:
-      type: object
-      properties:
-        minDepositAmount:
-          type: integer
-          format: int32
-          description: The minimum amount a `Lead` is interested in depositing when opening a new savings account
-        maxDepositAmount:
-          type: integer
-          format: int32
-          description: The maximum amount a `Lead` is interested in depositing when opening a new savings account
-    LeadLoanInformationJson:
-      type: object
-      properties:
-        purpose:
-          $ref: '#/components/schemas/LoanPurpose'
-        loanAmount:
-          type: integer
-          format: int32
-    RefinanceType:
-      type: string
-      enum:
-      - cash_out
-      - rate_term
-    LeadRefinanceLoanInformationJson:
-      type: object
-      title: Refinance loan information
-      properties:
-        accountNumber:
-          type: string
-          description: The account number for a loan the lead is refinancing
-        incomeBasedRepayment:
-          type: boolean
-          description: If the repayment is income-based for a loan the lead is refinancing
-        interestRate:
-          type: number
-          description: The interest rate for a loan the lead is refinancing
-        loanAmount:
-          type: integer
-          format: int32
-          description: The loan amount for a loan the lead is refinancing
-        loanServicer:
-          type: string
-          description: The name of a loan servicer of a loan the lead is refinancing
-        loanType:
-          $ref: '#/components/schemas/RefinanceLoanType'
-          description: The loan type for a loan the lead is refinancing
-        nextPaymentAmount:
-          type: number
-          description: The amount the next payment will be on a loan the lead is refinancing
-        nextPaymentDate:
-          type: string
-          format: date
-          description: The next payment date for a loan the lead is refinancing
-    LeadEducationInformationJson:
-      type: object
-      properties:
-        educationLevel:
-          $ref: '#/components/schemas/EducationLevel'
-        graduateDegreeType:
-          $ref: '#/components/schemas/GraduateDegreeType'
-        universityAttended:
-          type: string
-          description: 'Name of university where a lead received their undergraduate degree.
-
-            A lookup service for possible universities is available from using the /leads/universities endpoint.
-
-            To maximize returned offers, this string must match one of the names returned from the lookup.
-
-            '
-          deprecated: true
-        universityOpeId:
-          type: string
-          $ref: '#/components/schemas/OpeId'
-        graduationDate:
-          type: string
-          format: date
-          description: Date the lead graudated from undergrad (YYYY-MM-DD)
-          deprecated: true
-        graduateGraduationDate:
-          type: string
-          format: date
-          description: Lead's graduate school graduation date (YYYY-MM-DD)
-        graduateLastAttendedDate:
-          type: string
-          format: date
-          description: Lead's last attended month/year for graduate school (YYYY-MM-DD)
-        graduateUniversityAttended:
-          type: string
-          description: 'Name of university where a lead received their graduate degree.
-
-            A lookup service for possible universities is available from using the /leads/universities endpoint.
-
-            To maximize returned offers, this string must match one of the names returned from the lookup.
-
-            '
-        graduateUniversityOpeId:
-          $ref: '#/components/schemas/OpeId'
-        undergraduateGraduationDate:
-          type: string
-          format: date
-          description: Date the lead graduated from undergrad (YYYY-MM-DD).
-        undergraduateLastAttendedDate:
-          type: string
-          format: date
-          description: Lead's last attended month/year for undergrad (YYYY-MM-DD)
-        undergraduateUniversityAttended:
-          type: string
-          description: 'Name of university where a lead received their undergraduate degree.
-
-            A lookup service for possible universities is available from using the /leads/universities endpoint.
-
-            To maximize returned offers, this string must match one of the names returned from the lookup.
-
-            '
-        undergraduateUniversityOpeId:
-          type: string
-          $ref: '#/components/schemas/OpeId'
-    PropertyStatus:
-      type: string
-      enum:
-      - own_outright
-      - own_with_mortgage
-      - rent
-    OpeId:
-      type: string
-      pattern: ^\d{6}[A-Za-z\d]{2}$
-      description: identification number used by the U.S. Department of Education's Office of Postsecondary Education (OPE) to identify schools that have Program Participation Agreements (PPA) so that its students are eligible to participate in Federal Student Financial Assistance programs under Title IV regulations. This is a 6-digit number followed by a 2-digit suffix used to identify branches, additional locations, and other entities that are part of the eligible institution.
-    MortechCreditRating:
-      type: string
-      enum:
-      - Excellent (780-850)
-      - Excellent (760-779)
-      - Excellent (740-759)
-      - Good (720-739)
-      - Good (700-719)
-      - Fair (680-699)
-      - Fair (660-679)
-      - Poor (640-659)
-      - Poor (620-639)
-      - Poor (580-619)
-      - Poor (Under 580)
-    ApiErrorDetails:
-      type: object
-      additionalProperties:
-        type: string
-    OccupancyType:
-      type: string
-      enum:
-      - primary
-      - secondary
-      - investment
-    GraduateDegreeType:
-      type: string
-      enum:
-      - doctor_of_medicine
-      - doctor_of_osteopathic_medicine
-      - doctor_of_optometry
-      - doctor_of_dental_medicine
-      - dentariae_medicinae_doctoris
-      - doctor_of_dental_surgery
-      - doctor_of_veterinary_medicine
-      - doctor_of_pharmacy
-      - veterinariae_medicinae_doctoris
-      - master_of_arts
-      - master_of_science
-      - master_of_research
-      - master_of_research_project
-      - master_of_studies
-      - master_of_business_administration
-      - master_of_library_science
-      - master_of_public_administration
-      - master_of_public_health
-      - master_of_laws
-      - master_of_arts_liberal_studies
-      - master_of_fine_arts
-      - master_of_music
-      - master_of_education
-      - master_of_engineering
-      - master_of_architecture
-      - juris_doctor
-      - other
-    MortgageLoanType:
-      type: string
-      enum:
-      - ten_year_fixed
-      - fifteen_year_fixed
-      - twenty_year_fixed
-      - thirty_year_fixed
-      - forty_year_fixed
-      - three_year_intro_30_year_adjustable
-      - five_year_intro_30_year_adjustable
-      - seven_year_intro_30_year_adjustable
-      - ten_year_intro_30_year_adjustable
     LeadLegalInformationJson:
       type: object
       description: Information regarding a `Lead`'s communication consent
@@ -703,194 +181,11 @@ components:
           pattern: ^(?!\b(\d)\1+-(\d)\1+-(\d)\1+\b)(?!123-45-6789|219-09-9999|078-05-1120)(?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4}$
         citizenshipStatus:
           $ref: '#/components/schemas/CitizenshipStatus'
-    CitizenshipStatus:
-      type: string
-      description: Citizenship status
-      enum:
-      - citizen
-      - permanent_resident
-      - other
-    LeadClientTagsJson:
-      type: object
-      description: Arbitrary key-values mappings to associate with a `Lead`. This field can be use to attach `subid`s to a `Lead`
-      additionalProperties:
-        type: array
-        items:
-          type: string
-      maxProperties: 1
-      minProperties: 1
-      example:
-        subid:
-        - '123'
-    LeadCreditInformationJson:
-      type: object
-      description: Credit history information relating to a `Lead`
-      properties:
-        providedCreditRating:
-          $ref: '#/components/schemas/ProvidedCreditRating'
-        providedNumericCreditScore:
-          type: integer
-          format: int32
-          description: FICO credit score provided by a `Lead`
-    ProvidedCreditRating:
+    BatchConsentVersion:
       type: string
       enum:
-      - excellent
-      - good
-      - fair
-      - poor
-      - limited
-      - unknown
-    LeadIdentificationInformationJson:
-      type: object
-      properties:
-        idNumber:
-          type: string
-          description: The ID number supplied by the lead
-        idState:
-          type: string
-          description: The state of issue of the supplied ID
-        idType:
-          $ref: '#/components/schemas/IdType'
-          description: The form of the ID number supplied by the lead
-    IdType:
-      type: string
-      enum:
-      - driver_license
-      - state_id
-      - passport
-    RefinanceLoanType:
-      type: string
-      enum:
-      - federal_student_loan
-      - private_student_loan
-    LeadSessionInformationJson:
-      type: object
-      description: Browsing session information accociated with a `Lead`
-      properties:
-        ipAddress:
-          type: string
-        userAgent:
-          type: string
-        browserFingerprint:
-          type: string
-    LeadFinancialInformation:
-      type: object
-      properties:
-        employmentStatus:
-          $ref: '#/components/schemas/EmploymentStatus'
-        employmentPayFrequency:
-          $ref: '#/components/schemas/EmploymentPayFrequency'
-        annualIncome:
-          type: integer
-          format: int32
-        monthlyNetIncome:
-          type: integer
-          format: int32
-        bankName:
-          type: string
-        bankRoutingNumber:
-          type: string
-        bankAccountType:
-          $ref: '#/components/schemas/BankAccountType'
-        creditCardDebt:
-          type: integer
-          format: int32
-        monthsAtBank:
-          type: integer
-          format: int32
-        bankAccountNumber:
-          type: string
-        monthlyDebt:
-          type: integer
-          format: int32
-        totalAssets:
-          type: integer
-          format: int32
-        monthlyHousingPayment:
-          type: integer
-          format: int32
-        availableAssets:
-          type: integer
-          format: int32
-        additionalIncome:
-          type: integer
-          format: int32
-          description: The amount of additional income the lead recieves
-        additionalIncomeFrequency:
-          $ref: '#/components/schemas/EmploymentPayFrequency'
-          description: The frequency the lead recieves additional income
-        hasDirectDeposit:
-          type: boolean
-          description: Do you have a direct deposit?
-        totalUnsecuredDebt:
-          type: integer
-          format: int32
-          description: Approximate total unsecured debt in dollars
-    LeadBestTimeToCall:
-      type: string
-      enum:
-      - morning
-      - afternoon
-      - evening
-      - night
-    PrefillResponse:
-      type: object
-      properties:
-        productTypes:
-          type: array
-          description: Product types in which the `Prefill` is associated
-          items:
-            $ref: '#/components/schemas/ProductType'
-        prefillToken:
-          type: string
-          format: uuid
-          description: The Prefill token used for retrieving the prefill data
-        expiresInSeconds:
-          type: number
-          format: int32
-          description: The number of seconds until the prefill token expires
-        maxUses:
-          type: number
-          format: int32
-          description: The maximum number of times the prefill token can be used
-        partnerPageUrl:
-          type: string
-          format: uri
-          description: The URL to the partner's page
-        embedSnippet:
-          type: string
-          format: html
-          description: The snippet to be embedded in the partner's page
-      required:
-      - productTypes
-      - prefillToken
-      - expiresInSeconds
-      - maxUses
-      example:
-        productTypes:
-        - loan
-        prefillToken: d9b212a8-b284-5986-813e-a8d8e87c1863
-        expiresInSeconds: 180
-        maxUses: 1
-        partnerPageUrl: https://www.moneylion.com/network/meratas/loans/search/loan-purpose?tag.partnerKey=meratas-pp-loans&prefillToken=e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4
-        embedSnippet: <script async src="https://www.moneylion.dev/network/fagner/offer-carousel/web-component/offer-carousel/index.js" data-embed-type="auto-mount" data-cnf-layout-variant="native-layout" data-title="Offer Carousel" data-prefill-token="e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4" data-display-layout="carousel"></script>
-    LeadPersonalReferenceInformationJson:
-      type: object
-      properties:
-        firstName:
-          type: string
-          description: The first name of the personal reference supplied by the lead
-        lastName:
-          type: string
-          description: The last name of the personal reference supplied by the lead
-        primaryPhone:
-          type: string
-          pattern: ^1?\d{10}$
-          description: The phone number of the personal reference supplied by the lead
-        relationType:
-          $ref: '#/components/schemas/PersonalReferenceRelationType'
-          description: The relation of the personal reference supplied by the lead
+      - v1
+      - v2
     ProductType:
       type: string
       enum:
@@ -1079,16 +374,389 @@ components:
           - there
           something:
           - else
-    LeadCreditCardInformationJson:
+    MortgageType:
+      type: string
+      enum:
+      - purchase
+      - refinance
+    PropertyType:
+      type: string
+      enum:
+      - rent
+      - condo
+      - multi_unit
+      - single_family
+      - townhouse
+    ProvidedCreditRating:
+      type: string
+      enum:
+      - excellent
+      - good
+      - fair
+      - poor
+      - limited
+      - unknown
+    BankAccountType:
+      type: string
+      enum:
+      - checking
+      - savings
+      - other
+    EmploymentPayFrequency:
+      type: string
+      enum:
+      - weekly
+      - biweekly
+      - twice_monthly
+      - monthly
+    LeadIdentificationInformationJson:
       type: object
       properties:
-        allowAnnualFee:
+        idNumber:
+          type: string
+          description: The ID number supplied by the lead
+        idState:
+          type: string
+          description: The state of issue of the supplied ID
+        idType:
+          $ref: '#/components/schemas/IdType'
+          description: The form of the ID number supplied by the lead
+    OpeId:
+      type: string
+      pattern: ^\d{6}[A-Za-z\d]{2}$
+      description: identification number used by the U.S. Department of Education's Office of Postsecondary Education (OPE) to identify schools that have Program Participation Agreements (PPA) so that its students are eligible to participate in Federal Student Financial Assistance programs under Title IV regulations. This is a 6-digit number followed by a 2-digit suffix used to identify branches, additional locations, and other entities that are part of the eligible institution.
+    LeadCreditInformationJson:
+      type: object
+      description: Credit history information relating to a `Lead`
+      properties:
+        providedCreditRating:
+          $ref: '#/components/schemas/ProvidedCreditRating'
+        providedNumericCreditScore:
+          type: integer
+          format: int32
+          description: FICO credit score provided by a `Lead`
+    EmploymentStatus:
+      type: string
+      enum:
+      - employed
+      - employed_full_time
+      - employed_part_time
+      - military
+      - not_employed
+      - self_employed
+      - retired
+      - other
+    MortechCreditRating:
+      type: string
+      enum:
+      - Excellent (780-850)
+      - Excellent (760-779)
+      - Excellent (740-759)
+      - Good (720-739)
+      - Good (700-719)
+      - Fair (680-699)
+      - Fair (660-679)
+      - Poor (640-659)
+      - Poor (620-639)
+      - Poor (580-619)
+      - Poor (Under 580)
+    PrefillResponse:
+      type: object
+      properties:
+        productTypes:
+          type: array
+          description: Product types in which the `Prefill` is associated
+          items:
+            $ref: '#/components/schemas/ProductType'
+        prefillToken:
+          type: string
+          format: uuid
+          description: The Prefill token used for retrieving the prefill data
+        expiresInSeconds:
+          type: number
+          format: int32
+          description: The number of seconds until the prefill token expires
+        maxUses:
+          type: number
+          format: int32
+          description: The maximum number of times the prefill token can be used
+        partnerPageUrl:
+          type: string
+          format: uri
+          description: The URL to the partner's page
+        embedSnippet:
+          type: string
+          format: html
+          description: The snippet to be embedded in the partner's page
+      required:
+      - productTypes
+      - prefillToken
+      - expiresInSeconds
+      - maxUses
+      example:
+        productTypes:
+        - loan
+        prefillToken: d9b212a8-b284-5986-813e-a8d8e87c1863
+        expiresInSeconds: 180
+        maxUses: 1
+        partnerPageUrl: https://www.moneylion.com/network/meratas/loans/search/loan-purpose?tag.partnerKey=meratas-pp-loans&prefillToken=e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4
+        embedSnippet: <script async src="https://www.moneylion.dev/network/fagner/offer-carousel/web-component/offer-carousel/index.js" data-embed-type="auto-mount" data-cnf-layout-variant="native-layout" data-title="Offer Carousel" data-prefill-token="e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4" data-display-layout="carousel"></script>
+    RefinanceType:
+      type: string
+      enum:
+      - cash_out
+      - rate_term
+    CitizenshipStatus:
+      type: string
+      description: Citizenship status
+      enum:
+      - citizen
+      - permanent_resident
+      - other
+    LeadSavingsInformationJson:
+      type: object
+      properties:
+        minDepositAmount:
+          type: integer
+          format: int32
+          description: The minimum amount a `Lead` is interested in depositing when opening a new savings account
+        maxDepositAmount:
+          type: integer
+          format: int32
+          description: The maximum amount a `Lead` is interested in depositing when opening a new savings account
+    LeadRefinanceLoanInformationJson:
+      type: object
+      title: Refinance loan information
+      properties:
+        accountNumber:
+          type: string
+          description: The account number for a loan the lead is refinancing
+        incomeBasedRepayment:
           type: boolean
-        cardPurposes:
+          description: If the repayment is income-based for a loan the lead is refinancing
+        interestRate:
+          type: number
+          description: The interest rate for a loan the lead is refinancing
+        loanAmount:
+          type: integer
+          format: int32
+          description: The loan amount for a loan the lead is refinancing
+        loanServicer:
+          type: string
+          description: The name of a loan servicer of a loan the lead is refinancing
+        loanType:
+          $ref: '#/components/schemas/RefinanceLoanType'
+          description: The loan type for a loan the lead is refinancing
+        nextPaymentAmount:
+          type: number
+          description: The amount the next payment will be on a loan the lead is refinancing
+        nextPaymentDate:
+          type: string
+          format: date
+          description: The next payment date for a loan the lead is refinancing
+    LeadLoanInformationJson:
+      type: object
+      properties:
+        purpose:
+          $ref: '#/components/schemas/LoanPurpose'
+        loanAmount:
+          type: integer
+          format: int32
+    RefinanceLoanType:
+      type: string
+      enum:
+      - federal_student_loan
+      - private_student_loan
+    LeadSessionInformationJson:
+      type: object
+      description: Browsing session information accociated with a `Lead`
+      properties:
+        ipAddress:
+          type: string
+        userAgent:
+          type: string
+        browserFingerprint:
+          type: string
+    OccupancyType:
+      type: string
+      enum:
+      - primary
+      - secondary
+      - investment
+    PropertySearchStatus:
+      type: string
+      enum:
+      - found
+      - not_found
+    LeadHealthInformationJson:
+      type: object
+      properties:
+        gender:
+          $ref: '#/components/schemas/Gender'
+        heightInInches:
+          type: integer
+          format: int32
+        weightInPounds:
+          type: integer
+          format: int32
+        tobaccoSmoker:
+          type: boolean
+    LeadAutoInsuranceInformationJson:
+      type: object
+      properties:
+        numberOfVehicles:
+          type: integer
+          format: int32
+        hasAutoInsurance:
+          type: boolean
+        priorCarrierInformation:
+          type: object
+          title: Prior Carrier Information
+          properties:
+            carrierName:
+              type: string
+              description: Name of the prior insurance carrier
+            timeInsuredMonths:
+              type: integer
+              format: int32
+              description: Duration in months the lead was insured with the prior carrier
+        policyEffectiveDate:
+          type: string
+          format: date
+        coverageInformation:
+          type: object
+          title: Coverage Information
+          properties:
+            bodilyInjuryAmount:
+              type: integer
+              format: int32
+              description: Bodily injury coverage amount
+            propertyDamageAmount:
+              type: integer
+              format: int32
+              description: Property damage coverage amount
+            collisionAmount:
+              type: integer
+              format: int32
+              description: Collision coverage amount
+        garageInformation:
+          type: object
+          title: Garage Information
+          properties:
+            address1:
+              type: string
+              description: Street address line 1 of the garage location
+            address2:
+              type: string
+              description: Street address line 2 of the garage location (optional)
+            city:
+              type: string
+              description: City where the vehicle is garaged
+            state:
+              type: string
+              description: State where the vehicle is garaged
+            zipCode:
+              type: string
+              description: ZIP code of the garage address
+        vehiclesInformation:
           type: array
           items:
-            $ref: '#/components/schemas/CardPurpose'
-          description: A list of card purposes in which the lead is interested
+            type: object
+            title: Vehicle information
+            properties:
+              monthlyPayment:
+                type: integer
+                format: int32
+                description: The lead's monthly auto loan payment
+              estimatedMileage:
+                type: integer
+                format: int32
+                description: The vehicle's estimated number of miles driven
+              vehicleIdentificationNumber:
+                type: string
+                description: The vehicle identification number (VIN) of the financed vehicle
+              vehicleUuid:
+                type: string
+                format: uuid
+                description: The UUID representing the unique Year/Make/Model/Trim of the financed vehicle
+        driversInformation:
+          type: array
+          items:
+            type: object
+            title: Driver Information
+            properties:
+              role:
+                type: string
+                enum:
+                - primary
+                - secondary
+                - unlisted
+              gender:
+                $ref: '#/components/schemas/Gender'
+                description: Driver's gender
+              personalInformation:
+                $ref: '#/components/schemas/LeadPersonalInformation'
+                description: Personal information of the driver
+    PersonalReferenceRelationType:
+      type: string
+      enum:
+      - parent
+      - employer
+      - spouse
+      - guardian
+      - sibling
+      - relative
+      - friend
+      - other
+    IdType:
+      type: string
+      enum:
+      - driver_license
+      - state_id
+      - passport
+    LeadClientTagsJson:
+      type: object
+      description: Arbitrary key-values mappings to associate with a `Lead`. This field can be use to attach `subid`s to a `Lead`
+      additionalProperties:
+        type: array
+        items:
+          type: string
+      maxProperties: 1
+      minProperties: 1
+      example:
+        subid:
+        - '123'
+    LeadCoApplicantInformationJson:
+      type: object
+      description: 'The personal information of a co-applicant that may be considered in the
+
+        underwriting and approval of a loan.
+
+        '
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        annualIncome:
+          type: integer
+          format: int32
+        streetAddress1:
+          type: string
+          description: Street address (primary address line)
+        streetAddress2:
+          type: string
+          description: Secondary address line
+        city:
+          type: string
+        state:
+          $ref: '#/components/schemas/State'
+        zipcode:
+          type: string
+          pattern: ^\d{5}([-\s]\d{4})?$
     State:
       type: string
       format: state
@@ -1148,74 +816,6 @@ components:
       - WI
       - WV
       - WY
-    EmploymentStatus:
-      type: string
-      enum:
-      - employed
-      - employed_full_time
-      - employed_part_time
-      - military
-      - not_employed
-      - self_employed
-      - retired
-      - other
-    PropertySearchStatus:
-      type: string
-      enum:
-      - found
-      - not_found
-    PropertyType:
-      type: string
-      enum:
-      - rent
-      - condo
-      - multi_unit
-      - single_family
-      - townhouse
-    BatchConsentVersion:
-      type: string
-      enum:
-      - v1
-      - v2
-    CardPurpose:
-      type: string
-      description: Purposes or categories related to a credit card
-      enum:
-      - balance_transfer
-      - cash_back
-      - earning_rewards
-      - improve_credit
-      - low_interest
-      - new_to_credit
-      - student
-      - travel_incentives
-    LeadHealthInformationJson:
-      type: object
-      properties:
-        gender:
-          $ref: '#/components/schemas/Gender'
-        heightInInches:
-          type: integer
-          format: int32
-        weightInPounds:
-          type: integer
-          format: int32
-        tobaccoSmoker:
-          type: boolean
-    EmploymentPayFrequency:
-      type: string
-      enum:
-      - weekly
-      - biweekly
-      - twice_monthly
-      - monthly
-    PurchaseStatus:
-      type: string
-      enum:
-      - no_offer
-      - offer_accepted
-      - offer_pending
-      - under_contract
     EducationLevel:
       type: string
       enum:
@@ -1229,28 +829,417 @@ components:
       - did_not_graduate
       - still_enrolled
       - other
-    PersonalReferenceRelationType:
+    CardPurpose:
+      type: string
+      description: Purposes or categories related to a credit card
+      enum:
+      - balance_transfer
+      - cash_back
+      - earning_rewards
+      - improve_credit
+      - low_interest
+      - new_to_credit
+      - student
+      - travel_incentives
+    LeadEducationInformationJson:
+      type: object
+      properties:
+        educationLevel:
+          $ref: '#/components/schemas/EducationLevel'
+        graduateDegreeType:
+          $ref: '#/components/schemas/GraduateDegreeType'
+        universityAttended:
+          type: string
+          description: 'Name of university where a lead received their undergraduate degree.
+
+            A lookup service for possible universities is available from using the /leads/universities endpoint.
+
+            To maximize returned offers, this string must match one of the names returned from the lookup.
+
+            '
+          deprecated: true
+        universityOpeId:
+          type: string
+          $ref: '#/components/schemas/OpeId'
+        graduationDate:
+          type: string
+          format: date
+          description: Date the lead graudated from undergrad (YYYY-MM-DD)
+          deprecated: true
+        graduateGraduationDate:
+          type: string
+          format: date
+          description: Lead's graduate school graduation date (YYYY-MM-DD)
+        graduateLastAttendedDate:
+          type: string
+          format: date
+          description: Lead's last attended month/year for graduate school (YYYY-MM-DD)
+        graduateUniversityAttended:
+          type: string
+          description: 'Name of university where a lead received their graduate degree.
+
+            A lookup service for possible universities is available from using the /leads/universities endpoint.
+
+            To maximize returned offers, this string must match one of the names returned from the lookup.
+
+            '
+        graduateUniversityOpeId:
+          $ref: '#/components/schemas/OpeId'
+        undergraduateGraduationDate:
+          type: string
+          format: date
+          description: Date the lead graduated from undergrad (YYYY-MM-DD).
+        undergraduateLastAttendedDate:
+          type: string
+          format: date
+          description: Lead's last attended month/year for undergrad (YYYY-MM-DD)
+        undergraduateUniversityAttended:
+          type: string
+          description: 'Name of university where a lead received their undergraduate degree.
+
+            A lookup service for possible universities is available from using the /leads/universities endpoint.
+
+            To maximize returned offers, this string must match one of the names returned from the lookup.
+
+            '
+        undergraduateUniversityOpeId:
+          type: string
+          $ref: '#/components/schemas/OpeId'
+    Gender:
       type: string
       enum:
-      - parent
-      - employer
-      - spouse
-      - guardian
-      - sibling
-      - relative
-      - friend
+      - male
+      - female
+    LoanPurpose:
+      type: string
+      enum:
+      - auto
+      - auto_purchase
+      - auto_refinance
+      - baby
+      - boat
+      - business
+      - car_repair
+      - cosmetic
+      - credit_card_refi
+      - debt_consolidation
+      - emergency
+      - engagement
+      - green
+      - home_improvement
+      - home_purchase
+      - home_refi
+      - household_expenses
+      - large_purchases
+      - life_event
+      - medical_dental
+      - motorcycle
+      - moving_relocation
       - other
-  examples:
-    PrefillResponse:
-      summary: Prefill Response
-      value:
-        productTypes:
-        - loan
-        prefillToken: d9b212a8-b284-5986-813e-a8d8e87c1863
-        expiresInSeconds: 180
-        maxUses: 1
-        partnerPageUrl: https://www.moneylion.com/network/meratas/loans/search/loan-purpose?tag.partnerKey=meratas-pp-loans&prefillToken=e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4
-        embedSnippet: <script async src="https://www.moneylion.dev/network/fagner/offer-carousel/web-component/offer-carousel/index.js" data-embed-type="auto-mount" data-cnf-layout-variant="native-layout" data-title="Offer Carousel" data-prefill-token="e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4" data-display-layout="carousel"> </script>
+      - rv
+      - special_occasion
+      - student_loan
+      - student_loan_refi
+      - taxes
+      - vacation
+      - wedding
+    LeadCreditCardInformationJson:
+      type: object
+      properties:
+        allowAnnualFee:
+          type: boolean
+        cardPurposes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardPurpose'
+          description: A list of card purposes in which the lead is interested
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
+    GraduateDegreeType:
+      type: string
+      enum:
+      - doctor_of_medicine
+      - doctor_of_osteopathic_medicine
+      - doctor_of_optometry
+      - doctor_of_dental_medicine
+      - dentariae_medicinae_doctoris
+      - doctor_of_dental_surgery
+      - doctor_of_veterinary_medicine
+      - doctor_of_pharmacy
+      - veterinariae_medicinae_doctoris
+      - master_of_arts
+      - master_of_science
+      - master_of_research
+      - master_of_research_project
+      - master_of_studies
+      - master_of_business_administration
+      - master_of_library_science
+      - master_of_public_administration
+      - master_of_public_health
+      - master_of_laws
+      - master_of_arts_liberal_studies
+      - master_of_fine_arts
+      - master_of_music
+      - master_of_education
+      - master_of_engineering
+      - master_of_architecture
+      - juris_doctor
+      - other
+    LeadEmploymentInformationJson:
+      type: object
+      properties:
+        employerName:
+          type: string
+        employerAddress:
+          type: string
+        employerAddress2:
+          type: string
+        employerCity:
+          type: string
+        employerPhone:
+          type: string
+        employerState:
+          type: string
+        employerZip:
+          type: string
+        jobTitle:
+          type: string
+        monthsEmployed:
+          type: integer
+          format: int32
+        directDeposit:
+          type: boolean
+          description: Whether a `Lead` uses direct deposit for their salary
+        payDate1:
+          type: string
+          format: date
+        payDate2:
+          type: string
+          format: date
+        startDate:
+          type: string
+          format: date
+          description: The date the lead started working at their current employer (YYYY-MM-DD)
+    LeadMortgageInformationJson:
+      type: object
+      properties:
+        propertyType:
+          $ref: '#/components/schemas/PropertyType'
+        propertyValue:
+          type: integer
+          format: int32
+        mortgageBalance:
+          type: integer
+          format: int32
+        lenderName:
+          type: string
+        hasFHALoan:
+          type: boolean
+        currentWithLoan:
+          type: boolean
+        propertyStatus:
+          $ref: '#/components/schemas/PropertyStatus'
+        mortgageType:
+          $ref: '#/components/schemas/MortgageType'
+        mortgageAmount:
+          type: integer
+          format: int32
+          description: Amount the lead will borrow
+        downPaymentAmount:
+          type: integer
+          format: int32
+        propertyState:
+          type: string
+        propertyCounty:
+          type: string
+        propertyAddress1:
+          type: string
+          description: Street address (primary address line)
+        propertyAddress2:
+          type: string
+          description: Secondary address line
+        propertyZipcode:
+          type: string
+        propertyCity:
+          type: string
+        refinanceAmount:
+          type: integer
+          format: int32
+          description: Amount the lead will borrow for refinancing an existing mortgage
+        cashOutAmount:
+          type: integer
+          format: int32
+          description: Additional amount the lead will borrow against existing home equity in the case of refinance
+        occupancyType:
+          $ref: '#/components/schemas/OccupancyType'
+        refinanceType:
+          $ref: '#/components/schemas/RefinanceType'
+        propertySearchStatus:
+          $ref: '#/components/schemas/PropertySearchStatus'
+        numUnits:
+          type: integer
+          format: int32
+          description: The number of legal units on the property
+        closingDate:
+          type: string
+          format: date
+        purchaseStatus:
+          $ref: '#/components/schemas/PurchaseStatus'
+        purchaseDate:
+          type: string
+          format: date
+        monthlyHoaFee:
+          type: number
+          description: The amount of the HOA fee for the lead
+        mortgageCompany:
+          type: string
+          description: The name of the company holding the lead's mortgage
+        mortgageEscrowAmount:
+          type: number
+          description: The amount of escrow the lead pays
+        includeFhaLoans:
+          type: boolean
+          description: 'If true, the lead will receive FHA loan offers; if false, they will not.
+
+            '
+        includeVaLoans:
+          type: boolean
+          description: 'If true, the lead will receive VA loan offers; if false, they will not.
+
+            '
+        requestedLoanTerms:
+          type: array
+          items:
+            $ref: '#/components/schemas/MortgageLoanType'
+        mortechCreditRating:
+          $ref: '#/components/schemas/MortechCreditRating'
+    LeadBestTimeToCall:
+      type: string
+      enum:
+      - morning
+      - afternoon
+      - evening
+      - night
+    PurchaseStatus:
+      type: string
+      enum:
+      - no_offer
+      - offer_accepted
+      - offer_pending
+      - under_contract
+    ApiError:
+      type: object
+      properties:
+        attribute:
+          type: string
+          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
+
+            '
+        type:
+          type: string
+          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
+
+            '
+        details:
+          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ApiErrorDetails'
+        message:
+          type: string
+          description: 'A human-readable, English description of the error.
+
+            '
+    MortgageLoanType:
+      type: string
+      enum:
+      - ten_year_fixed
+      - fifteen_year_fixed
+      - twenty_year_fixed
+      - thirty_year_fixed
+      - forty_year_fixed
+      - three_year_intro_30_year_adjustable
+      - five_year_intro_30_year_adjustable
+      - seven_year_intro_30_year_adjustable
+      - ten_year_intro_30_year_adjustable
+    PropertyStatus:
+      type: string
+      enum:
+      - own_outright
+      - own_with_mortgage
+      - rent
+    LeadFinancialInformation:
+      type: object
+      properties:
+        employmentStatus:
+          $ref: '#/components/schemas/EmploymentStatus'
+        employmentPayFrequency:
+          $ref: '#/components/schemas/EmploymentPayFrequency'
+        annualIncome:
+          type: integer
+          format: int32
+        monthlyNetIncome:
+          type: integer
+          format: int32
+        bankName:
+          type: string
+        bankRoutingNumber:
+          type: string
+        bankAccountType:
+          $ref: '#/components/schemas/BankAccountType'
+        creditCardDebt:
+          type: integer
+          format: int32
+        monthsAtBank:
+          type: integer
+          format: int32
+        bankAccountNumber:
+          type: string
+        monthlyDebt:
+          type: integer
+          format: int32
+        totalAssets:
+          type: integer
+          format: int32
+        monthlyHousingPayment:
+          type: integer
+          format: int32
+        availableAssets:
+          type: integer
+          format: int32
+        additionalIncome:
+          type: integer
+          format: int32
+          description: The amount of additional income the lead recieves
+        additionalIncomeFrequency:
+          $ref: '#/components/schemas/EmploymentPayFrequency'
+          description: The frequency the lead recieves additional income
+        hasDirectDeposit:
+          type: boolean
+          description: Do you have a direct deposit?
+        totalUnsecuredDebt:
+          type: integer
+          format: int32
+          description: Approximate total unsecured debt in dollars
+    LeadPersonalReferenceInformationJson:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: The first name of the personal reference supplied by the lead
+        lastName:
+          type: string
+          description: The last name of the personal reference supplied by the lead
+        primaryPhone:
+          type: string
+          pattern: ^1?\d{10}$
+          description: The phone number of the personal reference supplied by the lead
+        relationType:
+          $ref: '#/components/schemas/PersonalReferenceRelationType'
+          description: The relation of the personal reference supplied by the lead
   responses:
     UnauthorizedRequest:
       description: Unauthorized request
@@ -1265,6 +1254,17 @@ components:
               summary: Access token was not specified
               value:
               - message: Access token is missing
+  examples:
+    PrefillResponse:
+      summary: Prefill Response
+      value:
+        productTypes:
+        - loan
+        prefillToken: d9b212a8-b284-5986-813e-a8d8e87c1863
+        expiresInSeconds: 180
+        maxUses: 1
+        partnerPageUrl: https://www.moneylion.com/network/meratas/loans/search/loan-purpose?tag.partnerKey=meratas-pp-loans&prefillToken=e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4
+        embedSnippet: <script async src="https://www.moneylion.dev/network/fagner/offer-carousel/web-component/offer-carousel/index.js" data-embed-type="auto-mount" data-cnf-layout-variant="native-layout" data-title="Offer Carousel" data-prefill-token="e9c6b1a2-4f8d-4d2c-b9e6-91f2a6d8b0a4" data-display-layout="carousel"> </script>
   securitySchemes:
     publishableBearerToken:
       type: http

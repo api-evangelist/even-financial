@@ -326,8 +326,6 @@ apis:
   humanURL: https://engine.tech/docs/api-reference/
   baseURL: https://api.engine.tech
   tags:
-  - Pre-Fill
-  tags_raw:
   - Pre Fill
   properties:
   - type: OpenAPI

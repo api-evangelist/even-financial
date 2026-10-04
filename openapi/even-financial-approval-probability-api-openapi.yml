@@ -102,6 +102,208 @@ paths:
                   $ref: '#/components/schemas/ApiError'
 components:
   schemas:
+    FinancialInstitutionLoanReport:
+      type: object
+      required:
+      - uuid
+      - name
+      - probabilities
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The unique identifier for the financial institution.
+        name:
+          type: string
+          description: The name of the financial institution.
+        logoUrl:
+          type: string
+          description: A URL of a logo for the financial institution.
+        probabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoanProbability'
+          description: The approval probabilities for the financial intitution.
+    LoanReport:
+      type: object
+      required:
+      - uuid
+      - annualIncome
+      - creditRating
+      - networkProbabilities
+      - financialInsitutions
+      - createdAt
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: A unique identifier for this report.
+        annualIncome:
+          type: integer
+          format: int32
+          description: The user's annual income in dollars.
+        creditRating:
+          description: The user's credit score range.
+          allOf:
+          - $ref: '#/components/schemas/ProvidedCreditRating'
+        totalDebt:
+          type: integer
+          format: int32
+          description: The user's total debt in dollars.
+        countOfDerogatories:
+          type: integer
+          format: int32
+          description: The number of derogatory accounts listed on the user's credit report.
+        state:
+          description: The user's state of residence.
+          allOf:
+          - $ref: '#/components/schemas/State'
+        loanPurpose:
+          description: The reason for the loan.
+          allOf:
+          - $ref: '#/components/schemas/LoanPurpose'
+        loanAmount:
+          type: integer
+          format: int32
+          description: The size of the the loan.
+        networkProbabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoanProbability'
+          description: Probabilities for classes of loans, irrespective of financial institution.
+        financialInsitutions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialInstitutionLoanReport'
+          description: Probabilities broken out for specific financial institutions.
+        createdAt:
+          type: string
+          format: date-time
+          description: When this report was created.
+    LoanProbability:
+      type: object
+      required:
+      - probability
+      - aprPercentMin
+      - aprPercentMax
+      - termMonthsMin
+      - termMonthsMax
+      properties:
+        probability:
+          type: number
+          format: double
+          description: The likelihood of approval for loans that match the criteria.
+        aprPercentMin:
+          type: number
+          format: double
+          description: The minimum APR for loans with this approval probability.
+        aprPercentMax:
+          type: number
+          format: double
+          description: The maximum APR for loans with this approval probability.
+        termMonthsMin:
+          type: integer
+          format: int64
+          description: The minimum term length for loans with this approval probability.
+        termMonthsMax:
+          type: integer
+          format: int64
+          description: The maximum term length for loans with this approval probability.
+        productSubType:
+          description: The optional loan sub-type of loans with this approval probability.
+          allOf:
+          - $ref: '#/components/schemas/ProductSubType'
+    ApiError:
+      type: object
+      properties:
+        attribute:
+          type: string
+          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
+
+            '
+        type:
+          type: string
+          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
+
+            '
+        details:
+          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
+
+            '
+          allOf:
+          - $ref: '#/components/schemas/ApiErrorDetails'
+        message:
+          type: string
+          description: 'A human-readable, English description of the error.
+
+            '
+    ProvidedCreditRating:
+      type: string
+      enum:
+      - excellent
+      - good
+      - fair
+      - poor
+      - limited
+      - unknown
+    ProductSubType:
+      type: string
+      description: A type of financial product
+      enum:
+      - credit_card
+      - secured_card
+      - student_card
+      - personal_loan
+      - secured_loan
+      - student_loan_refinance
+      - co_applicant_loan
+      - line_of_credit
+      - automobile_refinance
+      - home_equity_line_of_credit
+      - purchase
+      - refinance
+      - savings_account
+      - money_market_account
+      - certificate_of_deposit
+      - individual_retirement_account
+      - cash_management_account
+      - high_interest_checking
+      - checking
+      - accidental_death_benefits
+      - term_life
+      - term_life_instant
+      - whole_life
+      - bill_reduction
+      - debt_relief
+      - installment_loans
+      - credit_builder
+      - cash_advance
+      - credit_repair
+      - education_offers
+      - employment_opportunity
+      - financial_wellness
+      - direct_affiliate
+      - overdraft_protection
+      - revenue_based_financing
+      - installment_loan_more_offers
+      - credit_card_more_offers
+      - credit_repair_more_offers
+      - student_loan
+      - health
+      - auto_and_vehicle
+      - games
+      - home
+      - rewards
+      - life_insurance
+      - auto_insurance
+      - specialty_vehicle_insurance
+      - home_owners_insurance
+      - renters_insurance
+      - uncategorized
+      - buy_now_pay_later
+      - home_equity_agreements
+      - cash_advance_moneylion
+      - unknown
     State:
       type: string
       format: state
@@ -161,157 +363,6 @@ components:
       - WI
       - WV
       - WY
-    ProvidedCreditRating:
-      type: string
-      enum:
-      - excellent
-      - good
-      - fair
-      - poor
-      - limited
-      - unknown
-    ApiErrorDetails:
-      type: object
-      additionalProperties:
-        type: string
-    ProductSubType:
-      type: string
-      description: A type of financial product
-      enum:
-      - credit_card
-      - secured_card
-      - student_card
-      - personal_loan
-      - secured_loan
-      - student_loan_refinance
-      - co_applicant_loan
-      - line_of_credit
-      - automobile_refinance
-      - home_equity_line_of_credit
-      - purchase
-      - refinance
-      - savings_account
-      - money_market_account
-      - certificate_of_deposit
-      - individual_retirement_account
-      - cash_management_account
-      - high_interest_checking
-      - checking
-      - accidental_death_benefits
-      - term_life
-      - term_life_instant
-      - whole_life
-      - bill_reduction
-      - debt_relief
-      - installment_loans
-      - credit_builder
-      - cash_advance
-      - credit_repair
-      - education_offers
-      - employment_opportunity
-      - financial_wellness
-      - direct_affiliate
-      - overdraft_protection
-      - revenue_based_financing
-      - installment_loan_more_offers
-      - credit_card_more_offers
-      - credit_repair_more_offers
-      - student_loan
-      - health
-      - auto_and_vehicle
-      - games
-      - home
-      - rewards
-      - life_insurance
-      - auto_insurance
-      - specialty_vehicle_insurance
-      - home_owners_insurance
-      - renters_insurance
-      - uncategorized
-      - buy_now_pay_later
-      - home_equity_agreements
-      - cash_advance_moneylion
-      - unknown
-    LoanReport:
-      type: object
-      required:
-      - uuid
-      - annualIncome
-      - creditRating
-      - networkProbabilities
-      - financialInsitutions
-      - createdAt
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          description: A unique identifier for this report.
-        annualIncome:
-          type: integer
-          format: int32
-          description: The user's annual income in dollars.
-        creditRating:
-          description: The user's credit score range.
-          allOf:
-          - $ref: '#/components/schemas/ProvidedCreditRating'
-        totalDebt:
-          type: integer
-          format: int32
-          description: The user's total debt in dollars.
-        countOfDerogatories:
-          type: integer
-          format: int32
-          description: The number of derogatory accounts listed on the user's credit report.
-        state:
-          description: The user's state of residence.
-          allOf:
-          - $ref: '#/components/schemas/State'
-        loanPurpose:
-          description: The reason for the loan.
-          allOf:
-          - $ref: '#/components/schemas/LoanPurpose'
-        loanAmount:
-          type: integer
-          format: int32
-          description: The size of the the loan.
-        networkProbabilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/LoanProbability'
-          description: Probabilities for classes of loans, irrespective of financial institution.
-        financialInsitutions:
-          type: array
-          items:
-            $ref: '#/components/schemas/FinancialInstitutionLoanReport'
-          description: Probabilities broken out for specific financial institutions.
-        createdAt:
-          type: string
-          format: date-time
-          description: When this report was created.
-    ApiError:
-      type: object
-      properties:
-        attribute:
-          type: string
-          description: 'The attribute that this error applies to. Omitted if this error is not in the context of a resource, or cannot be isolated to a single attribute.
-
-            '
-        type:
-          type: string
-          description: 'A classification for this error, which can be used to render the appropriate custom error template, or take other programmatic actions.
-
-            '
-        details:
-          description: 'Variables associated with this error that can be injected into a custom error template, or used to parameterize any other programatic actions.
-
-            '
-          allOf:
-          - $ref: '#/components/schemas/ApiErrorDetails'
-        message:
-          type: string
-          description: 'A human-readable, English description of the error.
-
-            '
     LoanPurpose:
       type: string
       enum:
@@ -345,6 +396,10 @@ components:
       - taxes
       - vacation
       - wedding
+    ApiErrorDetails:
+      type: object
+      additionalProperties:
+        type: string
     LoanReportCreateData:
       type: object
       required:
@@ -379,62 +434,50 @@ components:
           type: integer
           format: int32
           description: The size of the the loan.
-    FinancialInstitutionLoanReport:
-      type: object
-      required:
-      - uuid
-      - name
-      - probabilities
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          description: The unique identifier for the financial institution.
-        name:
-          type: string
-          description: The name of the financial institution.
-        logoUrl:
-          type: string
-          description: A URL of a logo for the financial institution.
-        probabilities:
-          type: array
-          items:
-            $ref: '#/components/schemas/LoanProbability'
-          description: The approval probabilities for the financial intitution.
-    LoanProbability:
-      type: object
-      required:
-      - probability
-      - aprPercentMin
-      - aprPercentMax
-      - termMonthsMin
-      - termMonthsMax
-      properties:
-        probability:
-          type: number
-          format: double
-          description: The likelihood of approval for loans that match the criteria.
-        aprPercentMin:
-          type: number
-          format: double
-          description: The minimum APR for loans with this approval probability.
-        aprPercentMax:
-          type: number
-          format: double
-          description: The maximum APR for loans with this approval probability.
-        termMonthsMin:
-          type: integer
-          format: int64
-          description: The minimum term length for loans with this approval probability.
-        termMonthsMax:
-          type: integer
-          format: int64
-          description: The maximum term length for loans with this approval probability.
-        productSubType:
-          description: The optional loan sub-type of loans with this approval probability.
-          allOf:
-          - $ref: '#/components/schemas/ProductSubType'
+  responses:
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+    MalformedRequest:
+      description: Malformed request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            invalidUuidPathParameter:
+              $ref: '#/components/examples/InvalidUuidPathParameter'
+    UnauthorizedRequest:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
+          examples:
+            missingAccessToken:
+              summary: Access token was not specified
+              value:
+              - message: Access token is missing
   examples:
+    LoanApprovalProbabilityCreateData:
+      summary: Loan approval probability create data
+      value:
+        annualIncome: 75000
+        creditRating: excellent
+        totalDebt: 10000
+        countOfDerogatories: 0
+        state: NY
+        loanPurpose: debt_consolidation
+        loanAmount: 10000
     LoanApprovalProbabilityReport:
       summary: Loan approval probability report
       value:
@@ -464,54 +507,11 @@ components:
           - probability: 84.5421
             aprLow: 12.76
             aprHigh: 18.85
-    LoanApprovalProbabilityCreateData:
-      summary: Loan approval probability create data
-      value:
-        annualIncome: 75000
-        creditRating: excellent
-        totalDebt: 10000
-        countOfDerogatories: 0
-        state: NY
-        loanPurpose: debt_consolidation
-        loanAmount: 10000
     InvalidUuidPathParameter:
       summary: Invalid UUID in path parameter
       value:
       - message: Bad request.
         details: 'Cannot parse parameter uuid as UUID: Invalid UUID string: 123'
-  responses:
-    InvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
-    UnauthorizedRequest:
-      description: Unauthorized request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
-          examples:
-            missingAccessToken:
-              summary: Access token was not specified
-              value:
-              - message: Access token is missing
-    MalformedRequest:
-      description: Malformed request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
-          examples:
-            invalidUuidPathParameter:
-              $ref: '#/components/examples/InvalidUuidPathParameter'
   securitySchemes:
     publishableBearerToken:
       type: http

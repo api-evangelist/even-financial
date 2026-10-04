@@ -241,42 +241,36 @@ paths:
                 items:
                   $ref: '#/components/schemas/ApiError'
 components:
-  examples:
-    FeaturedFinancialInstitutions:
-      summary: Featured financial institutions
-      value:
-      - uuid: 32bd2f7c-79fd-5c54-bcb5-3a46454a465c
-        name: Alpha, Inc.
-        logoUrl: https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png
-      - uuid: 91d08be0-2a8c-4d28-b399-7e1b38e2522e
-        name: Beta, Inc.
-        logoUrl: https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png
-    UniversityNamesMatchingJohns:
-      summary: University names matching "johns"
-      value:
-      - Johns Hopkins University
-      - Johns Hopkins University - Carey Business School
-      - Johns Hopkins University - Paul Nifle School of Advanced International Studies
-      - Johns Hopkins University - Peabody Conservatory of Music
-      - Johns Hopkins University - School of Arts & Science
-      - Johns Hopkins University - School of Medicine
-      - Johns Hopkins University - School of Nursing
-      - Johns Hopkins University - School of Public Health
-      - Johns Hopkins University - SPSBE
-      - Saint Johns University
-      - Cornell University Johnson, MBA
-      - Johnson College
-      - Johnson County Community College
-      - Johnson University
-      - Johnson & Wales University
-      - Northern Vermont University - Johnson (FKA Johnson State College + Lyndon State College)
-      - Northern Vermont University - Lyndon (FKA Lyndon State College + Johnson State College)
-      - University of Pittsburgh - Johnstown
   schemas:
-    ApiErrorDetails:
+    FeaturedFinancialInstitution:
       type: object
-      additionalProperties:
-        type: string
+      required:
+      - uuid
+      - name
+      - logoUrl
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+          description: 'A unique identifier for the financial institution.
+
+            '
+        name:
+          type: string
+          readOnly: true
+          description: 'The name of the financial institution. This value is subject to
+
+            change, so `financialInstitutionUuid` should be used for grouping.
+
+            '
+        logoUrl:
+          type: string
+          format: url
+          readOnly: true
+          description: 'The URL of an image logo for the associated financial institution.
+
+            '
     ApiError:
       type: object
       properties:
@@ -332,36 +326,19 @@ components:
           type: integer
           format: int64
           description: NADA Used Card Guide vehicle id.
-    FeaturedFinancialInstitution:
+    ApiErrorDetails:
       type: object
-      required:
-      - uuid
-      - name
-      - logoUrl
-      properties:
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-          description: 'A unique identifier for the financial institution.
-
-            '
-        name:
-          type: string
-          readOnly: true
-          description: 'The name of the financial institution. This value is subject to
-
-            change, so `financialInstitutionUuid` should be used for grouping.
-
-            '
-        logoUrl:
-          type: string
-          format: url
-          readOnly: true
-          description: 'The URL of an image logo for the associated financial institution.
-
-            '
+      additionalProperties:
+        type: string
   responses:
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiError'
     UnauthorizedRequest:
       description: Unauthorized request
       content:
@@ -375,14 +352,37 @@ components:
               summary: Access token was not specified
               value:
               - message: Access token is missing
-    InvalidRequest:
-      description: Invalid request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiError'
+  examples:
+    FeaturedFinancialInstitutions:
+      summary: Featured financial institutions
+      value:
+      - uuid: 32bd2f7c-79fd-5c54-bcb5-3a46454a465c
+        name: Alpha, Inc.
+        logoUrl: https://aff-tag.evenfinancial.com/images/alpha/Alpha_120x80.png
+      - uuid: 91d08be0-2a8c-4d28-b399-7e1b38e2522e
+        name: Beta, Inc.
+        logoUrl: https://aff-tag.evenfinancial.com/images/beta/Beta_120x80.png
+    UniversityNamesMatchingJohns:
+      summary: University names matching "johns"
+      value:
+      - Johns Hopkins University
+      - Johns Hopkins University - Carey Business School
+      - Johns Hopkins University - Paul Nifle School of Advanced International Studies
+      - Johns Hopkins University - Peabody Conservatory of Music
+      - Johns Hopkins University - School of Arts & Science
+      - Johns Hopkins University - School of Medicine
+      - Johns Hopkins University - School of Nursing
+      - Johns Hopkins University - School of Public Health
+      - Johns Hopkins University - SPSBE
+      - Saint Johns University
+      - Cornell University Johnson, MBA
+      - Johnson College
+      - Johnson County Community College
+      - Johnson University
+      - Johnson & Wales University
+      - Northern Vermont University - Johnson (FKA Johnson State College + Lyndon State College)
+      - Northern Vermont University - Lyndon (FKA Lyndon State College + Johnson State College)
+      - University of Pittsburgh - Johnstown
   securitySchemes:
     publishableBearerToken:
       type: http
