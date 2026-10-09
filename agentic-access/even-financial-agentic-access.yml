@@ -1,169 +1,21 @@
-generated: '2026-07-19'
+generated: '2026-09-23'
 method: generated
-source: openapi/even-financial-openapi-original.json
+source: openapi/even-financial-analytics-api-openapi.yml, openapi/even-financial-approval-probability-api-openapi.yml,
+  openapi/even-financial-lead-api-openapi.yml, openapi/even-financial-offer-preview-api-openapi.yml,
+  openapi/even-financial-pre-fill-api-openapi.yml, openapi/even-financial-ui-utils-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 22
   by_action_class:
-    acting: 5
-    connected: 17
+    connected: 19
+    acting: 3
   by_consequence:
-    write: 5
-    read: 17
+    read: 19
+    write: 3
   human_in_the_loop_required: 0
 operations:
-- path: /leads/rateTables
-  method: post
-  operationId: submitLead
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /leads/{leadUuid}/rateTables
-  method: post
-  operationId: getRateTableForSpecifiedLead
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /originator/prefills/{prefillToken}
-  method: get
-  operationId: getPrefill
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /originator/prefills
-  method: post
-  operationId: prefill
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /originator/rateTables/{uuid}
-  method: get
-  operationId: getRateTable
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /leads/{uuid}
-  method: get
-  operationId: getLead
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /leads/{uuid}
-  method: patch
-  operationId: updateLead
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /approvalProbability/loanReports
-  method: post
-  operationId: createLoansApprovalProbabilityReport
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /approvalProbability/loanReports/{uuid}
-  method: get
-  operationId: getLoansApprovalProbabilityReport
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /offerPreview/loanOffers
-  method: get
-  operationId: getPreviewLoanOffers
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /offerPreview/creditCardOffers
-  method: get
-  operationId: getPreviewCreditCardOffers
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /offerPreview/savingsOffers
-  method: get
-  operationId: getPreviewSavingsOffers
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /supplyAnalytics/leadEvents
   method: get
   operationId: getLeadEvents
@@ -204,6 +56,144 @@ operations:
     token:
       max-ttl: 3600
     audit: none
+- path: /approvalProbability/loanReports
+  method: post
+  operationId: createLoansApprovalProbabilityReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /approvalProbability/loanReports/{uuid}
+  method: get
+  operationId: getLoansApprovalProbabilityReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /leads/rateTables
+  method: post
+  operationId: submitLead
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /leads/{leadUuid}/rateTables
+  method: post
+  operationId: getRateTableForSpecifiedLead
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /originator/rateTables/{uuid}
+  method: get
+  operationId: getRateTable
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /leads/{uuid}
+  method: get
+  operationId: getLead
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /leads/{uuid}
+  method: patch
+  operationId: updateLead
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /offerPreview/loanOffers
+  method: get
+  operationId: getPreviewLoanOffers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /offerPreview/creditCardOffers
+  method: get
+  operationId: getPreviewCreditCardOffers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /offerPreview/savingsOffers
+  method: get
+  operationId: getPreviewSavingsOffers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /originator/prefills/{prefillToken}
+  method: get
+  operationId: getPrefill
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /originator/prefills
+  method: post
+  operationId: prefill
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /leads/universities
   method: get
   operationId: getUniversities
